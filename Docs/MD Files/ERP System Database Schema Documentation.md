@@ -8,7 +8,7 @@ Stores user account information.
 - **Name** - VARCHAR(255) - Full name of the user
 - **Email** - VARCHAR(255) - Unique email address
 - **Password** - VARCHAR(255) - Hashed password
-- **Phone** - VARCHAR(20) - Contact phone number
+- **Phone** - VARCHAR(50) - Contact phone number
 - **CreatedAt** - DATETIME - Account creation timestamp
 
 ### Roles
