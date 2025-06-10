@@ -2,253 +2,253 @@
 
 ## 1. Users & Roles (Authentication + RBAC)
 
-### Users
+### users
 Stores user account information.
-- **Id (PK)** - INT - Unique identifier
-- **Name** - VARCHAR(255) - Full name of the user
-- **Email** - VARCHAR(255) - Unique email address
-- **Password** - VARCHAR(255) - Hashed password
-- **Phone** - VARCHAR(50) - Contact phone number
-- **CreatedAt** - DATETIME - Account creation timestamp
+- **id** (PK) - INT - Unique identifier
+- **name** - VARCHAR(255) - Full name of the user
+- **email** - VARCHAR(255) - Unique email address
+- **password** - VARCHAR(255) - Hashed password
+- **phone** - VARCHAR(50) - Contact phone number
+- **created_at** - DATETIME - Account creation timestamp
 
-### Roles
+### roles
 Defines user roles.
-- **Id (PK)** - INT
-- **Name** - VARCHAR(100)
-- **Description** - TEXT
+- **id** (PK) - INT
+- **name** - VARCHAR(100)
+- **description** - TEXT
 
-### UserRoles
+### user_roles
 Mapping table for many-to-many relationship between users and roles.
-- **Id (PK)** - INT
-- **UserId (FK to Users.Id)** - INT
-- **RoleId (FK to Roles.Id)** - INT
+- **id** (PK) - INT
+- **user_id** (FK to users.id) - INT
+- **role_id** (FK to roles.id) - INT
 
-### Features
+### features
 Defines individual access-controlled features.
-- **Id (PK)** - INT
-- **Name** - VARCHAR(100) (e.g. "Inventory.View")
-- **Module** - VARCHAR(100) (e.g. "Inventory")
-- **Description** - TEXT
+- **id** (PK) - INT
+- **name** - VARCHAR(100) (e.g. "Inventory.View")
+- **module** - VARCHAR(100) (e.g. "Inventory")
+- **description** - TEXT
 
-### RolePermissions
+### role_permissions
 Permissions associated with roles and features.
-- **Id (PK)** - INT
-- **RoleId (FK to Roles.Id)** - INT
-- **FeatureId (FK to Features.Id)** - INT
-- **CanRead** - BIT
-- **CanCreate** - BIT
-- **CanUpdate** - BIT
-- **CanDelete** - BIT
+- **id** (PK) - INT
+- **role_id** (FK to roles.id) - INT
+- **feature_id** (FK to features.id) - INT
+- **can_read** - BIT
+- **can_create** - BIT
+- **can_update** - BIT
+- **can_delete** - BIT
 
 ## 2. Products & Inventory
 
-### Categories
+### categories
 Defines product categories.
-- **Id (PK)** - INT
-- **Name** - VARCHAR(255)
-- **Description** - TEXT
+- **id** (PK) - INT
+- **name** - VARCHAR(255)
+- **description** - TEXT
 
-### Suppliers
+### suppliers
 Stores information about product suppliers.
-- **Id (PK)** - INT
-- **CompanyName** - VARCHAR(255)
-- **ContactPersonName** - VARCHAR(255)
-- **Phone** - VARCHAR(50)
-- **Email** - VARCHAR(255)
-- **Address** - TEXT
+- **id** (PK) - INT
+- **company_name** - VARCHAR(255)
+- **contact_person_name** - VARCHAR(255)
+- **phone** - VARCHAR(50)
+- **email** - VARCHAR(255)
+- **address** - TEXT
 
-### Products
+### products
 Product master table.
-- **Id (PK)** - INT
-- **Name** - VARCHAR(255)
-- **CategoryId (FK to Categories.Id)** - INT
-- **SupplierId (FK to Suppliers.Id)** - INT
-- **SKU** - VARCHAR(100)
-- **Description** - TEXT
-- **Unit** - VARCHAR(50)
-- **Price** - DECIMAL(12,2)
-- **CreatedAt** - DATETIME
+- **id** (PK) - INT
+- **name** - VARCHAR(255)
+- **category_id** (FK to categories.id) - INT
+- **supplier_id** (FK to suppliers.id) - INT
+- **sku** - VARCHAR(100)
+- **description** - TEXT
+- **unit** - VARCHAR(50)
+- **price** - DECIMAL(12,2)
+- **created_at** - DATETIME
 
-### Inventory
+### inventory
 Tracks inventory levels per product.
-- **Id (PK)** - INT
-- **ProductId (FK to Products.Id)** - INT
-- **Quantity** - INT
-- **ReorderLevel** - INT (A threshold value — when Quantity drops below this, it flags a low stock alert)
-- **LastUpdated** - DATETIME
+- **id** (PK) - INT
+- **product_id** (FK to products.id) - INT
+- **quantity** - INT
+- **reorder_level** - INT (A threshold value — when Quantity drops below this, it flags a low stock alert)
+- **last_updated** - DATETIME
 
 ## 3. Sales Module
 
-### Customers
+### customers
 Customer master table.
-- **Id (PK)** - INT
-- **Name** - VARCHAR(255)
-- **Email** - VARCHAR(255)
-- **Phone** - VARCHAR(50)
-- **Address** - TEXT
+- **id** (PK) - INT
+- **name** - VARCHAR(255)
+- **email** - VARCHAR(255)
+- **phone** - VARCHAR(50)
+- **address** - TEXT
 
-### SalesOrders
+### sales_orders
 Tracks sales orders.
-- **Id (PK)** - INT
-- **OrderNumber** - VARCHAR(100)
-- **CustomerId (FK to Customers.Id)** - INT
-- **OrderDate** - DATE
-- **DeliveryDate** - DATE
-- **DeliveryStatus** - ENUM('Pending', 'Confirmed', 'Processing', 'Shipped', 'Delivered')
-- **Status** - ENUM('Open', 'Closed', 'Cancelled')
-- **Notes** - TEXT
+- **id** (PK) - INT
+- **order_number** - VARCHAR(100)
+- **customer_id** (FK to customers.id) - INT
+- **order_date** - DATE
+- **delivery_date** - DATE
+- **delivery_status** - ENUM - INT - ('Pending', 'Confirmed', 'Processing', 'Shipped', 'Delivered')
+- **status** - ENUM - INT - ('Open', 'Closed', 'Cancelled')
+- **notes** - TEXT
 
-### SalesOrderItems
+### sales_order_items
 Line items for sales orders.
-- **Id (PK)** - INT
-- **SalesOrderId (FK to SalesOrders.Id)** - INT
-- **ProductId (FK to Products.Id)** - INT
-- **Quantity** - INT
-- **UnitPrice** - DECIMAL(12,2)
-- **Discount** - DECIMAL(12,2)
+- **id** (PK) - INT
+- **sales_order_id** (FK to sales_orders.id) - INT
+- **product_id** (FK to products.id) - INT
+- **quantity** - INT
+- **unit_price** - DECIMAL(12,2)
+- **discount** - DECIMAL(12,2)
 
-### Invoices
+### invoices
 Tracks invoices linked to sales orders.
-- **Id (PK)** - INT
-- **SalesOrderId (FK to SalesOrders.Id)** - INT
-- **InvoiceDate** - DATE
-- **TotalAmount** - DECIMAL(12,2)
-- **IsPaid** - BIT
-- **DueDate** - DATE
+- **id** (PK) - INT
+- **sales_order_id** (FK to sales_orders.id) - INT
+- **invoice_date** - DATE
+- **total_amount** - DECIMAL(12,2)
+- **is_paid** - BIT
+- **due_date** - DATE
 
 ## 4. Purchase Module
 
-### PurchaseOrders
+### purchase_orders
 Tracks purchase orders.
-- **Id (PK)** - INT
-- **OrderNumber** - VARCHAR(100)
-- **SupplierId (FK to Suppliers.Id)** - INT
-- **OrderDate** - DATE
-- **ExpectedDeliveryDate** - DATE
-- **DeliveryStatus** - VARCHAR(50)
-- **Notes** - TEXT
+- **id** (PK) - INT
+- **order_number** - VARCHAR(100)
+- **supplier_id** (FK to suppliers.id) - INT
+- **order_date** - DATE
+- **expected_delivery_date** - DATE
+- **delivery_status** - VARCHAR(50)
+- **notes** - TEXT
 
-### PurchaseOrderItems
+### purchase_order_items
 Line items for purchase orders.
-- **Id (PK)** - INT
-- **PurchaseOrderId (FK to PurchaseOrders.Id)** - INT
-- **ProductId (FK to Products.Id)** - INT
-- **Quantity** - INT
-- **UnitPrice** - DECIMAL(12,2)
-- **Discount** - DECIMAL(12,2)
+- **id** (PK) - INT
+- **purchase_order_id** (FK to purchase_orders.id) - INT
+- **product_id** (FK to products.id) - INT
+- **quantity** - INT
+- **unit_price** - DECIMAL(12,2)
+- **discount** - DECIMAL(12,2)
 
-### Expenses
+### expenses
 Tracks company expenses.
-- **Id (PK)** - INT
-- **PurchaseOrderId (FK to PurchaseOrders.Id, nullable)** - INT
-- **Description** - TEXT
-- **Amount** - DECIMAL(12,2)
-- **ExpenseDate** - DATE
-- **CategoryID** - INT (FK to an ExpenseCategories table if defined)
+- **id** (PK) - INT
+- **purchase_order_id** (FK to purchase_orders.id, nullable) - INT
+- **description** - TEXT
+- **amount** - DECIMAL(12,2)
+- **expense_date** - DATE
+- **category_id** - INT (FK to an expense_categories table if defined)
 
 ## 5. HR & Payroll
 
-### Departments
+### departments
 Defines employee departments.
-- **Id (PK)** - INT
-- **Name** - VARCHAR(100)
-- **Description** - TEXT
+- **id** (PK) - INT
+- **name** - VARCHAR(100)
+- **description** - TEXT
 
-### Employees
+### employees
 Employee records.
-- **Id (PK)** - INT
-- **UserId (FK to Users.Id)** - INT
-- **DepartmentId (FK to Departments.Id)** - INT
-- **DateHired** - DATE
-- **Salary** - DECIMAL(12,2)
-- **Status** - ENUM('Active', 'On Leave', 'Terminated')
+- **id** (PK) - INT
+- **user_id** (FK to users.id) - INT
+- **department_id** (FK to departments.id) - INT
+- **date_hired** - DATE
+- **salary** - DECIMAL(12,2)
+- **status** - ENUM('Active', 'On Leave', 'Terminated')
 
-### Attendance
+### attendance
 Tracks daily attendance.
-- **Id (PK)** - INT
-- **EmployeeId (FK to Employees.Id)** - INT
-- **Date** - DATE
-- **CheckIn** - TIME
-- **CheckOut** - TIME
-- **Status** - ENUM('Present', 'Absent', 'Leave')
+- **id** (PK) - INT
+- **employee_id** (FK to employees.id) - INT
+- **date_of_attendance** - DATE
+- **check_in** - TIME
+- **check_out** - TIME
+- **status** - ENUM('Present', 'Absent', 'Leave')
 
-### Payroll
+### payroll
 Salary details per pay period.
-- **Id (PK)** - INT
-- **EmployeeId (FK to Employees.Id)** - INT
-- **PeriodStart** - DATE
-- **PeriodEnd** - DATE
-- **BaseSalary** - DECIMAL(12,2)
-- **Deductions** - DECIMAL(12,2)
-- **Bonuses** - DECIMAL(12,2)
-- **NetPay** - DECIMAL(12,2)
-- **PaidOn** - DATE
+- **id** (PK) - INT
+- **employee_id** (FK to employees.id) - INT
+- **period_start** - DATE
+- **period_end** - DATE
+- **base_salary** - DECIMAL(12,2)
+- **deductions** - DECIMAL(12,2)
+- **bonuses** - DECIMAL(12,2)
+- **net_pay** - DECIMAL(12,2)
+- **paid_on** - DATE
 
 ## 6. Finance & Accounting
 
-### Accounts
+### accounts
 Chart of accounts.
-- **Id (PK)** - INT
-- **Name** - VARCHAR(255)
-- **Type** - ENUM('Income', 'Expense', 'Asset', 'Liability', 'Equity')
+- **id** (PK) - INT
+- **name** - VARCHAR(255)
+- **type** - ENUM('Income', 'Expense', 'Asset', 'Liability', 'Equity')
 
-### Transactions
+### transactions
 Financial transactions per account.
-- **Id (PK)** - INT
-- **AccountId (FK to Accounts.Id)** - INT
-- **Date** - DATE
-- **Description** - TEXT
-- **Amount** - DECIMAL(12,2)
-- **Type** - ENUM('Credit', 'Debit')
+- **id** (PK) - INT
+- **account_id** (FK to accounts.id) - INT
+- **transaction_date** - DATE
+- **description** - TEXT
+- **amount** - DECIMAL(12,2)
+- **type** - ENUM('Credit', 'Debit')
 
-### Ledgers
+### ledgers
 Double-entry accounting records.
-- **Id (PK)** - INT
-- **EntryDate** - DATE
-- **Description** - TEXT
-- **DebitAccountId (FK to Accounts.Id)** - INT
-- **CreditAccountId (FK to Accounts.Id)** - INT
-- **Amount** - DECIMAL(12,2)
+- **id** (PK) - INT
+- **entry_date** - DATE
+- **description** - TEXT
+- **debit_account_id** (FK to accounts.id) - INT
+- **credit_account_id** (FK to accounts.id) - INT
+- **amount** - DECIMAL(12,2)
 
 ## 7. Reports, Notifications, Logs
 
-### Reports
+### reports
 User-generated or system-generated reports.
-- **Id (PK)** - INT
-- **Name** - VARCHAR(255)
-- **Module** - VARCHAR(100)
-- **CreatedBy (FK to Users.Id)** - INT
-- **CreatedAt** - DATETIME
-- **FiltersJson** - TEXT (storing filter criteria)
+- **id** (PK) - INT
+- **name** - VARCHAR(255)
+- **module** - VARCHAR(100)
+- **created_by** (FK to users.id) - INT
+- **created_at** - DATETIME
+- **filters_json** - TEXT (storing filter criteria)
 
-### Notifications
+### notifications
 User-targeted alerts.
-- **Id (PK)** - INT
-- **UserId (FK to Users.Id)** - INT
-- **Title** - VARCHAR(255)
-- **Message** - TEXT
-- **IsRead** - BIT
-- **CreatedAt** - DATETIME
+- **id** (PK) - INT
+- **user_id** (FK to users.id) - INT
+- **title** - VARCHAR(255)
+- **message** - TEXT
+- **is_read** - BIT
+- **created_at** - DATETIME
 
 ## 8. System Settings & Company Profile
 
-### Settings
+### settings
 Key-value settings for global configuration.
-- **Id (PK)** - INT
-- **Key** - VARCHAR(100)
-- **Value** - TEXT
-- **UpdatedAt** - DATETIME
+- **id** (PK) - INT
+- **key** - VARCHAR(100)
+- **value** - TEXT
+- **updated_at** - DATETIME
 
-### CompanyProfile
+### company_profile
 Basic company info.
-- **Id (PK)** - INT
-- **CompanyName** - VARCHAR(255)
-- **Address** - TEXT
-- **Email** - VARCHAR(255)
-- **Phone** - VARCHAR(50)
-- **TaxNumber** - VARCHAR(100)
-- **Logo** - TEXT (URL or file path)
+- **id** (PK) - INT
+- **company_name** - VARCHAR(255)
+- **address** - TEXT
+- **email** - VARCHAR(255)
+- **phone** - VARCHAR(50)
+- **tax_number** - VARCHAR(100)
+- **logo** - TEXT (URL or file path)
 
 ---
 
-**Note:** All foreign key constraints should be enforced for data integrity. Timestamps such as CreatedAt, UpdatedAt, and DeletedAt can be added as needed to support audit logging and soft deletes.
+**Note:** All foreign key constraints should be enforced for data integrity. Timestamps such as `created_at`, `updated_at`, and `deleted_at` can be added as needed to support audit logging and soft deletes.
