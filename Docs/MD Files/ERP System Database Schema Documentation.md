@@ -53,7 +53,7 @@ Stores information about product suppliers.
 - **Id (PK)** - INT
 - **CompanyName** - VARCHAR(255)
 - **ContactPersonName** - VARCHAR(255)
-- **Phone** - VARCHAR(20)
+- **Phone** - VARCHAR(50)
 - **Email** - VARCHAR(255)
 - **Address** - TEXT
 
@@ -84,7 +84,7 @@ Customer master table.
 - **Id (PK)** - INT
 - **Name** - VARCHAR(255)
 - **Email** - VARCHAR(255)
-- **Phone** - VARCHAR(20)
+- **Phone** - VARCHAR(50)
 - **Address** - TEXT
 
 ### SalesOrders
@@ -245,7 +245,7 @@ Basic company info.
 - **CompanyName** - VARCHAR(255)
 - **Address** - TEXT
 - **Email** - VARCHAR(255)
-- **Phone** - VARCHAR(20)
+- **Phone** - VARCHAR(50)
 - **TaxNumber** - VARCHAR(100)
 - **Logo** - TEXT (URL or file path)
 
