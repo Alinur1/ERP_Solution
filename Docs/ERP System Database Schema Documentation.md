@@ -29,7 +29,7 @@ Mapping table for many-to-many relationship between users and roles.
 
 ### 4. features
 Defines individual access-controlled features.
-- **id** (PK) - INT
+- **id** (PK) - INT [No auto increment]
 - **name** - VARCHAR(100) (e.g. "Inventory.View")
 - **module** - VARCHAR(100) (e.g. "Inventory")
 - **description** - TEXT
