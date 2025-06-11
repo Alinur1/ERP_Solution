@@ -1,8 +1,8 @@
 # ERP System Database Schema Documentation
 
-## 1. Users & Roles (Authentication + RBAC)
+## A. Users & Roles (Authentication + RBAC)
 
-### users
+### 1. users
 Stores user account information.
 - **id** (PK) - INT - Unique identifier
 - **name** - VARCHAR(255) - Full name of the user
@@ -13,7 +13,7 @@ Stores user account information.
 - **is_deleted** - BIT
 - **deleted_at** - DATETIME
 
-### roles
+### 2. roles
 Defines user roles.
 - **id** (PK) - INT
 - **name** - VARCHAR(100)
@@ -21,20 +21,20 @@ Defines user roles.
 - **is_deleted** - BIT
 - **deleted_at** - DATETIME
 
-### user_roles
+### 3. user_roles
 Mapping table for many-to-many relationship between users and roles.
 - **id** (PK) - INT
 - **user_id** (FK to users.id) - INT
 - **role_id** (FK to roles.id) - INT
 
-### features
+### 4. features
 Defines individual access-controlled features.
 - **id** (PK) - INT
 - **name** - VARCHAR(100) (e.g. "Inventory.View")
 - **module** - VARCHAR(100) (e.g. "Inventory")
 - **description** - TEXT
 
-### role_permissions
+### 5. role_permissions
 Permissions associated with roles and features.
 - **id** (PK) - INT
 - **role_id** (FK to roles.id) - INT
@@ -44,9 +44,9 @@ Permissions associated with roles and features.
 - **can_update** - BIT
 - **can_delete** - BIT
 
-## 2. Products & Inventory
+## B. Products & Inventory
 
-### categories
+### 6. categories
 Defines product categories.
 - **id** (PK) - INT
 - **name** - VARCHAR(255)
@@ -54,7 +54,7 @@ Defines product categories.
 - **is_deleted** - BIT
 - **deleted_at** - DATETIME
 
-### suppliers
+### 7. suppliers
 Stores information about product suppliers.
 - **id** (PK) - INT
 - **company_name** - VARCHAR(255)
@@ -65,7 +65,7 @@ Stores information about product suppliers.
 - **is_deleted** - BIT
 - **deleted_at** - DATETIME
 
-### products
+### 8. products
 Product master table.
 - **id** (PK) - INT
 - **name** - VARCHAR(255)
@@ -79,7 +79,7 @@ Product master table.
 - **is_deleted** - BIT
 - **deleted_at** - DATETIME
 
-### inventory
+### 9. inventory
 Tracks inventory levels per product.
 - **id** (PK) - INT
 - **product_id** (FK to products.id) - INT
@@ -87,9 +87,9 @@ Tracks inventory levels per product.
 - **reorder_level** - INT (A threshold value — when Quantity drops below this, it flags a low stock alert)
 - **last_updated** - DATETIME
 
-## 3. Sales Module
+## C. Sales Module
 
-### customers
+### 10. customers
 Customer master table.
 - **id** (PK) - INT
 - **name** - VARCHAR(255)
@@ -99,7 +99,7 @@ Customer master table.
 - **is_deleted** - BIT
 - **deleted_at** - DATETIME
 
-### sales_orders
+### 11. sales_orders
 Tracks sales orders.
 - **id** (PK) - INT
 - **order_number** - VARCHAR(100)
@@ -112,7 +112,7 @@ Tracks sales orders.
 - **is_deleted** - BIT
 - **deleted_at** - DATETIME
 
-### sales_order_items
+### 12. sales_order_items
 Line items for sales orders.
 - **id** (PK) - INT
 - **sales_order_id** (FK to sales_orders.id) - INT
@@ -123,7 +123,7 @@ Line items for sales orders.
 - **is_deleted** - BIT
 - **deleted_at** - DATETIME
 
-### invoices
+### 13. invoices
 Tracks invoices linked to sales orders.
 - **id** (PK) - INT
 - **sales_order_id** (FK to sales_orders.id) - INT
@@ -134,9 +134,9 @@ Tracks invoices linked to sales orders.
 - **is_deleted** - BIT
 - **deleted_at** - DATETIME
 
-## 4. Purchase Module
+## D. Purchase Module
 
-### purchase_orders
+### 14. purchase_orders
 Tracks purchase orders.
 - **id** (PK) - INT
 - **order_number** - VARCHAR(100)
@@ -148,7 +148,7 @@ Tracks purchase orders.
 - **is_deleted** - BIT
 - **deleted_at** - DATETIME
 
-### purchase_order_items
+### 15. purchase_order_items
 Line items for purchase orders.
 - **id** (PK) - INT
 - **purchase_order_id** (FK to purchase_orders.id) - INT
@@ -159,7 +159,7 @@ Line items for purchase orders.
 - **is_deleted** - BIT
 - **deleted_at** - DATETIME
 
-### expenses
+### 16. expenses
 Tracks company expenses.
 - **id** (PK) - INT
 - **purchase_order_id** (FK to purchase_orders.id, nullable) - INT
@@ -170,9 +170,9 @@ Tracks company expenses.
 - **is_deleted** - BIT
 - **deleted_at** - DATETIME
 
-## 5. HR & Payroll
+## E. HR & Payroll
 
-### departments
+### 17. departments
 Defines employee departments.
 - **id** (PK) - INT
 - **name** - VARCHAR(100)
@@ -180,7 +180,7 @@ Defines employee departments.
 - **is_deleted** - BIT
 - **deleted_at** - DATETIME
 
-### employees
+### 18. employees
 Employee records.
 - **id** (PK) - INT
 - **user_id** (FK to users.id) - INT
@@ -191,7 +191,7 @@ Employee records.
 - **is_deleted** - BIT
 - **deleted_at** - DATETIME
 
-### attendance
+### 19. attendance
 Tracks daily attendance.
 - **id** (PK) - INT
 - **employee_id** (FK to employees.id) - INT
@@ -200,7 +200,7 @@ Tracks daily attendance.
 - **check_out** - TIME
 - **status** - ENUM('Present', 'Absent', 'Leave')
 
-### payroll
+### 20. payroll
 Salary details per pay period.
 - **id** (PK) - INT
 - **employee_id** (FK to employees.id) - INT
@@ -214,9 +214,9 @@ Salary details per pay period.
 - **is_deleted** - BIT
 - **deleted_at** - DATETIME
 
-## 6. Finance & Accounting
+## F. Finance & Accounting
 
-### accounts
+### 21. accounts
 Chart of accounts.
 - **id** (PK) - INT
 - **name** - VARCHAR(255)
@@ -224,7 +224,7 @@ Chart of accounts.
 - **is_deleted** - BIT
 - **deleted_at** - DATETIME
 
-### transactions
+### 22. transactions
 Financial transactions per account.
 - **id** (PK) - INT
 - **account_id** (FK to accounts.id) - INT
@@ -235,7 +235,7 @@ Financial transactions per account.
 - **is_deleted** - BIT
 - **deleted_at** - DATETIME
 
-### ledgers
+### 23. ledgers
 Double-entry accounting records.
 - **id** (PK) - INT
 - **entry_date** - DATE
@@ -246,9 +246,9 @@ Double-entry accounting records.
 - **is_deleted** - BIT
 - **deleted_at** - DATETIME
 
-## 7. Reports, Notifications, Logs
+## G. Reports, Notifications, Logs
 
-### reports
+### 24. reports
 User-generated or system-generated reports.
 - **id** (PK) - INT
 - **name** - VARCHAR(255)
@@ -257,7 +257,7 @@ User-generated or system-generated reports.
 - **created_at** - DATETIME
 - **filters_json** - TEXT (storing filter criteria)
 
-### notifications
+### 25. notifications
 User-targeted alerts.
 - **id** (PK) - INT
 - **user_id** (FK to users.id) - INT
@@ -266,16 +266,16 @@ User-targeted alerts.
 - **is_read** - BIT
 - **created_at** - DATETIME
 
-## 8. System Settings & Company Profile
+## H. System Settings & Company Profile
 
-### settings
+### 26. settings
 Key-value settings for global configuration.
 - **id** (PK) - INT
 - **key** - VARCHAR(100)
 - **value** - TEXT
 - **updated_at** - DATETIME
 
-### company_profile
+### 27. company_profile
 Basic company info.
 - **id** (PK) - INT
 - **company_name** - VARCHAR(255)
