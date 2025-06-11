@@ -10,12 +10,16 @@ Stores user account information.
 - **password** - VARCHAR(255) - Hashed password
 - **phone** - VARCHAR(50) - Contact phone number
 - **created_at** - DATETIME - Account creation timestamp
+- **is_deleted** - BIT
+- **deleted_at** - DATETIME
 
 ### roles
 Defines user roles.
 - **id** (PK) - INT
 - **name** - VARCHAR(100)
 - **description** - TEXT
+- **is_deleted** - BIT
+- **deleted_at** - DATETIME
 
 ### user_roles
 Mapping table for many-to-many relationship between users and roles.
@@ -47,6 +51,8 @@ Defines product categories.
 - **id** (PK) - INT
 - **name** - VARCHAR(255)
 - **description** - TEXT
+- **is_deleted** - BIT
+- **deleted_at** - DATETIME
 
 ### suppliers
 Stores information about product suppliers.
@@ -56,6 +62,8 @@ Stores information about product suppliers.
 - **phone** - VARCHAR(50)
 - **email** - VARCHAR(255)
 - **address** - TEXT
+- **is_deleted** - BIT
+- **deleted_at** - DATETIME
 
 ### products
 Product master table.
@@ -68,6 +76,8 @@ Product master table.
 - **unit** - VARCHAR(50)
 - **price** - DECIMAL(12,2)
 - **created_at** - DATETIME
+- **is_deleted** - BIT
+- **deleted_at** - DATETIME
 
 ### inventory
 Tracks inventory levels per product.
@@ -86,6 +96,8 @@ Customer master table.
 - **email** - VARCHAR(255)
 - **phone** - VARCHAR(50)
 - **address** - TEXT
+- **is_deleted** - BIT
+- **deleted_at** - DATETIME
 
 ### sales_orders
 Tracks sales orders.
@@ -97,6 +109,8 @@ Tracks sales orders.
 - **delivery_status** - ENUM - INT - ('Pending', 'Confirmed', 'Processing', 'Shipped', 'Delivered')
 - **status** - ENUM - INT - ('Open', 'Closed', 'Cancelled')
 - **notes** - TEXT
+- **is_deleted** - BIT
+- **deleted_at** - DATETIME
 
 ### sales_order_items
 Line items for sales orders.
@@ -106,6 +120,8 @@ Line items for sales orders.
 - **quantity** - INT
 - **unit_price** - DECIMAL(12,2)
 - **discount** - DECIMAL(12,2)
+- **is_deleted** - BIT
+- **deleted_at** - DATETIME
 
 ### invoices
 Tracks invoices linked to sales orders.
@@ -115,6 +131,8 @@ Tracks invoices linked to sales orders.
 - **total_amount** - DECIMAL(12,2)
 - **is_paid** - BIT
 - **due_date** - DATE
+- **is_deleted** - BIT
+- **deleted_at** - DATETIME
 
 ## 4. Purchase Module
 
@@ -127,6 +145,8 @@ Tracks purchase orders.
 - **expected_delivery_date** - DATE
 - **delivery_status** - VARCHAR(50)
 - **notes** - TEXT
+- **is_deleted** - BIT
+- **deleted_at** - DATETIME
 
 ### purchase_order_items
 Line items for purchase orders.
@@ -136,6 +156,8 @@ Line items for purchase orders.
 - **quantity** - INT
 - **unit_price** - DECIMAL(12,2)
 - **discount** - DECIMAL(12,2)
+- **is_deleted** - BIT
+- **deleted_at** - DATETIME
 
 ### expenses
 Tracks company expenses.
@@ -145,6 +167,8 @@ Tracks company expenses.
 - **amount** - DECIMAL(12,2)
 - **expense_date** - DATE
 - **category_id** - INT (FK to an expense_categories table if defined)
+- **is_deleted** - BIT
+- **deleted_at** - DATETIME
 
 ## 5. HR & Payroll
 
@@ -153,6 +177,8 @@ Defines employee departments.
 - **id** (PK) - INT
 - **name** - VARCHAR(100)
 - **description** - TEXT
+- **is_deleted** - BIT
+- **deleted_at** - DATETIME
 
 ### employees
 Employee records.
@@ -162,6 +188,8 @@ Employee records.
 - **date_hired** - DATE
 - **salary** - DECIMAL(12,2)
 - **status** - ENUM('Active', 'On Leave', 'Terminated')
+- **is_deleted** - BIT
+- **deleted_at** - DATETIME
 
 ### attendance
 Tracks daily attendance.
@@ -183,6 +211,8 @@ Salary details per pay period.
 - **bonuses** - DECIMAL(12,2)
 - **net_pay** - DECIMAL(12,2)
 - **paid_on** - DATE
+- **is_deleted** - BIT
+- **deleted_at** - DATETIME
 
 ## 6. Finance & Accounting
 
@@ -191,6 +221,8 @@ Chart of accounts.
 - **id** (PK) - INT
 - **name** - VARCHAR(255)
 - **type** - ENUM('Income', 'Expense', 'Asset', 'Liability', 'Equity')
+- **is_deleted** - BIT
+- **deleted_at** - DATETIME
 
 ### transactions
 Financial transactions per account.
@@ -200,6 +232,8 @@ Financial transactions per account.
 - **description** - TEXT
 - **amount** - DECIMAL(12,2)
 - **type** - ENUM('Credit', 'Debit')
+- **is_deleted** - BIT
+- **deleted_at** - DATETIME
 
 ### ledgers
 Double-entry accounting records.
@@ -209,6 +243,8 @@ Double-entry accounting records.
 - **debit_account_id** (FK to accounts.id) - INT
 - **credit_account_id** (FK to accounts.id) - INT
 - **amount** - DECIMAL(12,2)
+- **is_deleted** - BIT
+- **deleted_at** - DATETIME
 
 ## 7. Reports, Notifications, Logs
 
@@ -248,6 +284,8 @@ Basic company info.
 - **phone** - VARCHAR(50)
 - **tax_number** - VARCHAR(100)
 - **logo** - TEXT (URL or file path)
+- **is_deleted** - BIT
+- **deleted_at** - DATETIME
 
 ---
 
