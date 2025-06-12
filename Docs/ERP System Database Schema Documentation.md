@@ -1,6 +1,6 @@
 # ERP System Database Schema Documentation
 
-##Schema/Database name = erp_api
+## Schema/Database name = erp_api
 
 ## A. Users & Roles (Authentication + RBAC)
 
