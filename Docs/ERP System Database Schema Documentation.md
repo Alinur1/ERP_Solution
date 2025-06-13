@@ -145,7 +145,7 @@ Tracks purchase orders.
 - **supplier_id** (FK to suppliers.id) - INT
 - **order_date** - DATE
 - **expected_delivery_date** - DATE
-- **delivery_status** - VARCHAR(50)
+- **delivery_status** - INT
 - **notes** - TEXT
 - **is_deleted** - BIT
 - **deleted_at** - DATETIME
