@@ -1,4 +1,11 @@
+using ErpBackendApi.DAL.ERPDataContext;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
+
+// Connection string configuration
+var connectionString = builder.Configuration.GetConnectionString("ErpConnection");
+builder.Services.AddDbContext<AppDataContext>(options => options.UseSqlServer(connectionString));
 
 // Add services to the container.
 
