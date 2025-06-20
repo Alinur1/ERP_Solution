@@ -19,7 +19,7 @@ namespace ErpBackendApi.BLL.Services
         {
             try
             {
-                var existingUser = await _context.users.FirstOrDefaultAsync(u => u.email == user.email);
+                var existingUser = await _context.users.FirstOrDefaultAsync(u => u.email == user.email && u.is_deleted == true);
                 if (existingUser != null)
                 {
                     throw new Exception("An user with this email already exists.");
