@@ -22,7 +22,7 @@ namespace ErpBackendApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetUsersById(int id)
+        public async Task<IActionResult> GetUserById(int id)
         {
             var operation_GetUsersById = await _iUsers.GetUserByIdAsync(id);
             if(operation_GetUsersById == null)
@@ -40,7 +40,7 @@ namespace ErpBackendApi.Controllers
             {
                 return NotFound();
             }
-            return Ok(operation_AddUser);
+            return CreatedAtAction(nameof(GetUserById), new { id = operation_AddUser.id }, operation_AddUser);
         }
 
         [HttpPut("update")]

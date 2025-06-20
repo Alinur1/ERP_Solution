@@ -1,6 +1,7 @@
 using ErpBackendApi.BLL.Interfaces;
 using ErpBackendApi.DAL.ERPDataContext;
 using ErpBackendApi.DAL.Models;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
 using static ErpBackendApi.Helper.LoggerClass;
@@ -14,36 +15,38 @@ namespace ErpBackendApi.BLL.Services
         {
             _context = context;
         }
-
+        //TODO: Improve the error handling for UserService
         public async Task<User> AddUserAsync(User user)
         {
-            try
+            var existingUser = await _context.users.FirstOrDefaultAsync(u => u.email == user.email && u.is_deleted != true);
+            if (existingUser != null)
             {
-                var existingUser = await _context.users.FirstOrDefaultAsync(u => u.email == user.email && u.is_deleted == true);
-                if (existingUser != null)
-                {
-                    throw new Exception("An user with this email already exists.");
-                }
-                _context.users.Add(user);
-                await _context.SaveChangesAsync();
-                return user;
+                throw new Exception("An user with this email already exists.");
             }
-            catch (Exception ex)
-            {
-                Logger("An error occurred at UserService in AddUserAsync#1: " + ex.Message + "/n" + ex.StackTrace);
-                throw new Exception("An error occurred at UserService in AddUserAsync#1. Please see the ERP_API_Logger.txt for more information.");
-            }
+            user.created_at = DateTime.UtcNow;
+            user.is_deleted = false;
+            _context.users.Add(user);
+            await _context.SaveChangesAsync();
+            return user;
         }
 
         public async Task<IEnumerable<User>> GetAllUsersAsync()
         {
             try
             {
-                return await _context.users.ToListAsync();
+                return await _context.users
+                    .Where(u => u.is_deleted != true)
+                    .Select(u => new User { 
+                        id = u.id,
+                        name = u.name,
+                        email = u.email,
+                        phone = u.phone,
+                        created_at = u.created_at
+                    }).ToListAsync();
             }
             catch (Exception ex)
             {
-                Logger("An error occurred at UserService in GetAllUsersAsync#1: " + ex.Message + "/n" + ex.StackTrace);
+                Logger("An error occurred at UserService in GetAllUsersAsync#1: " + ex.Message + "\n" + ex.StackTrace);
                 throw new Exception("An error occurred at UserService in GetAllUsersAsync#1. Please see the ERP_API_Logger.txt for more information.");
             }
         }
@@ -52,11 +55,21 @@ namespace ErpBackendApi.BLL.Services
         {
             try
             {
-                return await _context.users.FirstOrDefaultAsync(u => u.id == id);
+                return await _context.users
+                    .Where(u => u.id == id && u.is_deleted != true)
+                    .Select(u => new User
+                    {
+                        id = u.id,
+                        name = u.name,
+                        email = u.email,
+                        phone = u.phone,
+                        created_at = u.created_at
+                    })
+                    .FirstOrDefaultAsync();
             }
             catch (Exception ex)
             {
-                Logger("An error occurred at UserService in GetUserByIdAsync#1: " + ex.Message + "/n" + ex.StackTrace);
+                Logger("An error occurred at UserService in GetUserByIdAsync#1: " + ex.Message + "\n" + ex.StackTrace);
                 throw new Exception("An error occurred at UserService in GetUserByIdAsync#1. Please see the ERP_API_Logger.txt for more information.");
             }
         }
@@ -69,7 +82,7 @@ namespace ErpBackendApi.BLL.Services
                 if (existingUser != null)
                 {
                     existingUser.is_deleted = user.is_deleted;
-                    existingUser.deleted_at = user.deleted_at;
+                    existingUser.deleted_at = DateTime.UtcNow;
                     _context.users.Update(existingUser);
                     await _context.SaveChangesAsync();
                 }
@@ -77,7 +90,7 @@ namespace ErpBackendApi.BLL.Services
             }
             catch (Exception ex)
             {
-                Logger("An error occurred at UserService in SoftDeleteUserAsync#1: " + ex.Message + "/n" + ex.StackTrace);
+                Logger("An error occurred at UserService in SoftDeleteUserAsync#1: " + ex.Message + "\n" + ex.StackTrace);
                 throw new Exception("An error occurred at UserService in SoftDeleteUserAsync#1. Please see the ERP_API_Logger.txt for more information.");
             }
         }
@@ -99,7 +112,7 @@ namespace ErpBackendApi.BLL.Services
             }
             catch (Exception ex)
             {
-                Logger("An error occurred at UserService in UpdateUserAsync#1: " + ex.Message + "/n" + ex.StackTrace);
+                Logger("An error occurred at UserService in UpdateUserAsync#1: " + ex.Message + "\n" + ex.StackTrace);
                 throw new Exception("An error occurred at UserService in UpdateUserAsync#1. Please see the ERP_API_Logger.txt for more information.");
             }
         }

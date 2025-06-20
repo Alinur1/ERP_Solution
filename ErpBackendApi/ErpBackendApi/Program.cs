@@ -1,5 +1,10 @@
+using ErpBackendApi.BLL.Interfaces;
+using ErpBackendApi.BLL.Services;
 using ErpBackendApi.DAL.ERPDataContext;
 using Microsoft.EntityFrameworkCore;
+using static ErpBackendApi.Helper.LoggerClass;
+
+Logger("\n===================Application Started===================");
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +13,7 @@ var connectionString = builder.Configuration.GetConnectionString("ErpConnection"
 builder.Services.AddDbContext<AppDataContext>(options => options.UseSqlServer(connectionString));
 
 // Add services to the container.
+builder.Services.AddScoped<IUsers, UserService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
