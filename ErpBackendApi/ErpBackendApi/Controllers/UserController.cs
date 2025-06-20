@@ -54,7 +54,7 @@ namespace ErpBackendApi.Controllers
             return Ok(operation_UpdateUser);
         }
 
-        [HttpPut("soft-delete")]
+        [HttpPut("delete")]
         public async Task<IActionResult> SoftDeleteUser(User user)
         {
             var operation_SoftDeleteUser = await _iUsers.SoftDeleteUserAsync(user);
