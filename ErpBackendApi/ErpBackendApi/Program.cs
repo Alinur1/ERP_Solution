@@ -4,6 +4,8 @@ using ErpBackendApi.DAL.ERPDataContext;
 using Microsoft.EntityFrameworkCore;
 using static ErpBackendApi.Helper.LoggerClass;
 
+//TODO: Change the datatype of boolean characters from bit to tinyint in MySQL Database
+
 Logger("\n===================Application Started===================");
 
 var builder = WebApplication.CreateBuilder(args);
