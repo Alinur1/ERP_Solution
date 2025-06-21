@@ -15,10 +15,10 @@ namespace ErpBackendApi.BLL.Services
         {
             _context = context;
         }
-        //TODO: Improve the error handling for UserService
+
         public async Task<User> AddUserAsync(User user)
         {
-            var existingUser = await _context.users.FirstOrDefaultAsync(u => u.email == user.email && u.is_deleted != true);
+            var existingUser = await _context.users.FirstOrDefaultAsync(u => u.email == user.email && u.is_deleted == false);
             if (existingUser != null)
             {
                 throw new Exception("An user with this email already exists.");
@@ -35,7 +35,7 @@ namespace ErpBackendApi.BLL.Services
             try
             {
                 return await _context.users
-                    .Where(u => u.is_deleted != true)
+                    .Where(u => u.is_deleted == false)
                     .Select(u => new User { 
                         id = u.id,
                         name = u.name,
@@ -56,7 +56,7 @@ namespace ErpBackendApi.BLL.Services
             try
             {
                 return await _context.users
-                    .Where(u => u.id == id && u.is_deleted != true)
+                    .Where(u => u.id == id && u.is_deleted == false)
                     .Select(u => new User
                     {
                         id = u.id,
