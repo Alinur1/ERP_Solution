@@ -10,7 +10,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Connection string configuration
 var connectionString = builder.Configuration.GetConnectionString("ErpConnection");
-builder.Services.AddDbContext<AppDataContext>(options => options.UseSqlServer(connectionString));
+builder.Services.AddDbContext<AppDataContext>(options => options.UseMySQL(connectionString));  //For MySQL, uncomment this line and comment the SQL Server line below.
+//builder.Services.AddDbContext<AppDataContext>(options => options.UseSqlServer(connectionString)); //For SQL Server, uncomment this line and comment the MySQL line above.
 
 // Add services to the container.
 builder.Services.AddScoped<IUsers, UserService>();
