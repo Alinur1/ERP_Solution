@@ -6,6 +6,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
 using static ErpBackendApi.Helper.LoggerClass;
 
+//TODO: Handle saving null values for the SoftDeleteUserAsync and UpdateUserAsync methods
+//TODO: Undo deletion of the deleted users
+//TODO: Prevent update for the deleted users
+//TODO: Replace "throw new exception" with "throw new BadHttpRequestException" in AddUserAsync method
+
 namespace ErpBackendApi.BLL.Services
 {
     public class UserService : IUsers
