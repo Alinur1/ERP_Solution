@@ -2,6 +2,8 @@
 using ErpBackendApi.DAL.Models;
 using Microsoft.AspNetCore.Mvc;
 
+//TODO: return more friendly message
+
 namespace ErpBackendApi.Controllers
 {
     [ApiController]
@@ -25,7 +27,7 @@ namespace ErpBackendApi.Controllers
         public async Task<IActionResult> GetUserById(int id)
         {
             var operation_GetUsersById = await _iUsers.GetUserByIdAsync(id);
-            if(operation_GetUsersById == null)
+            if (operation_GetUsersById == null)
             {
                 return NotFound();
             }
@@ -36,7 +38,7 @@ namespace ErpBackendApi.Controllers
         public async Task<IActionResult> AddUser(User user)
         {
             var operation_AddUser = await _iUsers.AddUserAsync(user);
-            if(operation_AddUser == null)
+            if (operation_AddUser == null)
             {
                 return NotFound();
             }
@@ -47,7 +49,7 @@ namespace ErpBackendApi.Controllers
         public async Task<IActionResult> UpdateUser(User user)
         {
             var operation_UpdateUser = await _iUsers.UpdateUserAsync(user);
-            if(operation_UpdateUser == null)
+            if (operation_UpdateUser == null)
             {
                 return NotFound();
             }
@@ -58,7 +60,7 @@ namespace ErpBackendApi.Controllers
         public async Task<IActionResult> SoftDeleteUser(User user)
         {
             var operation_SoftDeleteUser = await _iUsers.SoftDeleteUserAsync(user);
-            if(operation_SoftDeleteUser == null)
+            if (operation_SoftDeleteUser == null)
             {
                 return NotFound();
             }
