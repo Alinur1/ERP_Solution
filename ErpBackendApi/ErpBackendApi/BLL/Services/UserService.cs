@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
 using static ErpBackendApi.Helper.LoggerClass;
 
+//TODO: Ability to change the password should be implemented
+
 namespace ErpBackendApi.BLL.Services
 {
     public class UserService : IUsers
