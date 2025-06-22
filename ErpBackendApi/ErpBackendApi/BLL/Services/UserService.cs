@@ -9,8 +9,7 @@ using static ErpBackendApi.Helper.LoggerClass;
 //complete = TODO: Handle saving null values for the SoftDeleteUserAsync and UpdateUserAsync methods
 //complete = TODO: Undo deletion of the deleted users
 //complete = TODO: Prevent update for the deleted users
-//TODO: Replace "throw new exception" with "throw new BadHttpRequestException" in AddUserAsync method
-//TODO: Replace "existingUser.is_deleted = user.is_deleted;" with "existingUser.is_deleted = true;" in SoftDeleteUserAsync method
+//complete = TODO: Replace "existingUser.is_deleted = user.is_deleted;" with "existingUser.is_deleted = true;" in SoftDeleteUserAsync method
 
 namespace ErpBackendApi.BLL.Services
 {
@@ -86,7 +85,7 @@ namespace ErpBackendApi.BLL.Services
             var existingUser = await _context.users.FirstOrDefaultAsync(u => u.id == user.id && u.is_deleted == false);
             if (existingUser != null)
             {
-                existingUser.is_deleted = user.is_deleted;
+                existingUser.is_deleted = true;
                 existingUser.deleted_at = DateTime.UtcNow;
                 _context.users.Update(existingUser);
                 await _context.SaveChangesAsync();
