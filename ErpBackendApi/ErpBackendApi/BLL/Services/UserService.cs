@@ -18,10 +18,11 @@ namespace ErpBackendApi.BLL.Services
 
         public async Task<User> AddUserAsync(User user)
         {
-            var existingUser = await _context.users.FirstOrDefaultAsync(u => u.email == user.email && u.is_deleted == false);
+            var existingUser = await _context.users.FirstOrDefaultAsync(u => u.email == user.email);
             if (existingUser != null)
             {
-                throw new Exception("An user with this email already exists.");
+                Logger("Tried to create an account with same email.");
+                return null;
             }
             user.created_at = DateTime.UtcNow;
             user.is_deleted = false;
@@ -32,47 +33,31 @@ namespace ErpBackendApi.BLL.Services
 
         public async Task<IEnumerable<User>> GetAllUsersAsync()
         {
-            try
-            {
-                return await _context.users
-                    .Where(u => u.is_deleted == false)
-                    .Select(u => new User
-                    {
-                        id = u.id,
-                        name = u.name,
-                        email = u.email,
-                        phone = u.phone,
-                        created_at = u.created_at
-                    }).ToListAsync();
-            }
-            catch (Exception ex)
-            {
-                Logger("An error occurred at UserService in GetAllUsersAsync#1: " + ex.Message + "\n" + ex.StackTrace);
-                throw new Exception("An error occurred at UserService in GetAllUsersAsync#1. Please see the ERP_API_Logger.txt for more information.");
-            }
+            return await _context.users
+                .Where(u => u.is_deleted == false)
+                .Select(u => new User
+                {
+                    id = u.id,
+                    name = u.name,
+                    email = u.email,
+                    phone = u.phone,
+                    created_at = u.created_at
+                }).ToListAsync();
         }
 
         public async Task<User> GetUserByIdAsync(int id)
         {
-            try
-            {
-                return await _context.users
-                    .Where(u => u.id == id && u.is_deleted == false)
-                    .Select(u => new User
-                    {
-                        id = u.id,
-                        name = u.name,
-                        email = u.email,
-                        phone = u.phone,
-                        created_at = u.created_at
-                    })
-                    .FirstOrDefaultAsync();
-            }
-            catch (Exception ex)
-            {
-                Logger("An error occurred at UserService in GetUserByIdAsync#1: " + ex.Message + "\n" + ex.StackTrace);
-                throw new Exception("An error occurred at UserService in GetUserByIdAsync#1. Please see the ERP_API_Logger.txt for more information.");
-            }
+            return await _context.users
+                .Where(u => u.id == id && u.is_deleted == false)
+                .Select(u => new User
+                {
+                    id = u.id,
+                    name = u.name,
+                    email = u.email,
+                    phone = u.phone,
+                    created_at = u.created_at
+                })
+                .FirstOrDefaultAsync();
         }
 
         public async Task<User> SoftDeleteUserAsync(User user)
@@ -85,7 +70,7 @@ namespace ErpBackendApi.BLL.Services
                 _context.users.Update(existingUser);
                 await _context.SaveChangesAsync();
             }
-            return existingUser ?? throw new KeyNotFoundException("User not found. Unable to delete user.");
+            return existingUser;
         }
 
         public async Task<User> UndoSoftDeleteUserAsync(User user)
@@ -98,7 +83,7 @@ namespace ErpBackendApi.BLL.Services
                 _context.users.Update(existingUser);
                 await _context.SaveChangesAsync();
             }
-            return existingUser ?? throw new KeyNotFoundException("User not found. Unable to undo deletion of user.");
+            return existingUser;
         }
 
         public async Task<User> UpdateUserAsync(User user)
@@ -112,7 +97,7 @@ namespace ErpBackendApi.BLL.Services
                 _context.users.Update(existingUser);
                 await _context.SaveChangesAsync();
             }
-            return existingUser ?? throw new KeyNotFoundException("User not found. Unable to update user information.");
+            return existingUser;
         }
     }
 }

@@ -2,7 +2,7 @@
 using ErpBackendApi.DAL.Models;
 using Microsoft.AspNetCore.Mvc;
 
-//TODO: return more friendly message
+//complete = TODO: return more friendly message
 
 namespace ErpBackendApi.Controllers
 {
@@ -29,7 +29,7 @@ namespace ErpBackendApi.Controllers
             var operation_GetUsersById = await _iUsers.GetUserByIdAsync(id);
             if (operation_GetUsersById == null)
             {
-                return NotFound();
+                return NotFound("User not found.");
             }
             return Ok(operation_GetUsersById);
         }
@@ -40,9 +40,9 @@ namespace ErpBackendApi.Controllers
             var operation_AddUser = await _iUsers.AddUserAsync(user);
             if (operation_AddUser == null)
             {
-                return NotFound();
+                return NotFound("An user with this email already exists.");
             }
-            return CreatedAtAction(nameof(GetUserById), new { id = operation_AddUser.id }, operation_AddUser);
+            return Ok("User created Successfully.");
         }
 
         [HttpPut("update")]
@@ -51,9 +51,9 @@ namespace ErpBackendApi.Controllers
             var operation_UpdateUser = await _iUsers.UpdateUserAsync(user);
             if (operation_UpdateUser == null)
             {
-                return NotFound();
+                return NotFound("User not found or the user is deleted.");
             }
-            return Ok(operation_UpdateUser);
+            return Ok("User updated successfully.");
         }
 
         [HttpPut("delete")]
@@ -62,9 +62,9 @@ namespace ErpBackendApi.Controllers
             var operation_SoftDeleteUser = await _iUsers.SoftDeleteUserAsync(user);
             if (operation_SoftDeleteUser == null)
             {
-                return NotFound();
+                return NotFound("User not found or already deleted.");
             }
-            return Ok(operation_SoftDeleteUser);
+            return Ok("User deleted successfully.");
         }
 
         [HttpPut("undo-delete")]
@@ -73,9 +73,9 @@ namespace ErpBackendApi.Controllers
             var operation_UndoSoftDeleteUser = await _iUsers.UndoSoftDeleteUserAsync(user);
             if (operation_UndoSoftDeleteUser == null)
             {
-                return NotFound();
+                return NotFound("User not found.");
             }
-            return Ok(operation_UndoSoftDeleteUser);
+            return Ok("User restored successfully.");
         }
     }
 }
