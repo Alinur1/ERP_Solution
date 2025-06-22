@@ -2,9 +2,6 @@
 using ErpBackendApi.DAL.Models;
 using Microsoft.AspNetCore.Mvc;
 
-//complete = TODO: return more friendly message
-//TODO: Check how GetAllUsers method returns null value (DB Backup recommended)
-
 namespace ErpBackendApi.Controllers
 {
     [ApiController]
