@@ -66,5 +66,16 @@ namespace ErpBackendApi.Controllers
             }
             return Ok(operation_SoftDeleteUser);
         }
+
+        [HttpPut("undo-delete")]
+        public async Task<IActionResult> UndoSoftDeleteUser(User user)
+        {
+            var operation_UndoSoftDeleteUser = await _iUsers.UndoSoftDeleteUserAsync(user);
+            if (operation_UndoSoftDeleteUser == null)
+            {
+                return NotFound();
+            }
+            return Ok(operation_UndoSoftDeleteUser);
+        }
     }
 }

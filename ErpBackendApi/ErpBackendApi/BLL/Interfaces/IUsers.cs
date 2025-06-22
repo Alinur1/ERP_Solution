@@ -9,5 +9,6 @@ namespace ErpBackendApi.BLL.Interfaces
         Task<User> AddUserAsync(User user);
         Task<User> UpdateUserAsync(User user);
         Task<User> SoftDeleteUserAsync(User user);
+        Task<User> UndoSoftDeleteUserAsync(User user);
     }
 }

@@ -92,6 +92,19 @@ namespace ErpBackendApi.BLL.Services
             return existingUser ?? throw new KeyNotFoundException("User not found. Unable to delete user.");            
         }
 
+        public async Task<User> UndoSoftDeleteUserAsync(User user)
+        {
+            var existingUser = await _context.users.FirstOrDefaultAsync(u => u.id == user.id && u.is_deleted == true);
+            if (existingUser != null)
+            {
+                existingUser.is_deleted = false;
+                existingUser.deleted_at = null;
+                _context.users.Update(existingUser);
+                await _context.SaveChangesAsync();
+            }
+            return existingUser ?? throw new KeyNotFoundException("User not found. Unable to undo deletion of user.");
+        }
+
         public async Task<User> UpdateUserAsync(User user)
         {            
             var existingUser = await _context.users.FirstOrDefaultAsync(u => u.id == user.id && u.is_deleted == false);
