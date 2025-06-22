@@ -75,5 +75,16 @@ namespace ErpBackendApi.Controllers
             }
             return Ok("User restored successfully.");
         }
+
+        [HttpPut("change-password")]
+        public async Task<IActionResult> ChangePassword(User user)
+        {
+            var operation_ChangePassword = await _iUsers.ChangePasswordAsync(user);
+            if (operation_ChangePassword == null)
+            {
+                return NotFound("Not a valid user/User not found.");
+            }
+            return Ok("Password changed successfully.");
+        }
     }
 }

@@ -6,8 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
 using static ErpBackendApi.Helper.LoggerClass;
 
-//TODO: Ability to change the password should be implemented
-
 namespace ErpBackendApi.BLL.Services
 {
     public class UserService : IUsers
@@ -96,6 +94,18 @@ namespace ErpBackendApi.BLL.Services
                 existingUser.name = user.name;
                 existingUser.email = user.email;
                 existingUser.phone = user.phone;
+                _context.users.Update(existingUser);
+                await _context.SaveChangesAsync();
+            }
+            return existingUser;
+        }
+
+        public async Task<User> ChangePasswordAsync(User user)
+        {
+            var existingUser = await _context.users.FirstOrDefaultAsync(u => u.id == user.id && u.is_deleted == false);
+            if (existingUser != null)
+            {
+                existingUser.password = user.password;
                 _context.users.Update(existingUser);
                 await _context.SaveChangesAsync();
             }
