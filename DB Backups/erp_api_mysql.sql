@@ -26,7 +26,7 @@ CREATE TABLE `accounts` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
   `type` int DEFAULT NULL,
-  `is_deleted` bit(1) DEFAULT NULL,
+  `is_deleted` tinyint DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -81,7 +81,7 @@ CREATE TABLE `categories` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
   `description` text,
-  `is_deleted` bit(1) DEFAULT NULL,
+  `is_deleted` tinyint DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -111,7 +111,7 @@ CREATE TABLE `company_profile` (
   `phone` varchar(50) DEFAULT NULL,
   `tax_number` varchar(100) DEFAULT NULL,
   `logo` text,
-  `is_deleted` bit(1) DEFAULT NULL,
+  `is_deleted` tinyint DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -139,7 +139,7 @@ CREATE TABLE `customers` (
   `email` varchar(255) DEFAULT NULL,
   `phone` varchar(50) DEFAULT NULL,
   `address` text,
-  `is_deleted` bit(1) DEFAULT NULL,
+  `is_deleted` tinyint DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -165,7 +165,7 @@ CREATE TABLE `departments` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(100) DEFAULT NULL,
   `description` text,
-  `is_deleted` bit(1) DEFAULT NULL,
+  `is_deleted` tinyint DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -194,7 +194,7 @@ CREATE TABLE `employees` (
   `date_hired` date DEFAULT NULL,
   `salary` decimal(12,2) DEFAULT NULL,
   `status` int DEFAULT NULL,
-  `is_deleted` bit(1) DEFAULT NULL,
+  `is_deleted` tinyint DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_employees_users_idx` (`user_id`),
@@ -227,7 +227,7 @@ CREATE TABLE `expenses` (
   `amount` decimal(12,2) DEFAULT NULL,
   `expense_date` date DEFAULT NULL,
   `category_id` int DEFAULT NULL,
-  `is_deleted` bit(1) DEFAULT NULL,
+  `is_deleted` tinyint DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_expenses_purchase_orders_idx` (`purchase_order_id`),
@@ -311,9 +311,9 @@ CREATE TABLE `invoices` (
   `sales_order_id` int DEFAULT NULL,
   `invoice_date` date DEFAULT NULL,
   `total_amount` decimal(12,2) DEFAULT NULL,
-  `is_paid` bit(1) DEFAULT NULL,
+  `is_paid` tinyint DEFAULT NULL,
   `due_date` date DEFAULT NULL,
-  `is_deleted` bit(1) DEFAULT NULL,
+  `is_deleted` tinyint DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_invoices_sales_orders_idx` (`sales_order_id`),
@@ -344,7 +344,7 @@ CREATE TABLE `ledgers` (
   `debit_account_id` int DEFAULT NULL,
   `credit_account_id` int DEFAULT NULL,
   `amount` decimal(12,2) DEFAULT NULL,
-  `is_deleted` bit(1) DEFAULT NULL,
+  `is_deleted` tinyint DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_ledgers_accounts_idx` (`debit_account_id`),
@@ -375,7 +375,7 @@ CREATE TABLE `notifications` (
   `user_id` int DEFAULT NULL,
   `title` varchar(255) DEFAULT NULL,
   `message` text,
-  `is_read` bit(1) DEFAULT NULL,
+  `is_read` tinyint DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_notifications_users_idx` (`user_id`),
@@ -409,7 +409,7 @@ CREATE TABLE `payroll` (
   `bonuses` decimal(12,2) DEFAULT NULL,
   `net_pay` decimal(12,2) DEFAULT NULL,
   `paid_on` date DEFAULT NULL,
-  `is_deleted` bit(1) DEFAULT NULL,
+  `is_deleted` tinyint DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
   PRIMARY KEY (`int`),
   KEY `fk_payroll_employees_idx` (`employee_id`),
@@ -443,7 +443,7 @@ CREATE TABLE `products` (
   `unit` varchar(50) DEFAULT NULL,
   `price` decimal(12,2) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
-  `is_deleted` bit(1) DEFAULT NULL,
+  `is_deleted` tinyint DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_products_categories_idx` (`category_id`),
@@ -476,7 +476,7 @@ CREATE TABLE `purchase_order_items` (
   `quantity` int DEFAULT NULL,
   `unit_price` decimal(12,2) DEFAULT NULL,
   `discount` decimal(12,2) DEFAULT NULL,
-  `is_deleted` bit(1) DEFAULT NULL,
+  `is_deleted` tinyint DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_purchase_order_items_purchase_orders_idx` (`purchase_order_id`),
@@ -510,7 +510,7 @@ CREATE TABLE `purchase_orders` (
   `expected_delivery_date` date DEFAULT NULL,
   `delivery_status` int DEFAULT NULL,
   `notes` text,
-  `is_deleted` bit(1) DEFAULT NULL,
+  `is_deleted` tinyint DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_purchase_orders_suppliers_idx` (`supplier_id`),
@@ -567,10 +567,10 @@ CREATE TABLE `role_permissions` (
   `id` int NOT NULL AUTO_INCREMENT,
   `role_id` int DEFAULT NULL,
   `feature_id` int DEFAULT NULL,
-  `can_read` bit(1) DEFAULT NULL,
-  `can_create` bit(1) DEFAULT NULL,
-  `can_update` bit(1) DEFAULT NULL,
-  `can_delete` bit(1) DEFAULT NULL,
+  `can_read` tinyint DEFAULT NULL,
+  `can_create` tinyint DEFAULT NULL,
+  `can_update` tinyint DEFAULT NULL,
+  `can_delete` tinyint DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_role_permissions_roles_idx` (`role_id`),
   KEY `fk_role_permission_features_idx` (`feature_id`),
@@ -599,7 +599,7 @@ CREATE TABLE `roles` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(100) DEFAULT NULL,
   `description` text,
-  `is_deleted` bit(1) DEFAULT NULL,
+  `is_deleted` tinyint DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -628,7 +628,7 @@ CREATE TABLE `sales_order_items` (
   `quantity` int DEFAULT NULL,
   `unit_price` decimal(12,2) DEFAULT NULL,
   `discount` decimal(12,2) DEFAULT NULL,
-  `is_deleted` bit(1) DEFAULT NULL,
+  `is_deleted` tinyint DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_sales_order_items_sales_orders_idx` (`sales_order_id`),
@@ -663,7 +663,7 @@ CREATE TABLE `sales_orders` (
   `delivery_status` int DEFAULT NULL,
   `status` int DEFAULT NULL,
   `notes` text,
-  `is_deleted` bit(1) DEFAULT NULL,
+  `is_deleted` tinyint DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_sales_orders_customers_idx` (`customer_id`),
@@ -719,7 +719,7 @@ CREATE TABLE `suppliers` (
   `phone` varchar(50) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
   `address` text,
-  `is_deleted` bit(1) DEFAULT NULL,
+  `is_deleted` tinyint DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -748,7 +748,7 @@ CREATE TABLE `transactions` (
   `description` text,
   `amount` decimal(12,2) DEFAULT NULL,
   `type` int DEFAULT NULL,
-  `is_deleted` bit(1) DEFAULT NULL,
+  `is_deleted` tinyint DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_transactions_accounts_idx` (`account_id`),
@@ -807,10 +807,10 @@ CREATE TABLE `users` (
   `password` varchar(255) DEFAULT NULL,
   `phone` varchar(50) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
-  `is_deleted` bit(1) DEFAULT NULL,
+  `is_deleted` tinyint DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -819,6 +819,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` VALUES (1,'First User','firstuser@email.com','1234','123456789','2025-06-21 12:33:23',0,NULL),(2,'Second User','seconduser@email.com','1234','123456789','2025-06-21 12:35:13',0,NULL),(3,'Deleted User','thirduser@email.com','1234','123456789','2025-06-21 12:35:13',1,'2025-06-22 11:48:02'),(4,'Fourth User','fourthuser@email.com','1234','123456789','2025-06-21 12:35:53',0,NULL),(5,'Fifth User','fifthuser@email.com','1234','123456789','2025-06-21 12:36:03',0,NULL),(7,'Sixth User','sixthuser@email.com','1234','123456789','2025-06-22 11:00:23',0,NULL),(8,'Seventh User','seventhuser@email.com','1234','123456789','2025-06-22 11:01:09',0,NULL),(9,'Eighth User','eighthuser@email.com','1234','123456789','2025-06-22 11:07:16',0,NULL);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -831,4 +832,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-06-14 17:28:53
+-- Dump completed on 2025-06-22 20:18:15
