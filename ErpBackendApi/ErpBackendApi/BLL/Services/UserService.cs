@@ -6,11 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
 using static ErpBackendApi.Helper.LoggerClass;
 
-//complete = TODO: Handle saving null values for the SoftDeleteUserAsync and UpdateUserAsync methods
-//complete = TODO: Undo deletion of the deleted users
-//complete = TODO: Prevent update for the deleted users
-//complete = TODO: Replace "existingUser.is_deleted = user.is_deleted;" with "existingUser.is_deleted = true;" in SoftDeleteUserAsync method
-
 namespace ErpBackendApi.BLL.Services
 {
     public class UserService : IUsers
