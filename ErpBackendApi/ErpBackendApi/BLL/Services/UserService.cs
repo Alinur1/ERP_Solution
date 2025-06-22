@@ -8,8 +8,9 @@ using static ErpBackendApi.Helper.LoggerClass;
 
 //complete = TODO: Handle saving null values for the SoftDeleteUserAsync and UpdateUserAsync methods
 //complete = TODO: Undo deletion of the deleted users
-//TODO: Prevent update for the deleted users
+//complete = TODO: Prevent update for the deleted users
 //TODO: Replace "throw new exception" with "throw new BadHttpRequestException" in AddUserAsync method
+//TODO: Replace "existingUser.is_deleted = user.is_deleted;" with "existingUser.is_deleted = true;" in SoftDeleteUserAsync method
 
 namespace ErpBackendApi.BLL.Services
 {
@@ -41,7 +42,8 @@ namespace ErpBackendApi.BLL.Services
             {
                 return await _context.users
                     .Where(u => u.is_deleted == false)
-                    .Select(u => new User { 
+                    .Select(u => new User
+                    {
                         id = u.id,
                         name = u.name,
                         email = u.email,
@@ -80,7 +82,7 @@ namespace ErpBackendApi.BLL.Services
         }
 
         public async Task<User> SoftDeleteUserAsync(User user)
-        {            
+        {
             var existingUser = await _context.users.FirstOrDefaultAsync(u => u.id == user.id && u.is_deleted == false);
             if (existingUser != null)
             {
@@ -89,7 +91,7 @@ namespace ErpBackendApi.BLL.Services
                 _context.users.Update(existingUser);
                 await _context.SaveChangesAsync();
             }
-            return existingUser ?? throw new KeyNotFoundException("User not found. Unable to delete user.");            
+            return existingUser ?? throw new KeyNotFoundException("User not found. Unable to delete user.");
         }
 
         public async Task<User> UndoSoftDeleteUserAsync(User user)
@@ -106,7 +108,7 @@ namespace ErpBackendApi.BLL.Services
         }
 
         public async Task<User> UpdateUserAsync(User user)
-        {            
+        {
             var existingUser = await _context.users.FirstOrDefaultAsync(u => u.id == user.id && u.is_deleted == false);
             if (existingUser != null)
             {
