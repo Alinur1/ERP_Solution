@@ -11,6 +11,12 @@
 - User validation = HttpPost: http://localhost:5049/api/User/login
 
 ## 2. roles
+- Get all role data = HttpGet: http://localhost:5049/api/Role
+- Get role data by Id = HttpGet: http://localhost:5049/api/Role/5
+- Add a role = HttpPost: http://localhost:5049/api/Role
+- Update a role = HttpPut: http://localhost:5049/api/Role/update
+- Delete a role = HttpPut: http://localhost:5049/api/Role/delete
+- Restore a deleted role: HttpPut: http://localhost:5049/api/Role/undo-delete
 
 ## 3. user_roles
 
