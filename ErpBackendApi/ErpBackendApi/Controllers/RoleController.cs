@@ -44,6 +44,17 @@ namespace ErpBackendApi.Controllers
             return Ok("Role created successfully.");
         }
 
+        [HttpPut("update")]
+        public async Task<IActionResult> UpdateRole(Role role)
+        {
+            var operation_UpdateRole = await _iRoles.UpdateRoleAsync(role);
+            if (operation_UpdateRole == null)
+            {
+                return NotFound("Role not found or role is deleted.");
+            }
+            return Ok("Role updated successfully.");
+        }
+
         [HttpPut("delete")]
         public async Task<IActionResult> SoftDeleteRole(Role role)
         {
