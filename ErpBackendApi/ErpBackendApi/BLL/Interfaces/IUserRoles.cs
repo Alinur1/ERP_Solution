@@ -9,5 +9,6 @@ namespace ErpBackendApi.BLL.Interfaces
         Task<UserRoleDto> GetUserRoleByIdAsync(int id);
         Task<UserRole> AssignUserRoleAsync(UserRole userRole);
         Task<UserRole> UpdateUserRoleAsync(UserRole userRole);
+        Task<UserRole> RemoveUserRoleAsync(UserRole userRole);
     }
 }

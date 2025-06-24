@@ -69,5 +69,13 @@ namespace ErpBackendApi.BLL.Services
             await _context.SaveChangesAsync();
             return userRole;
         }
+
+        public async Task<UserRole> RemoveUserRoleAsync(UserRole userRole)
+        {
+            userRole.role_id = null;
+            _context.user_roles.Update(userRole);
+            await _context.SaveChangesAsync();
+            return userRole;
+        }
     }
 }
