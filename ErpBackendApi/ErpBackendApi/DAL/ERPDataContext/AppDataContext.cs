@@ -13,7 +13,7 @@ namespace ErpBackendApi.DAL.ERPDataContext
         //Users & Roles (Authentication + RBAC)
         public DbSet<User> users { get; set; }
         public DbSet<Role> roles { get; set; }
-        public DbSet<UserRole> user_role { get; set; }
+        public DbSet<UserRole> user_roles { get; set; }
         public DbSet<Feature> features { get; set; }
         public DbSet<RolePermission> role_permissions { get; set; }
 
