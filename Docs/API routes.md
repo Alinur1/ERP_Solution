@@ -12,13 +12,19 @@
 
 ## 2. roles
 - Get all role data = HttpGet: http://localhost:5049/api/Role
-- Get role data by Id = HttpGet: http://localhost:5049/api/Role/5
+- Get role data by Id = HttpGet: http://localhost:5049/api/Role/{id}
 - Add a role = HttpPost: http://localhost:5049/api/Role
 - Update a role = HttpPut: http://localhost:5049/api/Role/update
 - Delete a role = HttpPut: http://localhost:5049/api/Role/delete
 - Restore a deleted role: HttpPut: http://localhost:5049/api/Role/undo-delete
 
 ## 3. user_roles
+- Get all users' role = HttpGet: http://localhost:5049/api/UserRole
+- Get users' role by user_role Id = HttpGet: http://localhost:5049/api/UserRole/by-roles/{id}
+- Get user's designated role by user Id = HttpGet: http://localhost:5049/api/UserRole/by-userid/{id}
+- Assign a role to the user = HttpPost: http://localhost:5049/api/UserRole
+- Update users' role = HttpPut: http://localhost:5049/api/UserRole/update
+- Delete a user role = HttpDelete: http://localhost:5049/api/UserRole/delete
 
 ## 4. features
 
