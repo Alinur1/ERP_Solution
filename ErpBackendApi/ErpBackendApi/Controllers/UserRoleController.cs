@@ -23,7 +23,7 @@ namespace ErpBackendApi.Controllers
             return Ok(operation_GetAllUserRoles);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("by-roles/{id}")]
         public async Task<IActionResult> GetUserRolesById(int id)
         {
             var operation_GetUserRolesById = await _iUserRoles.GetUserRoleByIdAsync(id);
@@ -34,14 +34,24 @@ namespace ErpBackendApi.Controllers
             return Ok(operation_GetUserRolesById);
         }
 
+        [HttpGet("by-userid/{userId}")]
+        public async Task<IActionResult> GetUserRoleByUserId(int userId)
+        {
+            var operation_GetUserRoleByUserId = await _iUserRoles.GetUserRoleByUserIdAsync(userId);
+            if(operation_GetUserRoleByUserId == null)
+            {
+                return NotFound("User with a designated role not found.");
+            }
+            return Ok(operation_GetUserRoleByUserId);
+        }
+
         [HttpPost]
         public async Task<IActionResult> AssignUserRole(UserRole userRole)
         {
             var operation_AssignUserRole = await _iUserRoles.AssignUserRoleAsync(userRole);
             if (operation_AssignUserRole == null)
             {
-                Logger("An error occurred at UserRoleController in AssignUserRole");
-                return NotFound("Something went wrong. Please try again.");
+                return NotFound("User or Role does not exist or is inactive or the role is already assigned.");
             }
             return Ok("Role assigned to the user successfully.");
         }
@@ -52,20 +62,19 @@ namespace ErpBackendApi.Controllers
             var operation_UpdateUserRole = await _iUserRoles.UpdateUserRoleAsync(userRole);
             if (operation_UpdateUserRole == null)
             {
-                Logger("An error occurred at UserRoleController in UpdateUserRole");
-                return NotFound("Something went wrong. Please try again.");
+                return NotFound("Unable to update user's role.");
             }
             return Ok("User's role updated successfully.");
         }
 
-        [HttpPut("delete")]
+        [HttpDelete("delete")]
         public async Task<IActionResult> RemoveUserRole(UserRole userRole)
         {
             var operation_RemoveUserRole = await _iUserRoles.RemoveUserRoleAsync(userRole);
             if (operation_RemoveUserRole == null)
             {
                 Logger("An error occurred at UserRoleController in RemoveUserRole");
-                return NotFound("Something went wrong. Please try again.");
+                return NotFound("Something went wrong while removing user's role. Please try again.");
             }
             return Ok("User's role removed successfully.");
         }

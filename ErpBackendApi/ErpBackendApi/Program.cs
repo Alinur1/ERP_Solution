@@ -16,6 +16,7 @@ builder.Services.AddDbContext<AppDataContext>(options => options.UseMySQL(connec
 // Add services to the container.
 builder.Services.AddScoped<IUsers, UserService>();
 builder.Services.AddScoped<IRoles, RoleService>();
+builder.Services.AddScoped<IUserRoles, UserRoleService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
