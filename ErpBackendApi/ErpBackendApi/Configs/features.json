@@ -1,0 +1,122 @@
+[
+  {
+    "id": 101,
+    "name": "User.GetAllUsers",
+    "module": "User",
+    "description": "View all users"
+  },
+  {
+    "id": 102,
+    "name": "User.GetUserById",
+    "module": "User",
+    "description": "View user by id"
+  },
+  {
+    "id": 103,
+    "name": "User.AddUser",
+    "module": "User",
+    "description": "Add new user"
+  },
+  {
+    "id": 104,
+    "name": "User.UpdateUser",
+    "module": "User",
+    "description": "Update existing user"
+  },
+  {
+    "id": 105,
+    "name": "User.SoftDeleteUser",
+    "module": "User",
+    "description": "Delete user"
+  },
+  {
+    "id": 106,
+    "name": "User.UndoSoftDeleteUser",
+    "module": "User",
+    "description": "Restore a deleted user"
+  },
+  {
+    "id": 107,
+    "name": "User.ChangePassword",
+    "module": "User",
+    "description": "Change users password"
+  },
+  {
+    "id": 108,
+    "name": "User.ValidateUser",
+    "module": "User",
+    "description": "For login purpose"
+  },
+  {
+    "id": 109,
+    "name": "Role.GetAllRoles",
+    "module": "Role",
+    "description": "View all roles"
+  },
+  {
+    "id": 110,
+    "name": "Role.GetRoleById",
+    "module": "Role",
+    "description": "View role by id"
+  },
+  {
+    "id": 111,
+    "name": "Role.AddRoles",
+    "module": "Role",
+    "description": "Add new role"
+  },
+  {
+    "id": 112,
+    "name": "Role.UpdateRole",
+    "module": "Role",
+    "description": "Update existing role"
+  },
+  {
+    "id": 113,
+    "name": "Role.SoftDeleteRole",
+    "module": "Role",
+    "description": "Delete role"
+  },
+  {
+    "id": 114,
+    "name": "Role.UndoSoftDeleteRole",
+    "module": "Role",
+    "description": "Restore a deleted role"
+  },
+  {
+    "id": 115,
+    "name": "UserRole.GetAllUserRoles",
+    "module": "UserRole",
+    "description": "View all user role"
+  },
+  {
+    "id": 116,
+    "name": "UserRole.GetUserRolesById",
+    "module": "UserRole",
+    "description": "View user role by id"
+  },
+  {
+    "id": 117,
+    "name": "UserRole.GetUserRoleByUserId",
+    "module": "UserRole",
+    "description": "View user role by user id"
+  },
+  {
+    "id": 118,
+    "name": "UserRole.AssignUserRole",
+    "module": "UserRole",
+    "description": "Assign a role to the user"
+  },
+  {
+    "id": 119,
+    "name": "UserRole.UpdateUserRole",
+    "module": "UserRole",
+    "description": "Update  users role"
+  },
+  {
+    "id": 120,
+    "name": "UserRole.RemoveUserRole",
+    "module": "UserRole",
+    "description": "Remove role of users"
+  }
+]
