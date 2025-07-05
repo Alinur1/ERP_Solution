@@ -268,6 +268,7 @@ CREATE TABLE `features` (
 
 LOCK TABLES `features` WRITE;
 /*!40000 ALTER TABLE `features` DISABLE KEYS */;
+INSERT INTO `features` VALUES (101,'User.GetAllUsers','User','View all users'),(102,'User.GetUserById','User','View user by id'),(103,'User.AddUser','User','Add new user'),(104,'User.UpdateUser','User','Update existing user'),(105,'User.SoftDeleteUser','User','Delete user'),(106,'User.UndoSoftDeleteUser','User','Restore a deleted user'),(107,'User.ChangePassword','User','Change users password'),(108,'User.ValidateUser','User','For login purpose'),(109,'Role.GetAllRoles','Role','View all roles'),(110,'Role.GetRoleById','Role','View role by id'),(111,'Role.AddRoles','Role','Add new role'),(113,'Role.SoftDeleteRole','Role','Delete role'),(114,'Role.UndoSoftDeleteRole','Role','Restore a deleted role'),(115,'UserRole.GetAllUserRoles','UserRole','View all user role'),(116,'UserRole.GetUserRolesById','UserRole','View user role by id'),(117,'UserRole.GetUserRoleByUserId','UserRole','View user role by user id'),(118,'UserRole.AssignUserRole','UserRole','Assign a role to the user'),(119,'UserRole.UpdateUserRole','UserRole','Update users role'),(120,'UserRole.RemoveUserRole','UserRole','Remove role of users');
 /*!40000 ALTER TABLE `features` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -832,4 +833,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-06-22 20:18:15
+-- Dump completed on 2025-07-05 17:03:08
