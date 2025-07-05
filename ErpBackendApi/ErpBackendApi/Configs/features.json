@@ -111,7 +111,7 @@
     "id": 119,
     "name": "UserRole.UpdateUserRole",
     "module": "UserRole",
-    "description": "Update  users role"
+    "description": "Update users role"
   },
   {
     "id": 120,
