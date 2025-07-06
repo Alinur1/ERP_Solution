@@ -21,8 +21,8 @@ namespace ErpBackendApi.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(User user)
         {
-            var operation_AddUser = await _iUsers.AddUserAsync(user);
-            if (operation_AddUser == null)
+            var operation_Register = await _iUsers.AddUserAsync(user);
+            if (operation_Register == null)
             {
                 return NotFound("An user with this email already exists.");
             }
