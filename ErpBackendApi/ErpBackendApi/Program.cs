@@ -39,6 +39,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddScoped<IUsers, UserService>();
 builder.Services.AddScoped<IRoles, RoleService>();
 builder.Services.AddScoped<IUserRoles, UserRoleService>();
+builder.Services.AddScoped<IRolePermissions, RolePermissionService>();
 builder.Services.AddSingleton<JwtHelper>();
 
 
