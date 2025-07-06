@@ -86,17 +86,5 @@ namespace ErpBackendApi.Controllers
             }
             return Ok("Password changed successfully.");
         }
-
-        //TODO: Implement JWT authentication for login
-        //[HttpPost("login")]
-        //public async Task<IActionResult> ValidateUser(User user)
-        //{
-        //    var operation_ValidateUser = await _iUsers.ValidateUserAsync(user.email, user.password);
-        //    if (operation_ValidateUser == null)
-        //    {
-        //        return NotFound("Invalid email or password.");
-        //    }
-        //    return Ok("Login Successful");
-        //}
     }
 }
