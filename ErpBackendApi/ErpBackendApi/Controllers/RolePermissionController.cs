@@ -35,12 +35,18 @@ namespace ErpBackendApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddRolePermission(RolePermission rolePermission)
+        public async Task<IActionResult> AddRolePermission([FromBody] List<RolePermission> rolePermissions)
         {
-            var operation_AddRolePermission = await _iRolePermissions.AddRolePermissionAsync(rolePermission);
-            if(operation_AddRolePermission == null)
+            var addedRolePermissions = new List<RolePermission>();
+
+            foreach (var rolePermission in rolePermissions)
             {
-                return NotFound("The feature for the same role already exists.");
+                var operation_AddRolePermission = await _iRolePermissions.AddRolePermissionAsync(rolePermission);
+                if(operation_AddRolePermission == null)
+                {
+                    return NotFound("The feature for the same role already exists.");
+                }
+                addedRolePermissions.Add(rolePermission);
             }
             return Ok("Role permission added successfully.");
         }
