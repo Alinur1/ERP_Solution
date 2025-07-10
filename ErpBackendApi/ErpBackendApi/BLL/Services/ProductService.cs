@@ -97,19 +97,41 @@ namespace ErpBackendApi.BLL.Services
         {
             var existingCategory = await _context.categories.FirstOrDefaultAsync(c => c.id == product.category_id && c.is_deleted == false);
             var existingSupplier = await _context.suppliers.FirstOrDefaultAsync(s => s.id == product.supplier_id && s.is_deleted == false);
-            var existingProduct = await _context.products.FirstOrDefaultAsync(p => p.sku == product.sku && p.is_deleted == false);
-            if (existingCategory != null && existingSupplier != null && existingProduct != null)
+            var existingProduct = await _context.products.FirstOrDefaultAsync(p => p.id == product.id && p.is_deleted == false);
+            var duplicateSku = await _context.products.FirstOrDefaultAsync(p => p.sku == product.sku && p.id != product.id && p.is_deleted == false);
+
+            if (existingCategory == null)
             {
-                existingProduct.name = product.name;
-                existingProduct.category_id = product.category_id;
-                existingProduct.supplier_id = product.supplier_id;
-                existingProduct.sku = product.sku;
-                existingProduct.description = product.description;
-                existingProduct.unit = product.unit;
-                existingProduct.price = product.price;
-                _context.products.Update(existingProduct);
-                await _context.SaveChangesAsync();
+                Logger("Category not found or deleted. #1-UpdateProductAsync");
+                return null;
             }
+
+            if (existingSupplier == null)
+            {
+                Logger("Supplier not found or deleted. #2-UpdateProductAsync");
+                return null;
+            }
+
+            if (existingProduct == null)
+            {
+                Logger("Product to update not found or deleted. #3-UpdateProductAsync");
+                return null;
+            }
+
+            if (duplicateSku != null)
+            {
+                Logger("Duplicate SKU found on another product. #4-UpdateProductAsync");
+                return null;
+            }
+            existingProduct.name = product.name;
+            existingProduct.category_id = product.category_id;
+            existingProduct.supplier_id = product.supplier_id;
+            existingProduct.sku = product.sku;
+            existingProduct.description = product.description;
+            existingProduct.unit = product.unit;
+            existingProduct.price = product.price;
+            _context.products.Update(existingProduct);
+            await _context.SaveChangesAsync();            
             return existingProduct;
         }
 
