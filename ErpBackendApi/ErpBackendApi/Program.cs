@@ -88,3 +88,18 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+
+
+/* 
+
+TODO
+1. Add authentication in all controllers.
+2. Add a role by default when a user registers.
+3. Add a role by default when an admin creates an user.
+4. Finish the role permission according to features.
+5. Add proper validation to all the models.
+6. Handle error messages properly.
+7. Handle the date times properly to avoid extra works at the frontend.
+
+*/
