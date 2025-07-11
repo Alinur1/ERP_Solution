@@ -101,5 +101,6 @@ TODO
 5. Add proper validation to all the models.
 6. Handle error messages properly.
 7. Handle the date times properly to avoid extra works at the frontend.
+8. KillSwitch for feature permission.[ if bool FeaturePermission == true, admin can use role_permission feature, else, only admin role is accessible. ]
 
 */
