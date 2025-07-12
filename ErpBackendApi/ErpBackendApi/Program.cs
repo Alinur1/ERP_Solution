@@ -103,5 +103,7 @@ TODO
 6. Handle error messages properly.
 7. Handle the date times properly to avoid extra works at the frontend.
 8. KillSwitch for feature permission.[ if bool FeaturePermission == true, admin can use role_permission feature, else, only admin role is accessible. ]
+9. Test inventory API
+10. Check how to show the values which are depended on foreign keys and their refereneced id has a value of "is_delete = true".
 
 */
