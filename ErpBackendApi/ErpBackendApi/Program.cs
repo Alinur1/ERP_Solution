@@ -43,6 +43,7 @@ builder.Services.AddScoped<IRolePermissions, RolePermissionService>();
 builder.Services.AddScoped<ICategories, CategoryService>();
 builder.Services.AddScoped<ISuppliers, SupplierService>();
 builder.Services.AddScoped<IProducts, ProductService>();
+builder.Services.AddScoped<IInventories, InventoryService>();
 builder.Services.AddSingleton<JwtHelper>();
 
 
