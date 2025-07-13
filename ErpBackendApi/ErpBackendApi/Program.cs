@@ -45,10 +45,10 @@ builder.Services.AddScoped<ISuppliers, SupplierService>();
 builder.Services.AddScoped<IProducts, ProductService>();
 builder.Services.AddScoped<IInventories, InventoryService>();
 builder.Services.AddScoped<ICustomers, CustomerService>();
+
+
+
 builder.Services.AddSingleton<JwtHelper>();
-
-
-
 builder.Services.AddAuthorization();
 builder.Services.AddControllers();
 
