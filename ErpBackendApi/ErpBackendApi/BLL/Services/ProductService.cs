@@ -20,17 +20,19 @@ namespace ErpBackendApi.BLL.Services
             return await
             (
                 from p in _context.products
-                join c in _context.categories on p.category_id equals c.id
-                join s in _context.suppliers on p.supplier_id equals s.id
-                where p.is_deleted == false && c.is_deleted == false && s.is_deleted == false
+                join c in _context.categories on p.category_id equals c.id into catGroup
+                from c in catGroup.DefaultIfEmpty()
+                join s in _context.suppliers on p.supplier_id equals s.id into supGroup
+                from s in supGroup.DefaultIfEmpty()
+                where p.is_deleted == false
                 select new ProductDTO
                 {
                     id = p.id,
                     name = p.name,
-                    category_id = c.id,
-                    category_name = c.name,
-                    supplier_id = s.id,
-                    supplier_company_name = s.company_name,
+                    category_id = c != null ? c.id : null,
+                    category_name = c != null && c.is_deleted == false ? c.name : "-",
+                    supplier_id = s != null ? s.id : null,
+                    supplier_company_name = s != null && s.is_deleted == false ? s.company_name : "-",
                     sku = p.sku,
                     description = p.description,
                     unit = p.unit,
@@ -45,17 +47,19 @@ namespace ErpBackendApi.BLL.Services
             return await
             (
                 from p in _context.products
-                join c in _context.categories on p.category_id equals c.id
-                join s in _context.suppliers on p.supplier_id equals s.id
-                where p.id == id && p.is_deleted == false && c.is_deleted == false && s.is_deleted == false
+                join c in _context.categories on p.category_id equals c.id into catGroup
+                from c in catGroup.DefaultIfEmpty()
+                join s in _context.suppliers on p.supplier_id equals s.id into supGroup
+                from s in supGroup.DefaultIfEmpty()
+                where p.id == id && p.is_deleted == false
                 select new ProductDTO
                 {
                     id = p.id,
                     name = p.name,
-                    category_id = c.id,
-                    category_name = c.name,
-                    supplier_id = s.id,
-                    supplier_company_name = s.company_name,
+                    category_id = c != null ? c.id : null,
+                    category_name = c != null && c.is_deleted == false ? c.name : "-",
+                    supplier_id = s != null ? s.id : null,
+                    supplier_company_name = s != null && s.is_deleted == false ? s.company_name : "-",
                     sku = p.sku,
                     description = p.description,
                     unit = p.unit,
@@ -69,7 +73,6 @@ namespace ErpBackendApi.BLL.Services
         {
             var existingCategory = await _context.categories.FirstOrDefaultAsync(c => c.id == product.category_id && c.is_deleted == false);
             var existingSupplier = await _context.suppliers.FirstOrDefaultAsync(s => s.id == product.supplier_id && s.is_deleted == false);
-            var existingProduct = await _context.products.FirstOrDefaultAsync(p => p.sku == product.sku && p.is_deleted == false);
             if (existingCategory == null)
             {
                 Logger("Category not found or deleted.#1-AddProductAsync");
@@ -80,10 +83,14 @@ namespace ErpBackendApi.BLL.Services
                 Logger("Supplier not found or deleted.#2-AddProductAsync");
                 return null;
             }
-            if (existingProduct != null)
+            if (!string.IsNullOrEmpty(product.sku))
             {
-                Logger("Same Barcode/QR Code cannot be applied on different types of products.");
-                return null;
+                var existingProduct = await _context.products.FirstOrDefaultAsync(p => p.sku == product.sku && p.is_deleted == false);
+                if (existingProduct != null)
+                {
+                    Logger("Same Barcode/QR Code cannot be applied on different types of products.");
+                    return null;
+                }
             }
             product.created_at = DateTime.UtcNow;
             product.is_deleted = false;
@@ -123,6 +130,7 @@ namespace ErpBackendApi.BLL.Services
                 Logger("Duplicate SKU found on another product. #4-UpdateProductAsync");
                 return null;
             }
+
             existingProduct.name = product.name;
             existingProduct.category_id = product.category_id;
             existingProduct.supplier_id = product.supplier_id;
