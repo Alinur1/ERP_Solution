@@ -21,8 +21,9 @@ namespace ErpBackendApi.BLL.Services
             (
                 from ur in _context.user_roles
                 join u in _context.users on ur.user_id equals u.id
-                join r in _context.roles on ur.role_id equals r.id
-                where u.is_deleted == false && r.is_deleted == false
+                join r in _context.roles on ur.role_id equals r.id into roleGroup
+                from r in roleGroup.DefaultIfEmpty()
+                where u.is_deleted == false
                 select new UserRoleDto
                 {
                     id = ur.id,
@@ -31,8 +32,9 @@ namespace ErpBackendApi.BLL.Services
                     email = u.email,
                     phone = u.phone,
                     created_at = u.created_at,
-                    role_name = r.name,
-                    role_description = r.description
+                    role_id = r != null ? r.id : null,
+                    role_name = r != null && r.is_deleted == false ? r.name : "-",
+                    role_description = r != null && r.is_deleted == false ? r.description : "-",
                 }
             ).ToListAsync();
         }
@@ -43,8 +45,9 @@ namespace ErpBackendApi.BLL.Services
             (
                 from ur in _context.user_roles
                 join u in _context.users on ur.user_id equals u.id
-                join r in _context.roles on ur.role_id equals r.id
-                where ur.id == id && u.is_deleted == false && r.is_deleted == false
+                join r in _context.roles on ur.role_id equals r.id into roleGroup
+                from r in roleGroup.DefaultIfEmpty()
+                where ur.id == id && u.is_deleted == false
                 select new UserRoleDto
                 {
                     id = ur.id,
@@ -53,8 +56,9 @@ namespace ErpBackendApi.BLL.Services
                     email = u.email,
                     phone = u.phone,
                     created_at = u.created_at,
-                    role_name = r.name,
-                    role_description = r.description
+                    role_id = r != null ? r.id : null,
+                    role_name = r != null && r.is_deleted == false ? r.name : "-",
+                    role_description = r != null && r.is_deleted == false ? r.description : "-"
                 }
             ).FirstOrDefaultAsync();
         }
@@ -65,7 +69,8 @@ namespace ErpBackendApi.BLL.Services
             (
                 from ur in _context.user_roles
                 join u in _context.users on ur.user_id equals u.id
-                join r in _context.roles on ur.role_id equals r.id
+                join r in _context.roles on ur.role_id equals r.id into roleGroup
+                from r in roleGroup.DefaultIfEmpty()
                 where ur.user_id == userId && u.is_deleted == false && r.is_deleted == false
                 select new UserRoleDto
                 {
@@ -75,8 +80,9 @@ namespace ErpBackendApi.BLL.Services
                     email = u.email,
                     phone = u.phone,
                     created_at = u.created_at,
-                    role_name = r.name,
-                    role_description = r.description
+                    role_id = r != null ? r.id : null,
+                    role_name = r != null && r.is_deleted == false ? r.name : "-",
+                    role_description = r != null && r.is_deleted == false ? r.description : "-"
                 }
             ).ToListAsync();
         }
