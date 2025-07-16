@@ -119,5 +119,6 @@ Testing TODO
 1. Test Inventory API
 2. Test Customer API
 3. Test SalesOrder API
+4. Test SalesOrderItem API
 
 */
