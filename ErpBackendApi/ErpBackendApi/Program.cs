@@ -46,6 +46,7 @@ builder.Services.AddScoped<IProducts, ProductService>();
 builder.Services.AddScoped<IInventories, InventoryService>();
 builder.Services.AddScoped<ICustomers, CustomerService>();
 builder.Services.AddScoped<ISalesOrders, SalesOrderService>();
+builder.Services.AddScoped<ISalesOrderItems, SalesOrderItemService>();
 
 
 builder.Services.AddSingleton<JwtHelper>();
