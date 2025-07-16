@@ -45,7 +45,7 @@ builder.Services.AddScoped<ISuppliers, SupplierService>();
 builder.Services.AddScoped<IProducts, ProductService>();
 builder.Services.AddScoped<IInventories, InventoryService>();
 builder.Services.AddScoped<ICustomers, CustomerService>();
-
+builder.Services.AddScoped<ISalesOrders, SalesOrderService>();
 
 
 builder.Services.AddSingleton<JwtHelper>();
@@ -117,5 +117,6 @@ Testing TODO
 ---------------------------------------------------------------------------------------------------------------------------------
 1. Test Inventory API
 2. Test Customer API
+3. Test SalesOrder API
 
 */
