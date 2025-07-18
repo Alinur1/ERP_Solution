@@ -61,6 +61,7 @@ namespace ErpBackendApi.BLL.Services
                 Logger("Tried to add same product in the inventory.");
                 return null;
             }
+            inventory.last_updated = DateTime.UtcNow;
             _context.inventory.Add(inventory);
             await _context.SaveChangesAsync();
             return inventory;

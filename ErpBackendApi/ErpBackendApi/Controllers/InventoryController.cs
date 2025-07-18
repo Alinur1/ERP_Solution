@@ -55,14 +55,10 @@ namespace ErpBackendApi.Controllers
             return Ok("Inventory updated successfully.");
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteInventory(int id)
         {
             var operation_DeleteInventory = await _iInventories.DeleteInventoryAsync(id);
-            if (operation_DeleteInventory == null)
-            {
-                return NotFound("Unable to delete inventory.");
-            }
             return Ok("Inventory deleted successfully.");
         }
     }
