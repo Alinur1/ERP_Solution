@@ -111,14 +111,15 @@ TODO
 9. = REPEAT =  = COMPLETE = Check how to show the values which are depended on foreign keys and their refereneced id has a value of "is_delete = true".
 10. Add unit testing project.
 11. Handle null/no values (specially for string) variables gracefully for frontend.
+12. Automatically generate Order number for sales_order.
 
 
 
 ---------------------------------------------------------------------------------------------------------------------------------
 Testing TODO
 ---------------------------------------------------------------------------------------------------------------------------------
-1. Test Inventory API
-2. Test Customer API
+1. = COMPLETE = Test Inventory API
+2. = COMPLETE = Test Customer API
 3. Test SalesOrder API
 4. Test SalesOrderItem API
 5. Test Invoice API
