@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace ErpBackendApi.Helper
+namespace ErpBackendApi.Utilities.Helper
 {
     public static class LoggerClass
     {

@@ -1,7 +1,7 @@
 ﻿using ErpBackendApi.BLL.Interfaces;
 using ErpBackendApi.BLL.Services;
 using ErpBackendApi.DAL.Models;
-using ErpBackendApi.Helper;
+using ErpBackendApi.Utilities.Helper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

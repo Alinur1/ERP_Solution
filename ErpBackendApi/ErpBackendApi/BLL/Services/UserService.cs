@@ -4,7 +4,7 @@ using ErpBackendApi.DAL.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
-using static ErpBackendApi.Helper.LoggerClass;
+using static ErpBackendApi.Utilities.Helper.LoggerClass;
 
 namespace ErpBackendApi.BLL.Services
 {

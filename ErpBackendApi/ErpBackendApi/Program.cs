@@ -1,12 +1,12 @@
 using ErpBackendApi.BLL.Interfaces;
 using ErpBackendApi.BLL.Services;
 using ErpBackendApi.DAL.ERPDataContext;
-using ErpBackendApi.Helper;
+using ErpBackendApi.Utilities.Helper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using static ErpBackendApi.Helper.LoggerClass;
+using static ErpBackendApi.Utilities.Helper.LoggerClass;
 
 Logger("\n===================Application Started===================");
 

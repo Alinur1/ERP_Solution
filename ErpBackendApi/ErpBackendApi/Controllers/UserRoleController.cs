@@ -2,7 +2,7 @@
 using ErpBackendApi.DAL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using static ErpBackendApi.Helper.LoggerClass;
+using static ErpBackendApi.Utilities.Helper.LoggerClass;
 
 namespace ErpBackendApi.Controllers
 {

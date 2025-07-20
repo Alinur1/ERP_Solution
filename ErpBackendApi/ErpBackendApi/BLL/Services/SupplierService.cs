@@ -2,7 +2,7 @@
 using ErpBackendApi.DAL.ERPDataContext;
 using ErpBackendApi.DAL.Models;
 using Microsoft.EntityFrameworkCore;
-using static ErpBackendApi.Helper.LoggerClass;
+using static ErpBackendApi.Utilities.Helper.LoggerClass;
 
 namespace ErpBackendApi.BLL.Services
 {
