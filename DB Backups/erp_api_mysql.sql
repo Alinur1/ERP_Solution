@@ -84,7 +84,7 @@ CREATE TABLE `categories` (
   `is_deleted` tinyint DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -93,6 +93,7 @@ CREATE TABLE `categories` (
 
 LOCK TABLES `categories` WRITE;
 /*!40000 ALTER TABLE `categories` DISABLE KEYS */;
+INSERT INTO `categories` VALUES (2,'Chips','',0,NULL),(3,'Fries','',1,'2025-07-15 06:56:08'),(4,'Nuts','',0,NULL),(5,'Groceries','',0,NULL),(6,'Drinks','This is drinks category',0,NULL);
 /*!40000 ALTER TABLE `categories` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -142,7 +143,7 @@ CREATE TABLE `customers` (
   `is_deleted` tinyint DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -151,6 +152,7 @@ CREATE TABLE `customers` (
 
 LOCK TABLES `customers` WRITE;
 /*!40000 ALTER TABLE `customers` DISABLE KEYS */;
+INSERT INTO `customers` VALUES (1,'Md. Alinur Hossain','alinur@gmail.com','123456789','East Kafrul',0,NULL),(2,'Md. Jidan Rahman','jidan@email.com','1233453459',NULL,0,NULL),(3,'Md. Jidan Rahman','alinur@email.com','1233dsad453459',NULL,1,'2025-07-18 09:53:36'),(4,'Saad Muhammod Bijoy','bijoy@email.com','08927578293',NULL,0,NULL),(5,'Saad Muhammod Bijoy','','763278479283',NULL,1,'2025-07-18 09:54:07');
 /*!40000 ALTER TABLE `customers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -288,7 +290,7 @@ CREATE TABLE `inventory` (
   PRIMARY KEY (`id`),
   KEY `fk_inventory_products_idx` (`product_id`),
   CONSTRAINT `fk_inventory_products` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -297,6 +299,7 @@ CREATE TABLE `inventory` (
 
 LOCK TABLES `inventory` WRITE;
 /*!40000 ALTER TABLE `inventory` DISABLE KEYS */;
+INSERT INTO `inventory` VALUES (2,2,200,30,'2025-07-18 08:52:41'),(3,1,1000,50,'2025-07-18 08:57:41');
 /*!40000 ALTER TABLE `inventory` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -451,7 +454,7 @@ CREATE TABLE `products` (
   KEY `fk_products_suppliers_idx` (`supplier_id`),
   CONSTRAINT `fk_products_categories` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`),
   CONSTRAINT `fk_products_suppliers` FOREIGN KEY (`supplier_id`) REFERENCES `suppliers` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -460,6 +463,7 @@ CREATE TABLE `products` (
 
 LOCK TABLES `products` WRITE;
 /*!40000 ALTER TABLE `products` DISABLE KEYS */;
+INSERT INTO `products` VALUES (1,'Potato crackers',2,3,'2803108',NULL,'500',15.00,'2025-07-10 09:39:10',0,NULL),(2,'Mr. Twist',2,3,'2818971',NULL,'500',20.00,'2025-07-10 09:44:47',0,NULL),(3,'French Fry',3,1,'324798273',NULL,'2000',150.00,'2025-07-15 06:55:00',0,NULL);
 /*!40000 ALTER TABLE `products` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -505,7 +509,6 @@ DROP TABLE IF EXISTS `purchase_orders`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `purchase_orders` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `order_number` varchar(100) DEFAULT NULL,
   `supplier_id` int DEFAULT NULL,
   `order_date` date DEFAULT NULL,
   `expected_delivery_date` date DEFAULT NULL,
@@ -577,7 +580,7 @@ CREATE TABLE `role_permissions` (
   KEY `fk_role_permission_features_idx` (`feature_id`),
   CONSTRAINT `fk_role_permission_features` FOREIGN KEY (`feature_id`) REFERENCES `features` (`id`),
   CONSTRAINT `fk_role_permissions_roles` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -586,6 +589,7 @@ CREATE TABLE `role_permissions` (
 
 LOCK TABLES `role_permissions` WRITE;
 /*!40000 ALTER TABLE `role_permissions` DISABLE KEYS */;
+INSERT INTO `role_permissions` VALUES (1,1,101,1,1,1,1),(2,1,102,1,1,1,1),(3,1,103,1,1,1,1),(4,1,104,1,1,1,1);
 /*!40000 ALTER TABLE `role_permissions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -603,7 +607,7 @@ CREATE TABLE `roles` (
   `is_deleted` tinyint DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -612,6 +616,7 @@ CREATE TABLE `roles` (
 
 LOCK TABLES `roles` WRITE;
 /*!40000 ALTER TABLE `roles` DISABLE KEYS */;
+INSERT INTO `roles` VALUES (1,'Admin','',0,NULL),(2,'HR','',0,NULL),(3,'Manager','',0,NULL),(4,'Junior Manager','',0,NULL),(5,'Junior HR','',0,NULL),(6,'Cashier','',0,NULL),(7,'Junior Cashier','',0,NULL);
 /*!40000 ALTER TABLE `roles` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -657,7 +662,6 @@ DROP TABLE IF EXISTS `sales_orders`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sales_orders` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `order_number` varchar(100) DEFAULT NULL,
   `customer_id` int DEFAULT NULL,
   `order_date` date DEFAULT NULL,
   `delivery_date` date DEFAULT NULL,
@@ -723,7 +727,7 @@ CREATE TABLE `suppliers` (
   `is_deleted` tinyint DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -732,6 +736,7 @@ CREATE TABLE `suppliers` (
 
 LOCK TABLES `suppliers` WRITE;
 /*!40000 ALTER TABLE `suppliers` DISABLE KEYS */;
+INSERT INTO `suppliers` VALUES (1,'PRAN','Ajmal karim','01234567890','karim@email.com',NULL,1,'2025-07-15 16:40:30'),(2,'RFL','Abdullah Alam','01234567890','alam@email.com',NULL,0,NULL),(3,'Bombay sweets','Nisho Khan','01234567890','nisho@email.com',NULL,0,NULL),(4,'Cocola','Alamgir chowdhury','01234567890','alamgir@email.com',NULL,0,NULL);
 /*!40000 ALTER TABLE `suppliers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -782,7 +787,7 @@ CREATE TABLE `user_roles` (
   KEY `fk_user_roles_roles_idx` (`role_id`),
   CONSTRAINT `fk_user_roles_roles` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`),
   CONSTRAINT `fk_user_roles_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -791,6 +796,7 @@ CREATE TABLE `user_roles` (
 
 LOCK TABLES `user_roles` WRITE;
 /*!40000 ALTER TABLE `user_roles` DISABLE KEYS */;
+INSERT INTO `user_roles` VALUES (1,9,2),(2,1,1);
 /*!40000 ALTER TABLE `user_roles` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -811,7 +817,7 @@ CREATE TABLE `users` (
   `is_deleted` tinyint DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -820,7 +826,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'First User','firstuser@email.com','1234','123456789','2025-06-21 12:33:23',0,NULL),(2,'Second User','seconduser@email.com','1234','123456789','2025-06-21 12:35:13',0,NULL),(3,'Deleted User','thirduser@email.com','1234','123456789','2025-06-21 12:35:13',1,'2025-06-22 11:48:02'),(4,'Fourth User','fourthuser@email.com','1234','123456789','2025-06-21 12:35:53',0,NULL),(5,'Fifth User','fifthuser@email.com','1234','123456789','2025-06-21 12:36:03',0,NULL),(7,'Sixth User','sixthuser@email.com','1234','123456789','2025-06-22 11:00:23',0,NULL),(8,'Seventh User','seventhuser@email.com','1234','123456789','2025-06-22 11:01:09',0,NULL),(9,'Eighth User','eighthuser@email.com','1234','123456789','2025-06-22 11:07:16',0,NULL);
+INSERT INTO `users` VALUES (1,'First User','firstuser@email.com','1234','123456789','2025-06-21 12:33:23',0,NULL),(2,'Second User','seconduser@email.com','1234','123456789','2025-06-21 12:35:13',0,NULL),(3,'Deleted User','thirduser@email.com','1234','123456789','2025-06-21 12:35:13',1,'2025-06-22 11:48:02'),(4,'Fourth User','fourthuser@email.com','1234','123456789','2025-06-21 12:35:53',0,NULL),(5,'Fifth User','fifthuser@email.com','1234','123456789','2025-06-21 12:36:03',0,NULL),(7,'Sixth User','sixthuser@email.com','1234','123456789','2025-06-22 11:00:23',0,NULL),(8,'Seventh User','seventhuser@email.com','1234','123456789','2025-06-22 11:01:09',0,NULL),(9,'Eighth User','eighthuser@email.com','1234','123456789','2025-06-22 11:07:16',0,NULL),(10,'Ninth User','ninthuser@email.com',NULL,'123456789','2025-07-06 09:42:13',0,NULL);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -833,4 +839,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-07-05 17:03:08
+-- Dump completed on 2025-07-21 15:31:36
