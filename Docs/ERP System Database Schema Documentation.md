@@ -104,7 +104,6 @@ Customer master table.
 ### 11. sales_orders
 Tracks sales orders.
 - **id** (PK) - INT
-- **order_number** - VARCHAR(100)
 - **customer_id** (FK to customers.id) - INT
 - **order_date** - DATE
 - **delivery_date** - DATE
@@ -141,7 +140,6 @@ Tracks invoices linked to sales orders.
 ### 14. purchase_orders
 Tracks purchase orders.
 - **id** (PK) - INT
-- **order_number** - VARCHAR(100)
 - **supplier_id** (FK to suppliers.id) - INT
 - **order_date** - DATE
 - **expected_delivery_date** - DATE
