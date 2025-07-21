@@ -6,7 +6,6 @@ namespace ErpBackendApi.DAL.Models
     public class PurchaseOrder
     {
         public int id { get; set; }
-        public string? order_number { get; set; }
         public int? supplier_id { get; set; }
         public DateOnly? order_date { get; set; }
         public DateOnly? expected_delivery_date { get; set; }

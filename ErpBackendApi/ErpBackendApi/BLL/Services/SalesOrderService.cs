@@ -26,7 +26,6 @@ namespace ErpBackendApi.BLL.Services
                 select new SalesOrderDTO
                 {
                     id = so.id,
-                    order_number = so.order_number,
                     customer_id = c != null ? c.id : null,
                     customer_name = c != null && c.is_deleted == false ? c.name : "-",
                     order_date = so.order_date,
@@ -49,7 +48,6 @@ namespace ErpBackendApi.BLL.Services
                 select new SalesOrderDTO
                 {
                     id = so.id,
-                    order_number = so.order_number,
                     customer_id = c != null ? c.id : null,
                     customer_name = c != null && c.is_deleted == false ? c.name : "-",
                     order_date = so.order_date,
@@ -72,7 +70,6 @@ namespace ErpBackendApi.BLL.Services
                 select new SalesOrderDTO
                 {
                     id = so.id,
-                    order_number = so.order_number,
                     customer_id = c != null ? c.id : null,
                     customer_name = c != null && c.is_deleted == false ? c.name : "-",
                     order_date = so.order_date,
@@ -86,12 +83,6 @@ namespace ErpBackendApi.BLL.Services
 
         public async Task<SalesOrder> AddSalesOrderAsync(SalesOrder salesOrder)
         {
-            var existingSalesOrder = await _context.sales_orders.FirstOrDefaultAsync(so => so.order_number == salesOrder.order_number && so.is_deleted == false);
-            if (existingSalesOrder != null)
-            {
-                Logger("Same order number cannot be inserted in sales order.");
-                return null;
-            }
             salesOrder.is_deleted = false;
             salesOrder.deleted_at = null;
             _context.sales_orders.Add(salesOrder);
