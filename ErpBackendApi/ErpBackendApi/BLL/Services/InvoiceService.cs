@@ -27,7 +27,6 @@ namespace ErpBackendApi.BLL.Services
                 {
                     id = i.id,
                     sales_order_id = so != null ? so.id : null,
-                    sales_order_number = so != null && so.is_deleted == false ? so.order_number : "-",
                     invoice_date = i.invoice_date,
                     total_amount = i.total_amount,
                     is_paid = i.is_paid,
@@ -48,7 +47,6 @@ namespace ErpBackendApi.BLL.Services
                 {
                     id = i.id,
                     sales_order_id = so != null ? so.id : null,
-                    sales_order_number = so != null && so.is_deleted == false ? so.order_number : "-",
                     invoice_date = i.invoice_date,
                     total_amount = i.total_amount,
                     is_paid = i.is_paid,
@@ -69,7 +67,6 @@ namespace ErpBackendApi.BLL.Services
                 {
                     id = i.id,
                     sales_order_id = so != null ? so.id : null,
-                    sales_order_number = so != null && so.is_deleted == false ? so.order_number : "-",
                     invoice_date = i.invoice_date,
                     total_amount = i.total_amount,
                     is_paid = i.is_paid,

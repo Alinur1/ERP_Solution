@@ -29,7 +29,6 @@ namespace ErpBackendApi.BLL.Services
                 {
                     id = soi.id,
                     sales_order_id = so != null ? so.id : null,
-                    sales_order_number = so != null && so.is_deleted == false ? so.order_number : "-",
                     product_id = p != null ? p.id : null,
                     product_name = p != null && p.is_deleted == false ? p.name : "-",
                     quantity = soi.quantity,
@@ -53,7 +52,6 @@ namespace ErpBackendApi.BLL.Services
                 {
                     id = soi.id,
                     sales_order_id = so != null ? so.id : null,
-                    sales_order_number = so != null && so.is_deleted == false ? so.order_number : "-",
                     product_id = p != null ? p.id : null,
                     product_name = p != null && p.is_deleted == false ? p.name : "-",
                     quantity = soi.quantity,
@@ -77,7 +75,6 @@ namespace ErpBackendApi.BLL.Services
                 {
                     id = soi.id,
                     sales_order_id = so != null ? so.id : null,
-                    sales_order_number = so != null && so.is_deleted == false ? so.order_number : "-",
                     product_id = p != null ? p.id : null,
                     product_name = p != null && p.is_deleted == false ? p.name : "-",
                     quantity = soi.quantity,
