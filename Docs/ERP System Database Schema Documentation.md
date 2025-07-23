@@ -162,11 +162,11 @@ Line items for purchase orders.
 ### 16. expenses
 Tracks company expenses.
 - **id** (PK) - INT
-- **purchase_order_id** (FK to purchase_orders.id, nullable) - INT
+- **purchase_order_id** (FK to purchase_orders.id) - INT
+- **product_id** (FK to products.id) - INT
 - **description** - TEXT
 - **amount** - DECIMAL(12,2)
 - **expense_date** - DATE
-- **category_id** - INT (FK to an expense_categories table if defined)
 - **is_deleted** - BIT
 - **deleted_at** - DATETIME
 
