@@ -128,5 +128,6 @@ Testing TODO
 5. Test Invoice API
 6. Test PurchaseOrder API
 7. Test PurchaseOrderItem API
+8. Test Expense API
 
 */
