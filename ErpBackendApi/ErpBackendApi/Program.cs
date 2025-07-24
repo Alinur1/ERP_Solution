@@ -132,5 +132,6 @@ Testing TODO
 7. Test PurchaseOrderItem API
 8. Test Expense API
 9. Test Department API
+10. Test Employee API
 
 */
