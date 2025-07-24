@@ -52,6 +52,7 @@ builder.Services.AddScoped<IPurchaseOrders, PurchaseOrderService>();
 builder.Services.AddScoped<IPurchaseOrderItems, PurchaseOrderItemService>();
 builder.Services.AddScoped<IExpenses, ExpenseService>();
 builder.Services.AddScoped<IDepartments, DepartmentService>();
+builder.Services.AddScoped<IEmployees, EmployeeService>();
 
 
 builder.Services.AddSingleton<JwtHelper>();
