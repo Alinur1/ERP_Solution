@@ -7,8 +7,8 @@ namespace ErpBackendApi.BLL.Interfaces
     {
         Task<IEnumerable<AttendanceDTO>> GetAllAttendancesAsync();
         Task<AttendanceDTO> GetAttendanceByIdAsync(int id);
-        Task<Attendance> AddAttendanceAsync(Attendance attendance);
-        Task<Attendance> UpdateAttendanceAsync(Attendance attendance);
+        Task<Attendance> AddAttendanceAsync(Attendance att);
+        Task<Attendance> UpdateAttendanceAsync(Attendance att);
         Task<bool> DeleteAttendanceAsync(int id);
     }
 }
