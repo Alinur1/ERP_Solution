@@ -11,5 +11,7 @@ namespace ErpBackendApi.DAL.DTOs
         public TimeOnly? check_in { get; set; }
         public TimeOnly? check_out { get; set; }
         public AttendanceStatus? status { get; set; }
+        public bool? is_deleted { get; set; }
+        public DateTime? deleted_at { get; set; }
     }
 }

@@ -9,6 +9,7 @@ namespace ErpBackendApi.BLL.Interfaces
         Task<AttendanceDTO> GetAttendanceByIdAsync(int id);
         Task<Attendance> AddAttendanceAsync(Attendance att);
         Task<Attendance> UpdateAttendanceAsync(Attendance att);
-        Task<bool> DeleteAttendanceAsync(int id);
+        Task<Attendance> SoftDeleteAttendanceAsync(Attendance att);
+        Task<Attendance> UndoSoftDeleteAttendanceAsync(Attendance att);
     }
 }

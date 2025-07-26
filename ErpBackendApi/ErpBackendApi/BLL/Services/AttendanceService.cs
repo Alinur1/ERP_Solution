@@ -82,17 +82,34 @@ namespace ErpBackendApi.BLL.Services
             return existingAttendance;
         }
 
-        public async Task<bool> DeleteAttendanceAsync(int id)
+        public async Task<Attendance> SoftDeleteAttendanceAsync(Attendance att)
         {
-            var exisintAttendance = await _context.attendance.FindAsync(id);
-            if (exisintAttendance == null)
+            var existingAttendance = await _context.attendance.FirstOrDefaultAsync(a => a.id == att.id && a.is_deleted == false);
+            if (existingAttendance == null)
             {
-                Logger("Unable to delete the attendance.");
-                return false;
+                Logger("Attendance not found. Unable to delete attendance.");
+                return null;
             }
-            _context.attendance.Remove(exisintAttendance);
+            existingAttendance.is_deleted = true;
+            existingAttendance.deleted_at = DateTime.UtcNow;
+            _context.attendance.Update(existingAttendance);
             await _context.SaveChangesAsync();
-            return true;
+            return existingAttendance;
+        }
+
+        public async Task<Attendance> UndoSoftDeleteAttendanceAsync(Attendance att)
+        {
+            var existingAttendance = await _context.attendance.FirstOrDefaultAsync(a => a.id == att.id && a.is_deleted == true);
+            if (existingAttendance == null)
+            {
+                Logger("Attendance not found. Unable to restore deleted attendance.");
+                return null;
+            }
+            existingAttendance.is_deleted = false;
+            existingAttendance.deleted_at = null;
+            _context.attendance.Update(existingAttendance);
+            await _context.SaveChangesAsync();
+            return existingAttendance;
         }
     }
 }

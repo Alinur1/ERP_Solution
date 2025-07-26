@@ -12,5 +12,7 @@ namespace ErpBackendApi.DAL.Models
         public TimeOnly? check_out { get; set; }
         //[Column(TypeName = "int")]
         public AttendanceStatus? status { get; set; }
+        public bool? is_deleted { get; set; }
+        public DateTime? deleted_at { get; set; }
     }
 }
