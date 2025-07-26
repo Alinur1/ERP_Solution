@@ -199,6 +199,8 @@ Tracks daily attendance.
 - **check_in** - TIME
 - **check_out** - TIME
 - **status** - ENUM('Present', 'Absent', 'Leave')
+- **is_deleted** - BIT
+- **deleted_at** - DATETIME
 
 ### 20. payroll
 Salary details per pay period.
