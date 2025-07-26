@@ -5,7 +5,7 @@ using ErpBackendApi.DAL.Models;
 using Microsoft.EntityFrameworkCore;
 using static ErpBackendApi.Utilities.Helper.LoggerClass;
 
-//TODO: Refactor the Attendance and fix the mistakes later
+//TODO: Check if delete works with a parameter of (int id)
 
 namespace ErpBackendApi.BLL.Services
 {
@@ -26,6 +26,7 @@ namespace ErpBackendApi.BLL.Services
                 from e in employeeGroup.DefaultIfEmpty()
                 join u in _context.users on e.user_id equals u.id into userGroup
                 from u in userGroup.DefaultIfEmpty()
+                where a.is_deleted == false && (e == null || e.is_deleted == false) && (u == null || u.is_deleted == false)
                 select new AttendanceDTO
                 {
                     id = a.id,
@@ -48,7 +49,7 @@ namespace ErpBackendApi.BLL.Services
                 from e in employeeGroup.DefaultIfEmpty()
                 join u in _context.users on e.user_id equals u.id into userGroup
                 from u in userGroup.DefaultIfEmpty()
-                where a.id == id
+                where a.id == id && a.is_deleted == false && (e == null || e.is_deleted == false) && (u == null || u.is_deleted == false)
                 select new AttendanceDTO
                 {
                     id = a.id,
@@ -64,6 +65,14 @@ namespace ErpBackendApi.BLL.Services
 
         public async Task<Attendance> AddAttendanceAsync(Attendance att)
         {
+            var existingAttendace = await _context.attendance.FirstOrDefaultAsync(a => a.employee_id == att.employee_id && a.date_of_attendance == att.date_of_attendance && a.is_deleted == false);
+            if (existingAttendace != null)
+            {
+                Logger("Duplicate attendance for same employee on the same day.");
+                return null;
+            }
+            att.is_deleted = false;
+            att.deleted_at = null;
             _context.attendance.Add(att);
             await _context.SaveChangesAsync();
             return att;
@@ -77,7 +86,10 @@ namespace ErpBackendApi.BLL.Services
                 Logger("Unable to update attendance information. Not found.");
                 return null;
             }
-            _context.attendance.Update(existingAttendance);
+            existingAttendance.date_of_attendance = att.date_of_attendance;
+            existingAttendance.check_in = att.check_in;
+            existingAttendance.check_out = att.check_out;
+            existingAttendance.status = att.status;
             await _context.SaveChangesAsync();
             return existingAttendance;
         }
