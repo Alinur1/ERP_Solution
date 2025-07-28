@@ -118,6 +118,7 @@ TODO
 10. Add unit testing project.
 11. Handle null/no values (specially for string) variables gracefully for frontend.
 12. Automatically generate Order number for sales_order.
+13. In AppDataContext, try to convert all the objects of the models to the plural form.
 
 
 
