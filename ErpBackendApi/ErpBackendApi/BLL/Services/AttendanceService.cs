@@ -26,7 +26,7 @@ namespace ErpBackendApi.BLL.Services
                 from e in employeeGroup.DefaultIfEmpty()
                 join u in _context.users on e.user_id equals u.id into userGroup
                 from u in userGroup.DefaultIfEmpty()
-                where a.is_deleted == false && (e == null || e.is_deleted == false) && (u == null || u.is_deleted == false)
+                where a.is_deleted == false
                 select new AttendanceDTO
                 {
                     id = a.id,
