@@ -53,6 +53,7 @@ builder.Services.AddScoped<IPurchaseOrderItems, PurchaseOrderItemService>();
 builder.Services.AddScoped<IExpenses, ExpenseService>();
 builder.Services.AddScoped<IDepartments, DepartmentService>();
 builder.Services.AddScoped<IEmployees, EmployeeService>();
+builder.Services.AddScoped<IAttendances, AttendanceService>();
 
 
 builder.Services.AddSingleton<JwtHelper>();
@@ -133,5 +134,6 @@ Testing TODO
 8. Test Expense API
 9. Test Department API
 10. Test Employee API
+11. Test Attendance API
 
 */
