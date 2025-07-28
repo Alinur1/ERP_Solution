@@ -1,9 +1,11 @@
-namespace ErpBackendApi.DAL.Models
+﻿namespace ErpBackendApi.DAL.DTOs
 {
-    public class Payroll
+    public class PayrollDTO
     {
         public int id { get; set; }
         public int? employee_id { get; set; }
+        public int? user_id { get; set; }
+        public string? employee_name { get; set; }
         public DateOnly? period_start { get; set; }
         public DateOnly? period_end { get; set; }
         public decimal? base_salary { get; set; }
