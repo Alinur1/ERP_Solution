@@ -3,6 +3,7 @@ using ErpBackendApi.DAL.DTOs;
 using ErpBackendApi.DAL.ERPDataContext;
 using ErpBackendApi.DAL.Models;
 using Microsoft.EntityFrameworkCore;
+using static ErpBackendApi.Utilities.Helper.LoggerClass;
 
 namespace ErpBackendApi.BLL.Services
 {
@@ -68,24 +69,68 @@ namespace ErpBackendApi.BLL.Services
             ).FirstOrDefaultAsync();
         }
 
-        public Task<Payroll> AddPayrollAsync(Payroll payroll)
+        public async Task<Payroll> AddPayrollAsync(Payroll payroll)
         {
-            throw new NotImplementedException();
+            var existingPayroll = await _context.payroll.FirstOrDefaultAsync(p => p.employee_id == payroll.employee_id && p.is_deleted == false);
+            if (existingPayroll != null)
+            {
+                Logger("Same employee cannot have more than one payroll.");
+                return null;
+            }
+            payroll.is_deleted = false;
+            payroll.deleted_at = null;
+            _context.payroll.Add(payroll);
+            await _context.SaveChangesAsync();
+            return payroll;
         }
 
-        public Task<Payroll> UpdatePayrollAsync(Payroll payroll)
+        public async Task<Payroll> UpdatePayrollAsync(Payroll payroll)
         {
-            throw new NotImplementedException();
+            var existingPayroll = await _context.payroll.FirstOrDefaultAsync(p => p.id == payroll.id && p.is_deleted == false);
+            if (existingPayroll == null)
+            {
+                Logger("Unable to update payroll. Payroll not found.");
+                return null;
+            }
+            existingPayroll.period_start = payroll.period_start;
+            existingPayroll.period_end = payroll.period_end;
+            existingPayroll.base_salary = payroll.base_salary;
+            existingPayroll.deductions = payroll.deductions;
+            existingPayroll.bonuses = payroll.bonuses;
+            existingPayroll.net_pay = payroll.net_pay;
+            existingPayroll.paid_on = payroll.paid_on;
+            await _context.SaveChangesAsync();
+            return existingPayroll;
         }
 
-        public Task<Payroll> SoftDeletePayrollAsync(Payroll payroll)
+        public async Task<Payroll> SoftDeletePayrollAsync(Payroll payroll)
         {
-            throw new NotImplementedException();
+            var existingPayroll = await _context.payroll.FirstOrDefaultAsync(p => p.id == payroll.id && p.is_deleted == false);
+            if (existingPayroll == null)
+            {
+                Logger("Unable to delete payroll. Payroll not found.");
+                return null;
+            }
+            existingPayroll.is_deleted = true;
+            existingPayroll.deleted_at = DateTime.UtcNow;
+            _context.payroll.Update(existingPayroll);
+            await _context.SaveChangesAsync();
+            return existingPayroll;
         }
 
-        public Task<Payroll> UndoSoftDeletePayrollAsync(Payroll payroll)
+        public async Task<Payroll> UndoSoftDeletePayrollAsync(Payroll payroll)
         {
-            throw new NotImplementedException();
+            var existingPayroll = await _context.payroll.FirstOrDefaultAsync(p => p.id == payroll.id && p.is_deleted == true);
+            if (existingPayroll == null)
+            {
+                Logger("Unable to restore payroll. Payroll not found.");
+                return null;
+            }
+            existingPayroll.is_deleted = false;
+            existingPayroll.deleted_at = null;
+            _context.payroll.Update(existingPayroll);
+            await _context.SaveChangesAsync();
+            return existingPayroll;
         }
     }
 }
