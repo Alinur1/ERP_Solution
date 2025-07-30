@@ -55,6 +55,7 @@ builder.Services.AddScoped<IDepartments, DepartmentService>();
 builder.Services.AddScoped<IEmployees, EmployeeService>();
 builder.Services.AddScoped<IAttendances, AttendanceService>();
 builder.Services.AddScoped<IPayroll, PayrollService>();
+builder.Services.AddScoped<IAccount, AccountService>();
 
 
 builder.Services.AddSingleton<JwtHelper>();
