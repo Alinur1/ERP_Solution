@@ -68,23 +68,48 @@ namespace ErpBackendApi.BLL.Services
 
         public async Task<Transaction> UpdateTransactionAsync(Transaction transaction)
         {
-            //var existingTransaction = await _context.transactions.FirstOrDefaultAsync(t => t.id == transaction.id && t.is_deleted == false);
-            //if (existingTransaction == null)
-            //{
-            //    Logger("Unable to update transaction information. Transaction not found.");
-            //    return null;
-            //}
-            throw new NotImplementedException();
+            var existingTransaction = await _context.transactions.FirstOrDefaultAsync(t => t.id == transaction.id && t.is_deleted == false);
+            if (existingTransaction == null)
+            {
+                Logger("Unable to update transaction information. Transaction not found.");
+                return null;
+            }
+            existingTransaction.transaction_date = transaction.transaction_date;
+            existingTransaction.description = transaction.description;
+            existingTransaction.amount = transaction.amount;
+            existingTransaction.type = transaction.type;
+            await _context.SaveChangesAsync();
+            return existingTransaction;
         }
 
-        public Task<Transaction> SoftDeleteTransactionAsync(Transaction transaction)
+        public async Task<Transaction> SoftDeleteTransactionAsync(Transaction transaction)
         {
-            throw new NotImplementedException();
+            var existingTransaction = await _context.transactions.FirstOrDefaultAsync(t => t.id == transaction.id && t.is_deleted == false);
+            if (existingTransaction == null)
+            {
+                Logger("Unable to delete transaction information. Transaction not found.");
+                return null;
+            }
+            existingTransaction.is_deleted = true;
+            existingTransaction.deleted_at = DateTime.UtcNow;
+            _context.transactions.Update(existingTransaction);
+            await _context.SaveChangesAsync();
+            return existingTransaction;
         }
 
-        public Task<Transaction> UndoSoftDeleteTransactionAsync(Transaction transaction)
+        public async Task<Transaction> UndoSoftDeleteTransactionAsync(Transaction transaction)
         {
-            throw new NotImplementedException();
+            var existingTransaction = await _context.transactions.FirstOrDefaultAsync(t => t.id == transaction.id && t.is_deleted == true);
+            if (existingTransaction == null)
+            {
+                Logger("Unable to restore deleted transaction information. Transaction not found.");
+                return null;
+            }
+            existingTransaction.is_deleted = false;
+            existingTransaction.deleted_at = null;
+            _context.transactions.Update(existingTransaction);
+            await _context.SaveChangesAsync();
+            return existingTransaction;
         }
     }
 }
