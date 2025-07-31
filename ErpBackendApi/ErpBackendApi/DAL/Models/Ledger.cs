@@ -8,7 +8,7 @@
         public int? debit_account_id { get; set; }
         public int? credit_account_id { get; set; }
         public decimal? amount { get; set; }
-        public int? is_deleted { get; set; }
+        public bool? is_deleted { get; set; }
         public DateTime? deleted_at { get; set; }
     }
 }

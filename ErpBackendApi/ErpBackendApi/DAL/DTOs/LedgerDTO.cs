@@ -10,7 +10,7 @@
         public int? credit_account_id { get; set; }
         public string? credit_amount_name { get; set; }
         public decimal? amount { get; set; }
-        public int? is_deleted { get; set; }
+        public bool? is_deleted { get; set; }
         public DateTime? deleted_at { get; set; }
     }
 }
