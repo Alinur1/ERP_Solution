@@ -22,7 +22,7 @@ namespace ErpBackendApi.Controllers
             return Ok(operation_GetAllAccount);
         }
 
-        [HttpGet("id")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetAccountById(int id)
         {
             var operation_GetAccountById = await _iAccount.GetAccountByIdAsync(id);
