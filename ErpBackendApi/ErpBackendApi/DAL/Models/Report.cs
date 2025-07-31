@@ -8,5 +8,7 @@
         public int? created_by { get; set; }
         public DateTime? created_at { get; set; }
         public string? filters_json { get; set; }
+        public bool? is_deleted { get; set; }
+        public DateTime? deleted_at { get; set; }
     }
 }

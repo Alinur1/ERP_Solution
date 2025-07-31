@@ -58,6 +58,7 @@ builder.Services.AddScoped<IPayroll, PayrollService>();
 builder.Services.AddScoped<IAccount, AccountService>();
 builder.Services.AddScoped<ITransaction, TransactionService>();
 builder.Services.AddScoped<ILedger, LedgerService>();
+builder.Services.AddScoped<IReports, ReportService>();
 
 
 builder.Services.AddSingleton<JwtHelper>();
