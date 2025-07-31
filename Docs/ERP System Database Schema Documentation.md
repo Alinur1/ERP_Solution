@@ -258,6 +258,8 @@ User-generated or system-generated reports.
 - **created_by** (FK to users.id) - INT
 - **created_at** - DATETIME
 - **filters_json** - TEXT (storing filter criteria)
+- **is_deleted** - BIT
+- **deleted_at** - DATETIME
 
 ### 25. notifications
 User-targeted alerts.
@@ -267,6 +269,8 @@ User-targeted alerts.
 - **message** - TEXT
 - **is_read** - BIT
 - **created_at** - DATETIME
+- **is_deleted** - BIT
+- **deleted_at** - DATETIME
 
 ## H. System Settings & Company Profile
 
