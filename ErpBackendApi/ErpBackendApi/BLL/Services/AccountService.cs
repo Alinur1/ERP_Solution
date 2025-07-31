@@ -16,12 +16,14 @@ namespace ErpBackendApi.BLL.Services
 
         public async Task<IEnumerable<Account>> GetAllAccountsAsync()
         {
-            return await _context.accounts.ToListAsync();
+            return await _context.accounts
+                .Where(a => a.is_deleted == false)
+                .ToListAsync();
         }
 
         public async Task<Account> GetAccountByIdAsync(int id)
         {
-            return await _context.accounts.FirstOrDefaultAsync(a => a.id == id);
+            return await _context.accounts.FirstOrDefaultAsync(a => a.id == id && a.is_deleted == false);
         }
 
         public async Task<Account> AddAccountAsync(Account account)
