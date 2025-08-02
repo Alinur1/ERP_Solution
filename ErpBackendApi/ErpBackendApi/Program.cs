@@ -61,6 +61,7 @@ builder.Services.AddScoped<ILedger, LedgerService>();
 builder.Services.AddScoped<IReports, ReportService>();
 builder.Services.AddScoped<INotifications, NotificationService>();
 builder.Services.AddScoped<ISettings, SettingService>();
+builder.Services.AddScoped<ICompanyProfile, CompanyProfileService>();
 
 
 builder.Services.AddSingleton<JwtHelper>();
@@ -150,5 +151,6 @@ Testing TODO
 16. Test Report API
 17. Test Notification API
 18. Test Setting API
+19. Test CompanyProfile API
 
 */
