@@ -149,5 +149,6 @@ Testing TODO
 15. Test Ledger API
 16. Test Report API
 17. Test Notification API
+18. Test Setting API
 
 */
