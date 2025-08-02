@@ -60,6 +60,7 @@ builder.Services.AddScoped<ITransaction, TransactionService>();
 builder.Services.AddScoped<ILedger, LedgerService>();
 builder.Services.AddScoped<IReports, ReportService>();
 builder.Services.AddScoped<INotifications, NotificationService>();
+builder.Services.AddScoped<ISettings, SettingService>();
 
 
 builder.Services.AddSingleton<JwtHelper>();
