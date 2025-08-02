@@ -1,9 +1,10 @@
-﻿namespace ErpBackendApi.DAL.Models
+﻿namespace ErpBackendApi.DAL.DTOs
 {
-    public class Notification
+    public class NotificationDTO
     {
         public int id { get; set; }
         public int? user_id { get; set; }
+        public string? user_name { get; set; }
         public string? title { get; set; }
         public string? message { get; set; }
         public bool? is_read { get; set; }
