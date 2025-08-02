@@ -23,6 +23,12 @@ namespace ErpBackendApi.BLL.Services
 
         public async Task<CompanyProfile> AddCompanyProfileAsync(CompanyProfile companyProfile)
         {
+            if (await _context.company_profile.AnyAsync(c => c.is_deleted == false))
+            {
+                Logger("A company profile already exists. You cannot add another.");
+                return null;
+            }
+
             companyProfile.is_deleted = false;
             companyProfile.deleted_at = null;
             _context.company_profile.Add(companyProfile);
