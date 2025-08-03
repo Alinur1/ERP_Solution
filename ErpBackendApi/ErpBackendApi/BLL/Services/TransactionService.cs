@@ -7,7 +7,7 @@ using static ErpBackendApi.Utilities.Helper.LoggerClass;
 
 namespace ErpBackendApi.BLL.Services
 {
-    public class TransactionService : ITransaction
+    public class TransactionService : ITransactions
     {
         private readonly AppDataContext _context;
         public TransactionService(AppDataContext context)

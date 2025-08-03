@@ -7,7 +7,7 @@ using static ErpBackendApi.Utilities.Helper.LoggerClass;
 
 namespace ErpBackendApi.BLL.Services
 {
-    public class PayrollService : IPayroll
+    public class PayrollService : IPayrolls
     {
         private readonly AppDataContext _context;
         public PayrollService(AppDataContext context)

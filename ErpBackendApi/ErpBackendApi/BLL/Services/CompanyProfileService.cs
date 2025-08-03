@@ -4,8 +4,6 @@ using ErpBackendApi.DAL.Models;
 using Microsoft.EntityFrameworkCore;
 using static ErpBackendApi.Utilities.Helper.LoggerClass;
 
-//TODO: Make the company profile service compatible for one company only.
-
 namespace ErpBackendApi.BLL.Services
 {
     public class CompanyProfileService : ICompanyProfile
@@ -16,9 +14,9 @@ namespace ErpBackendApi.BLL.Services
             _context = context;
         }
 
-        public async Task<IEnumerable<CompanyProfile>> GetCompanyProfileAsync()
+        public async Task<CompanyProfile> GetCompanyProfileAsync()
         {
-            return await _context.company_profile.ToListAsync();
+            return await _context.company_profile.FirstOrDefaultAsync(c => c.is_deleted == false);
         }
 
         public async Task<CompanyProfile> AddCompanyProfileAsync(CompanyProfile companyProfile)

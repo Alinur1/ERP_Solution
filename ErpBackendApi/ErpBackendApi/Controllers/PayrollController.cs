@@ -9,8 +9,8 @@ namespace ErpBackendApi.Controllers
     [ApiController]
     public class PayrollController : ControllerBase
     {
-        private readonly IPayroll _iPayroll;
-        public PayrollController(IPayroll iPayroll)
+        private readonly IPayrolls _iPayroll;
+        public PayrollController(IPayrolls iPayroll)
         {
             _iPayroll = iPayroll;
         }

@@ -9,8 +9,8 @@ namespace ErpBackendApi.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private readonly IAccount _iAccount;
-        public AccountController(IAccount iAccount)
+        private readonly IAccounts _iAccount;
+        public AccountController(IAccounts iAccount)
         {
             _iAccount = iAccount;
         }

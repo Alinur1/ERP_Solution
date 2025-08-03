@@ -9,8 +9,8 @@ namespace ErpBackendApi.Controllers
     [ApiController]
     public class TransactionController : ControllerBase
     {
-        private readonly ITransaction _iTransaction;
-        public TransactionController(ITransaction iTransaction)
+        private readonly ITransactions _iTransaction;
+        public TransactionController(ITransactions iTransaction)
         {
             _iTransaction = iTransaction;
         }

@@ -3,7 +3,7 @@ using ErpBackendApi.DAL.Models;
 
 namespace ErpBackendApi.BLL.Interfaces
 {
-    public interface ITransaction
+    public interface ITransactions
     {
         Task<IEnumerable<TransactionDTO>> GetAllTransactionsAsync();
         Task<TransactionDTO> GetTransactionByIdAsync(int id);

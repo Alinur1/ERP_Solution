@@ -7,7 +7,7 @@ using static ErpBackendApi.Utilities.Helper.LoggerClass;
 
 namespace ErpBackendApi.BLL.Services
 {
-    public class LedgerService : ILedger
+    public class LedgerService : ILedgers
     {
         private readonly AppDataContext _context;
         public LedgerService(AppDataContext context)
@@ -33,7 +33,7 @@ namespace ErpBackendApi.BLL.Services
                     debit_account_id = da != null ? da.id : null,
                     debit_account_name = da != null && da.is_deleted == false ? da.name : null,
                     credit_account_id = ca != null ? ca.id : null,
-                    credit_amount_name = ca != null && ca.is_deleted == false ? ca.name : null,
+                    credit_account_name = ca != null && ca.is_deleted == false ? ca.name : null,
                     amount = l.amount,
                 }
             ).ToListAsync();
@@ -57,7 +57,7 @@ namespace ErpBackendApi.BLL.Services
                     debit_account_id = da != null ? da.id : null,
                     debit_account_name = da != null && da.is_deleted == false ? da.name : null,
                     credit_account_id = ca != null ? ca.id : null,
-                    credit_amount_name = ca != null && ca.is_deleted == false ? ca.name : null,
+                    credit_account_name = ca != null && ca.is_deleted == false ? ca.name : null,
                     amount = l.amount,
                 }
             ).FirstOrDefaultAsync();

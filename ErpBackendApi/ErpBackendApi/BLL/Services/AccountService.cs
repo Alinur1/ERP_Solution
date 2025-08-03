@@ -6,7 +6,7 @@ using static ErpBackendApi.Utilities.Helper.LoggerClass;
 
 namespace ErpBackendApi.BLL.Services
 {
-    public class AccountService : IAccount
+    public class AccountService : IAccounts
     {
         private readonly AppDataContext _context;
         public AccountService(AppDataContext context)

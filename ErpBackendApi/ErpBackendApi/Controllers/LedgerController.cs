@@ -9,8 +9,8 @@ namespace ErpBackendApi.Controllers
     [ApiController]
     public class LedgerController : ControllerBase
     {
-        private readonly ILedger _iLedger;
-        public LedgerController(ILedger iLedger)
+        private readonly ILedgers _iLedger;
+        public LedgerController(ILedgers iLedger)
         {
             _iLedger = iLedger;
         }

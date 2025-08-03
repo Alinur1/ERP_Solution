@@ -3,7 +3,7 @@ using ErpBackendApi.DAL.Models;
 
 namespace ErpBackendApi.BLL.Interfaces
 {
-    public interface IPayroll
+    public interface IPayrolls
     {
         Task<IEnumerable<PayrollDTO>> GetAllPayrollAsync();
         Task<PayrollDTO> GetPayrollByIdAsync(int id);

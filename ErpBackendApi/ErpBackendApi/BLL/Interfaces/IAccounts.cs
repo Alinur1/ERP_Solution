@@ -2,7 +2,7 @@
 
 namespace ErpBackendApi.BLL.Interfaces
 {
-    public interface IAccount
+    public interface IAccounts
     {
         Task<IEnumerable<Account>> GetAllAccountsAsync();
         Task<Account> GetAccountByIdAsync(int id);
