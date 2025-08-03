@@ -133,8 +133,8 @@ TODO
 ---------------------------------------------------------------------------------------------------------------------------------
 Testing TODO
 ---------------------------------------------------------------------------------------------------------------------------------
-1. = COMPLETE = Test Inventory API
-2. = COMPLETE = Test Customer API
+1. = REPEAT =  = COMPLETE = Test Inventory API
+2. = REPEAT =  = COMPLETE = Test Customer API
 3. Test SalesOrder API
 4. Test SalesOrderItem API
 5. Test Invoice API
