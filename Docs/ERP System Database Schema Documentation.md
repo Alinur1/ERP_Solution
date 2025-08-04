@@ -105,8 +105,8 @@ Customer master table.
 Tracks sales orders.
 - **id** (PK) - INT
 - **customer_id** (FK to customers.id) - INT
-- **order_date** - DATE
-- **delivery_date** - DATE
+- **order_date** - DATETIME
+- **delivery_date** - DATETIME
 - **delivery_status** - ENUM - INT - ('Pending', 'Confirmed', 'Processing', 'Shipped', 'Delivered')
 - **status** - ENUM - INT - ('Open', 'Closed', 'Cancelled')
 - **notes** - TEXT
@@ -128,10 +128,10 @@ Line items for sales orders.
 Tracks invoices linked to sales orders.
 - **id** (PK) - INT
 - **sales_order_id** (FK to sales_orders.id) - INT
-- **invoice_date** - DATE
+- **invoice_date** - DATETIME
 - **total_amount** - DECIMAL(12,2)
 - **is_paid** - BIT
-- **due_date** - DATE
+- **due_date** - DATETIME
 - **is_deleted** - BIT
 - **deleted_at** - DATETIME
 
@@ -141,8 +141,8 @@ Tracks invoices linked to sales orders.
 Tracks purchase orders.
 - **id** (PK) - INT
 - **supplier_id** (FK to suppliers.id) - INT
-- **order_date** - DATE
-- **expected_delivery_date** - DATE
+- **order_date** - DATETIME
+- **expected_delivery_date** - DATETIME
 - **delivery_status** - INT [Pending, Confirmed, InTransit, PartiallyDelivered, Delivered, Cancelled]
 - **notes** - TEXT
 - **is_deleted** - BIT
@@ -166,7 +166,7 @@ Tracks company expenses.
 - **product_id** (FK to products.id) - INT
 - **description** - TEXT
 - **amount** - DECIMAL(12,2)
-- **expense_date** - DATE
+- **expense_date** - DATETIME
 - **is_deleted** - BIT
 - **deleted_at** - DATETIME
 
@@ -185,7 +185,7 @@ Employee records.
 - **id** (PK) - INT
 - **user_id** (FK to users.id) - INT
 - **department_id** (FK to departments.id) - INT
-- **date_hired** - DATE
+- **date_hired** - DATETIME
 - **salary** - DECIMAL(12,2)
 - **status** - ENUM('Active', 'On Leave', 'Terminated')
 - **is_deleted** - BIT
@@ -195,9 +195,9 @@ Employee records.
 Tracks daily attendance.
 - **id** (PK) - INT
 - **employee_id** (FK to employees.id) - INT
-- **date_of_attendance** - DATE
-- **check_in** - TIME
-- **check_out** - TIME
+- **date_of_attendance** - DATETIME
+- **check_in** - DATETIME
+- **check_out** - DATETIME
 - **status** - ENUM('Present', 'Absent', 'Leave')
 - **is_deleted** - BIT
 - **deleted_at** - DATETIME
@@ -206,13 +206,13 @@ Tracks daily attendance.
 Salary details per pay period.
 - **id** (PK) - INT
 - **employee_id** (FK to employees.id) - INT
-- **period_start** - DATE
-- **period_end** - DATE
+- **period_start** - DATETIME
+- **period_end** - DATETIME
 - **base_salary** - DECIMAL(12,2)
 - **deductions** - DECIMAL(12,2)
 - **bonuses** - DECIMAL(12,2)
 - **net_pay** - DECIMAL(12,2)
-- **paid_on** - DATE
+- **paid_on** - DATETIME
 - **is_deleted** - BIT
 - **deleted_at** - DATETIME
 
@@ -230,7 +230,7 @@ Chart of accounts.
 Financial transactions per account.
 - **id** (PK) - INT
 - **account_id** (FK to accounts.id) - INT
-- **transaction_date** - DATE
+- **transaction_date** - DATETIME
 - **description** - TEXT
 - **amount** - DECIMAL(12,2)
 - **type** - ENUM('Credit', 'Debit')
@@ -240,7 +240,7 @@ Financial transactions per account.
 ### 23. ledgers
 Double-entry accounting records.
 - **id** (PK) - INT
-- **entry_date** - DATE
+- **entry_date** - DATETIME
 - **description** - TEXT
 - **debit_account_id** (FK to accounts.id) - INT
 - **credit_account_id** (FK to accounts.id) - INT
