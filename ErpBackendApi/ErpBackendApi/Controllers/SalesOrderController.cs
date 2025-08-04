@@ -22,7 +22,7 @@ namespace ErpBackendApi.Controllers
             return Ok(operation_GetAllSalesOrder);
         }
 
-        [HttpGet("id")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetSalesOrderById(int id)
         {
             var operation_GetSalesOrderById = await _iSalesOrders.GetSalesOrderByIdAsync(id);
@@ -33,7 +33,7 @@ namespace ErpBackendApi.Controllers
             return Ok(operation_GetSalesOrderById);
         }
 
-        [HttpGet("by-customer")]
+        [HttpGet("by-customer/{id}")]
         public async Task<IActionResult> GetSalesOrderByCustomerId(int customerId)
         {
             var operation_GetSalesOrderByCustomerId = await _iSalesOrders.GetSalesOrderByCustomerIdAsync(customerId);
