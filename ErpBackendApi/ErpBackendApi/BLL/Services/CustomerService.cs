@@ -48,7 +48,7 @@ namespace ErpBackendApi.BLL.Services
             if (existingCustomer != null)
             {
                 Logger("A customer with same phone number already exists.");
-                return null;
+                throw new InvalidOperationException("A customer with same phone number already exists.");
             }
             customer.is_deleted = false;
             customer.deleted_at = null;
@@ -60,10 +60,16 @@ namespace ErpBackendApi.BLL.Services
         public async Task<Customer> UpdateCustomerAsync(Customer customer)
         {
             var existingCustomer = await _context.customers.FirstOrDefaultAsync(c => c.id == customer.id && c.is_deleted == false);
+            var existingPhone = await _context.customers.FirstOrDefaultAsync(c => c.phone == customer.phone && c.is_deleted == false);
             if (existingCustomer == null)
             {
                 Logger("Customer not found to update information.");
-                return null;
+                throw new InvalidOperationException("Customer not found to update information.");
+            }
+            if (existingPhone != null)
+            {
+                Logger("Error! Duplicate phone number for a customer.");
+                throw new InvalidOperationException("Error! Duplicate phone number for a customer.");
             }
             existingCustomer.name = customer.name;
             existingCustomer.email = customer.email;
@@ -80,7 +86,7 @@ namespace ErpBackendApi.BLL.Services
             if (existingCustomer == null)
             {
                 Logger("Customer not found or already deleted.");
-                return null;
+                throw new InvalidOperationException("Customer not found or already deleted.");
             }
             existingCustomer.is_deleted = true;
             existingCustomer.deleted_at = DateTime.UtcNow;
@@ -95,7 +101,7 @@ namespace ErpBackendApi.BLL.Services
             if (existingCustomer == null)
             {
                 Logger("Unable to restore deleted customer or customer not found.");
-                return null;
+                throw new InvalidOperationException("Unable to restore deleted customer or customer not found.");
             }
             existingCustomer.is_deleted = false;
             existingCustomer.deleted_at = null;

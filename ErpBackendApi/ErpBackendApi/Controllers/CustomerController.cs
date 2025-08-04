@@ -36,45 +36,57 @@ namespace ErpBackendApi.Controllers
         [HttpPost]
         public async Task<IActionResult> AddCustomer(Customer customer)
         {
-            var operation_AddCustomer = await _iCustomer.AddCustomerAsync(customer);
-            if (operation_AddCustomer == null)
+            try
             {
-                return NotFound("A customer with same phone number already exists.");
+                var operation_AddCustomer = await _iCustomer.AddCustomerAsync(customer);
+                return Ok("Customer added successfully.");
             }
-            return Ok("Customer added successfully.");
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("update")]
         public async Task<IActionResult> UpdateCustomer(Customer customer)
         {
-            var operation_UpdateCustomer = await _iCustomer.UpdateCustomerAsync(customer);
-            if (operation_UpdateCustomer == null)
+            try
             {
-                return NotFound("Unable to update customer information.");
+                var operation_UpdateCustomer = await _iCustomer.UpdateCustomerAsync(customer);
+                return Ok("Customer information updated successfully.");
             }
-            return Ok("Customer information updated successfully.");
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         [HttpPut("delete")]
         public async Task<IActionResult> SoftDeleteCustomer(Customer customer)
         {
-            var operation_SoftDeleteCustomer = await _iCustomer.SoftDeleteCustomerAsync(customer);
-            if (operation_SoftDeleteCustomer == null)
+            try
             {
-                return NotFound("Unable to delete customer data.");
+                var operation_SoftDeleteCustomer = await _iCustomer.SoftDeleteCustomerAsync(customer);
+                return Ok("Customer information deleted successfully.");
             }
-            return Ok("Customer information deleted successfully.");
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         [HttpPut("undo-delete")]
         public async Task<IActionResult> UndoSoftDeleteCustomer(Customer customer)
         {
-            var operation_UndoSoftDeleteCustomer = await _iCustomer.UndoSoftDeleteCustomerAsync(customer);
-            if (operation_UndoSoftDeleteCustomer == null)
+            try
             {
-                return NotFound("Unable to restore deleted customer data.");
+                var operation_UndoSoftDeleteCustomer = await _iCustomer.UndoSoftDeleteCustomerAsync(customer);
+                return Ok("Customer information restored successfully.");
             }
-            return Ok("Customer information restored successfully.");
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
     }
 }
