@@ -3,7 +3,7 @@
     public class LedgerDTO
     {
         public int id { get; set; }
-        public DateOnly? entry_date { get; set; }
+        public DateTime? entry_date { get; set; }
         public string? description { get; set; }
         public int? debit_account_id { get; set; }
         public string? debit_account_name { get; set; }

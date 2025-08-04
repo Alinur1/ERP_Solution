@@ -12,7 +12,7 @@ namespace ErpBackendApi.DAL.DTOs
         public DateTime? employee_created_at { get; set; }
         public int? department_id { get; set; }
         public string? department_name { get; set; }
-        public DateOnly? date_hired { get; set; }
+        public DateTime? date_hired { get; set; }
         public decimal? salary { get; set; }
         public EmployeeStatus? status { get; set; }
         public bool? is_deleted { get; set; }

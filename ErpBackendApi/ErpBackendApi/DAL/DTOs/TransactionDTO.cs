@@ -7,7 +7,7 @@ namespace ErpBackendApi.DAL.DTOs
         public int id { get; set; }
         public int? account_id { get; set; }
         public string? account_name { get; set; }
-        public DateOnly? transaction_date { get; set; }
+        public DateTime? transaction_date { get; set; }
         public string? description { get; set; }
         public decimal? amount { get; set; }
         //[Column(TypeName = "int")]

@@ -8,7 +8,7 @@ namespace ErpBackendApi.DAL.Models
         public int id { get; set; }
         public int? user_id { get; set; }
         public int? department_id { get; set; }
-        public DateOnly? date_hired { get; set; }
+        public DateTime? date_hired { get; set; }
         public decimal? salary { get; set; }
         //[Column(TypeName = "int")]
         public EmployeeStatus? status { get; set; }

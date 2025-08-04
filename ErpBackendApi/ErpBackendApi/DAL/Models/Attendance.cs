@@ -7,9 +7,9 @@ namespace ErpBackendApi.DAL.Models
     {
         public int id { get; set; }
         public int? employee_id { get; set; }
-        public DateOnly? date_of_attendance { get; set; }
-        public TimeOnly? check_in { get; set; }
-        public TimeOnly? check_out { get; set; }
+        public DateTime? date_of_attendance { get; set; }
+        public DateTime? check_in { get; set; }
+        public DateTime? check_out { get; set; }
         //[Column(TypeName = "int")]
         public AttendanceStatus? status { get; set; }
         public bool? is_deleted { get; set; }
