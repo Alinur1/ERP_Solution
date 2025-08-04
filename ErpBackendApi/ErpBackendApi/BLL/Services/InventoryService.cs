@@ -56,10 +56,16 @@ namespace ErpBackendApi.BLL.Services
         public async Task<Inventory> AddInventoryAsync(Inventory inventory)
         {
             var existingInventory = await _context.inventory.FirstOrDefaultAsync(i => i.product_id == inventory.product_id);
+            var existingProduct = await _context.products.AnyAsync(p => p.id == inventory.product_id || p.is_deleted == true);
+            if (!existingProduct)
+            {
+                Logger("Product does not exist or deleted.");
+                throw new InvalidOperationException("Product does not exist or deleted.");
+            }
             if (existingInventory != null)
             {
                 Logger("Tried to add same product in the inventory.");
-                return null;
+                throw new InvalidOperationException("Tried to add same product in the inventory.");
             }
             inventory.last_updated = DateTime.UtcNow;
             _context.inventory.Add(inventory);
@@ -73,7 +79,7 @@ namespace ErpBackendApi.BLL.Services
             if (existingInventory == null)
             {
                 Logger("Inventory not found to update.");
-                return null;
+                throw new InvalidOperationException("Inventory not found to update.");
             }
             existingInventory.quantity = inventory.quantity;
             existingInventory.reorder_level = inventory.reorder_level;
@@ -89,7 +95,7 @@ namespace ErpBackendApi.BLL.Services
             if (existingInventory == null)
             {
                 Logger("Inventory not found to delete.");
-                return false;
+                throw new InvalidOperationException("Inventory not found to delete.");
             }
             _context.inventory.Remove(existingInventory);
             await _context.SaveChangesAsync();

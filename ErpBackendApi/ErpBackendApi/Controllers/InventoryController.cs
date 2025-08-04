@@ -36,34 +36,43 @@ namespace ErpBackendApi.Controllers
         [HttpPost]
         public async Task<IActionResult> AddInventory(Inventory inventory)
         {
-            var operation_AddInventory = await _iInventories.AddInventoryAsync(inventory);
-            if (operation_AddInventory == null)
+            try
             {
-                return NotFound("Tried to add same product in the inventory or the inventory already exists.");
+                var operation_AddInventory = await _iInventories.AddInventoryAsync(inventory);
+                return Ok("Inventory added successfully.");
             }
-            return Ok("Inventory added successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut]
         public async Task<IActionResult> UpdateInventory(Inventory inventory)
         {
-            var operation_UpdateInventory = await _iInventories.UpdateInventoryAsync(inventory);
-            if (operation_UpdateInventory == null)
+            try
             {
-                return NotFound("Inventory not found to update.");
+                var operation_UpdateInventory = await _iInventories.UpdateInventoryAsync(inventory);
+                return Ok("Inventory updated successfully.");
             }
-            return Ok("Inventory updated successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteInventory(int id)
         {
-            var operation_DeleteInventory = await _iInventories.DeleteInventoryAsync(id);
-            if (operation_DeleteInventory == false)
+            try
             {
-                return NotFound("Unable to delete inventory.");
+                var operation_DeleteInventory = await _iInventories.DeleteInventoryAsync(id);
+                return Ok("Inventory deleted successfully.");
             }
-            return Ok("Inventory deleted successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
     }
 }
