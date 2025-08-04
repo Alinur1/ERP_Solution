@@ -51,9 +51,9 @@ DROP TABLE IF EXISTS `attendance`;
 CREATE TABLE `attendance` (
   `id` int NOT NULL AUTO_INCREMENT,
   `employee_id` int DEFAULT NULL,
-  `date_of_attendance` date DEFAULT NULL,
-  `check_in` time DEFAULT NULL,
-  `check_out` time DEFAULT NULL,
+  `date_of_attendance` datetime DEFAULT NULL,
+  `check_in` datetime DEFAULT NULL,
+  `check_out` datetime DEFAULT NULL,
   `status` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_attendance_employees_idx` (`employee_id`),
@@ -143,7 +143,7 @@ CREATE TABLE `customers` (
   `is_deleted` tinyint DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -152,7 +152,7 @@ CREATE TABLE `customers` (
 
 LOCK TABLES `customers` WRITE;
 /*!40000 ALTER TABLE `customers` DISABLE KEYS */;
-INSERT INTO `customers` VALUES (1,'Md. Alinur Hossain','alinur@gmail.com','123456789','East Kafrul',0,NULL),(2,'Md. Jidan Rahman','jidan@email.com','1233453459',NULL,0,NULL),(3,'Md. Jidan Rahman','alinur@email.com','1233dsad453459',NULL,1,'2025-07-18 09:53:36'),(4,'Saad Muhammod Bijoy','bijoy@email.com','08927578293',NULL,0,NULL),(5,'Saad Muhammod Bijoy','','763278479283',NULL,1,'2025-07-18 09:54:07');
+INSERT INTO `customers` VALUES (1,'Md. Alinur Hossain','alinur@gmail.com','123456789','East Kafrul',0,NULL),(2,'Md. Jidan Rahman','jidan@email.com','1233453459',NULL,0,NULL),(3,'Md. Jidan Rahman','alinur@email.com','1233dsad453459',NULL,1,'2025-07-18 09:53:36'),(4,'Saad Muhammod Bijoy','bijoy@email.com','08927578293',NULL,0,NULL),(5,'Saad Muhammod Bijoy','','763278479283',NULL,1,'2025-07-18 09:54:07'),(6,'Barrister Sumon','sumon01@gmail.com','123456789110','Dhaka Central Jail',1,'2025-08-04 13:46:24');
 /*!40000 ALTER TABLE `customers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -193,7 +193,7 @@ CREATE TABLE `employees` (
   `id` int NOT NULL AUTO_INCREMENT,
   `user_id` int DEFAULT NULL,
   `department_id` int DEFAULT NULL,
-  `date_hired` date DEFAULT NULL,
+  `date_hired` datetime DEFAULT NULL,
   `salary` decimal(12,2) DEFAULT NULL,
   `status` int DEFAULT NULL,
   `is_deleted` tinyint DEFAULT NULL,
@@ -227,7 +227,7 @@ CREATE TABLE `expenses` (
   `purchase_order_id` int DEFAULT NULL,
   `description` text,
   `amount` decimal(12,2) DEFAULT NULL,
-  `expense_date` date DEFAULT NULL,
+  `expense_date` datetime DEFAULT NULL,
   `category_id` int DEFAULT NULL,
   `is_deleted` tinyint DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
@@ -290,7 +290,7 @@ CREATE TABLE `inventory` (
   PRIMARY KEY (`id`),
   KEY `fk_inventory_products_idx` (`product_id`),
   CONSTRAINT `fk_inventory_products` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -299,7 +299,7 @@ CREATE TABLE `inventory` (
 
 LOCK TABLES `inventory` WRITE;
 /*!40000 ALTER TABLE `inventory` DISABLE KEYS */;
-INSERT INTO `inventory` VALUES (2,2,200,30,'2025-07-18 08:52:41'),(3,1,1000,50,'2025-07-18 08:57:41');
+INSERT INTO `inventory` VALUES (2,2,200,30,'2025-07-18 08:52:41'),(3,1,1000,50,'2025-07-18 08:57:41'),(10,3,5000,40,'2025-08-04 11:24:19');
 /*!40000 ALTER TABLE `inventory` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -313,10 +313,10 @@ DROP TABLE IF EXISTS `invoices`;
 CREATE TABLE `invoices` (
   `id` int NOT NULL AUTO_INCREMENT,
   `sales_order_id` int DEFAULT NULL,
-  `invoice_date` date DEFAULT NULL,
+  `invoice_date` datetime DEFAULT NULL,
   `total_amount` decimal(12,2) DEFAULT NULL,
   `is_paid` tinyint DEFAULT NULL,
-  `due_date` date DEFAULT NULL,
+  `due_date` datetime DEFAULT NULL,
   `is_deleted` tinyint DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -343,7 +343,7 @@ DROP TABLE IF EXISTS `ledgers`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ledgers` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `entry_date` date DEFAULT NULL,
+  `entry_date` datetime DEFAULT NULL,
   `description` text,
   `debit_account_id` int DEFAULT NULL,
   `credit_account_id` int DEFAULT NULL,
@@ -406,13 +406,13 @@ DROP TABLE IF EXISTS `payroll`;
 CREATE TABLE `payroll` (
   `int` int NOT NULL AUTO_INCREMENT,
   `employee_id` int DEFAULT NULL,
-  `period_start` date DEFAULT NULL,
-  `period_end` date DEFAULT NULL,
+  `period_start` datetime DEFAULT NULL,
+  `period_end` datetime DEFAULT NULL,
   `base_salary` decimal(12,2) DEFAULT NULL,
   `deductions` decimal(12,2) DEFAULT NULL,
   `bonuses` decimal(12,2) DEFAULT NULL,
   `net_pay` decimal(12,2) DEFAULT NULL,
-  `paid_on` date DEFAULT NULL,
+  `paid_on` datetime DEFAULT NULL,
   `is_deleted` tinyint DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
   PRIMARY KEY (`int`),
@@ -510,8 +510,8 @@ DROP TABLE IF EXISTS `purchase_orders`;
 CREATE TABLE `purchase_orders` (
   `id` int NOT NULL AUTO_INCREMENT,
   `supplier_id` int DEFAULT NULL,
-  `order_date` date DEFAULT NULL,
-  `expected_delivery_date` date DEFAULT NULL,
+  `order_date` datetime DEFAULT NULL,
+  `expected_delivery_date` datetime DEFAULT NULL,
   `delivery_status` int DEFAULT NULL,
   `notes` text,
   `is_deleted` tinyint DEFAULT NULL,
@@ -663,8 +663,8 @@ DROP TABLE IF EXISTS `sales_orders`;
 CREATE TABLE `sales_orders` (
   `id` int NOT NULL AUTO_INCREMENT,
   `customer_id` int DEFAULT NULL,
-  `order_date` date DEFAULT NULL,
-  `delivery_date` date DEFAULT NULL,
+  `order_date` datetime DEFAULT NULL,
+  `delivery_date` datetime DEFAULT NULL,
   `delivery_status` int DEFAULT NULL,
   `status` int DEFAULT NULL,
   `notes` text,
@@ -673,7 +673,7 @@ CREATE TABLE `sales_orders` (
   PRIMARY KEY (`id`),
   KEY `fk_sales_orders_customers_idx` (`customer_id`),
   CONSTRAINT `fk_sales_orders_customers` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -682,6 +682,7 @@ CREATE TABLE `sales_orders` (
 
 LOCK TABLES `sales_orders` WRITE;
 /*!40000 ALTER TABLE `sales_orders` DISABLE KEYS */;
+INSERT INTO `sales_orders` VALUES (1,1,NULL,NULL,0,0,NULL,0,NULL);
 /*!40000 ALTER TABLE `sales_orders` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -750,7 +751,7 @@ DROP TABLE IF EXISTS `transactions`;
 CREATE TABLE `transactions` (
   `id` int NOT NULL AUTO_INCREMENT,
   `account_id` int DEFAULT NULL,
-  `transaction_date` date DEFAULT NULL,
+  `transaction_date` datetime DEFAULT NULL,
   `description` text,
   `amount` decimal(12,2) DEFAULT NULL,
   `type` int DEFAULT NULL,
@@ -839,4 +840,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-07-21 15:31:36
+-- Dump completed on 2025-08-04 21:54:16
