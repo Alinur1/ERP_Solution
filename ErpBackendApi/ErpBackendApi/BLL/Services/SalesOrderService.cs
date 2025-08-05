@@ -27,7 +27,7 @@ namespace ErpBackendApi.BLL.Services
                 {
                     id = so.id,
                     customer_id = c != null ? c.id : null,
-                    customer_name = c != null && c.is_deleted == false ? c.name : "-",
+                    customer_name = c != null && c.is_deleted == false ? c.name : null,
                     order_date = so.order_date,
                     delivery_date = so.delivery_date,
                     delivery_status = so.delivery_status,
@@ -49,7 +49,7 @@ namespace ErpBackendApi.BLL.Services
                 {
                     id = so.id,
                     customer_id = c != null ? c.id : null,
-                    customer_name = c != null && c.is_deleted == false ? c.name : "-",
+                    customer_name = c != null && c.is_deleted == false ? c.name : null,
                     order_date = so.order_date,
                     delivery_date = so.delivery_date,
                     delivery_status = so.delivery_status,
@@ -59,7 +59,7 @@ namespace ErpBackendApi.BLL.Services
             ).FirstOrDefaultAsync();
         }
 
-        public async Task<SalesOrderDTO> GetSalesOrderByCustomerIdAsync(int customerId)
+        public async Task<IEnumerable<SalesOrderDTO>> GetSalesOrderByCustomerIdAsync(int customerId)
         {
             return await
             (
@@ -71,18 +71,24 @@ namespace ErpBackendApi.BLL.Services
                 {
                     id = so.id,
                     customer_id = c != null ? c.id : null,
-                    customer_name = c != null && c.is_deleted == false ? c.name : "-",
+                    customer_name = c != null && c.is_deleted == false ? c.name : null,
                     order_date = so.order_date,
                     delivery_date = so.delivery_date,
                     delivery_status = so.delivery_status,
                     status = so.status,
                     notes = so.notes
                 }
-            ).FirstOrDefaultAsync();
+            ).ToListAsync();
         }
 
         public async Task<SalesOrder> AddSalesOrderAsync(SalesOrder salesOrder)
         {
+            var existingCustomer = await _context.customers.FirstOrDefaultAsync(c => c.id == salesOrder.customer_id && c.is_deleted == false);
+            if (existingCustomer == null)
+            {
+                Logger("Customer not found.");
+                throw new InvalidOperationException("Customer not found.");
+            }
             salesOrder.is_deleted = false;
             salesOrder.deleted_at = null;
             _context.sales_orders.Add(salesOrder);
@@ -96,9 +102,8 @@ namespace ErpBackendApi.BLL.Services
             if (existingSalesOrder == null)
             {
                 Logger("Unable to update sales order. Check if it is not deleted.");
-                return null;
+                throw new InvalidOperationException("Unable to update sales order. Check if it is not deleted.");
             }
-            existingSalesOrder.customer_id = salesOrder.customer_id;
             existingSalesOrder.order_date = salesOrder.order_date;
             existingSalesOrder.delivery_date = salesOrder.delivery_date;
             existingSalesOrder.delivery_status = salesOrder.delivery_status;
@@ -115,7 +120,7 @@ namespace ErpBackendApi.BLL.Services
             if (existingSalesOrder == null)
             {
                 Logger("Unable to delete sales order. Sales order not found or already deleted.");
-                return null;
+                throw new InvalidOperationException("Unable to delete sales order. Sales order not found or already deleted.");
             }
             existingSalesOrder.is_deleted = true;
             existingSalesOrder.deleted_at = DateTime.UtcNow;
@@ -130,7 +135,7 @@ namespace ErpBackendApi.BLL.Services
             if (existingSalesOrder == null)
             {
                 Logger("Unable to restore deleted sales order.");
-                return null;
+                throw new InvalidOperationException("Unable to restore deleted sales order.");
             }
             existingSalesOrder.is_deleted = false;
             existingSalesOrder.deleted_at = null;

@@ -136,7 +136,7 @@ Testing TODO
 ---------------------------------------------------------------------------------------------------------------------------------
 1. = COMPLETE = Test Inventory API
 2. = COMPLETE = Test Customer API
-3. Test SalesOrder API
+3. = COMPLETE = Test SalesOrder API
 4. Test SalesOrderItem API
 5. Test Invoice API
 6. Test PurchaseOrder API
