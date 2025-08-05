@@ -3,6 +3,7 @@ using ErpBackendApi.DAL.DTOs;
 using ErpBackendApi.DAL.ERPDataContext;
 using ErpBackendApi.DAL.Models;
 using Microsoft.EntityFrameworkCore;
+using System;
 using static ErpBackendApi.Utilities.Helper.LoggerClass;
 
 namespace ErpBackendApi.BLL.Services
@@ -30,7 +31,7 @@ namespace ErpBackendApi.BLL.Services
                     id = soi.id,
                     sales_order_id = so != null ? so.id : null,
                     product_id = p != null ? p.id : null,
-                    product_name = p != null && p.is_deleted == false ? p.name : "-",
+                    product_name = p != null && p.is_deleted == false ? p.name : null,
                     quantity = soi.quantity,
                     unit_price = soi.unit_price,
                     discount = soi.discount
@@ -53,7 +54,7 @@ namespace ErpBackendApi.BLL.Services
                     id = soi.id,
                     sales_order_id = so != null ? so.id : null,
                     product_id = p != null ? p.id : null,
-                    product_name = p != null && p.is_deleted == false ? p.name : "-",
+                    product_name = p != null && p.is_deleted == false ? p.name : null,
                     quantity = soi.quantity,
                     unit_price = soi.unit_price,
                     discount = soi.discount
@@ -76,7 +77,7 @@ namespace ErpBackendApi.BLL.Services
                     id = soi.id,
                     sales_order_id = so != null ? so.id : null,
                     product_id = p != null ? p.id : null,
-                    product_name = p != null && p.is_deleted == false ? p.name : "-",
+                    product_name = p != null && p.is_deleted == false ? p.name : null,
                     quantity = soi.quantity,
                     unit_price = soi.unit_price,
                     discount = soi.discount
@@ -87,10 +88,16 @@ namespace ErpBackendApi.BLL.Services
         public async Task<SalesOrderItem> AddSalesOrderItemAsync(SalesOrderItem item)
         {
             var existingSalesOrderItem = await _context.sales_order_items.FirstOrDefaultAsync(soi => soi.sales_order_id == item.sales_order_id && soi.is_deleted == false);
+            var exisintngSalesOrder = await _context.sales_orders.FirstOrDefaultAsync(so => so.id == item.sales_order_id && so.is_deleted == false);
             if (existingSalesOrderItem != null)
             {
                 Logger("Same order number for an item is not allowed.");
-                return null;
+                throw new InvalidOperationException("Same order number for an item is not allowed.");
+            }
+            if (exisintngSalesOrder == null)
+            {
+                Logger("Sales order doesn't exist.");
+                throw new InvalidOperationException("Sales order doesn't exist.");
             }
             item.is_deleted = false;
             item.deleted_at = null;
@@ -105,7 +112,7 @@ namespace ErpBackendApi.BLL.Services
             if (existingSalesOrderItem == null)
             {
                 Logger("Unable to update sales order item.");
-                return null;
+                throw new InvalidOperationException("Unable to update sales order item.");
             }
             existingSalesOrderItem.sales_order_id = item.sales_order_id;
             existingSalesOrderItem.product_id = item.product_id;
@@ -123,7 +130,7 @@ namespace ErpBackendApi.BLL.Services
             if (existingSalesOrderItem == null)
             {
                 Logger("Unable to delete sales order item.");
-                return null;
+                throw new InvalidOperationException("Unable to delete sales order item.");
             }
             existingSalesOrderItem.is_deleted = true;
             existingSalesOrderItem.deleted_at = DateTime.UtcNow;
@@ -138,7 +145,7 @@ namespace ErpBackendApi.BLL.Services
             if (existingSalesOrderItem == null)
             {
                 Logger("Unable to delete sales order item.");
-                return null;
+                throw new InvalidOperationException("Unable to delete sales order item.");
             }
             existingSalesOrderItem.is_deleted = false;
             existingSalesOrderItem.deleted_at = null;

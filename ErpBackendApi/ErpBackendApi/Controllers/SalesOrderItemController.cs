@@ -33,7 +33,7 @@ namespace ErpBackendApi.Controllers
             return Ok(operation_GetSalesOrderItemById);
         }
 
-        [HttpGet("sales-order/{id}")]
+        [HttpGet("sales-order/{orderId}")]
         public async Task<IActionResult> GetSalesOrderItemBySalesOrderId(int orderId)
         {
             var operation_GetSalesOrderItemBySalesOrderId = await _iSalesOrderItem.GetSalesOrderItemBySalesOrderIdAsync(orderId);
@@ -47,45 +47,57 @@ namespace ErpBackendApi.Controllers
         [HttpPost]
         public async Task<IActionResult> AddSalesOrderItem(SalesOrderItem item)
         {
-            var operation_AddSalesOrderItem = await _iSalesOrderItem.AddSalesOrderItemAsync(item);
-            if (operation_AddSalesOrderItem == null)
+            try
             {
-                return NotFound("Unable to add sales order item / Same order number for an item is not allowed.");
+                var operation_AddSalesOrderItem = await _iSalesOrderItem.AddSalesOrderItemAsync(item);
+                return Ok("Sales order item added successfully.");
             }
-            return Ok("Sales order item added successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("update")]
         public async Task<IActionResult> UpdateSalesOrderItem(SalesOrderItem item)
         {
-            var operation_UpdateSalesOrderItem = await _iSalesOrderItem.UpdateSalesOrderItemAsync(item);
-            if (operation_UpdateSalesOrderItem == null)
+            try
             {
-                return NotFound("Unable to update sales order item.");
+                var operation_UpdateSalesOrderItem = await _iSalesOrderItem.UpdateSalesOrderItemAsync(item);
+                return Ok("Sales order item information updated successfully.");
             }
-            return Ok("Sales order item information updated successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         [HttpPut("delete")]
         public async Task<IActionResult> SoftDeleteSalesOrderItem(SalesOrderItem item)
         {
-            var operation_SoftDeleteSalesOrderItem = await _iSalesOrderItem.SoftDeleteSalesOrderItemAsync(item);
-            if (operation_SoftDeleteSalesOrderItem == null)
+            try
             {
-                return NotFound("Unable to delete sales order item.");
+                var operation_SoftDeleteSalesOrderItem = await _iSalesOrderItem.SoftDeleteSalesOrderItemAsync(item);
+                return Ok("Sales order item information deleted successfully.");
             }
-            return Ok("Sales order item information deleted successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         [HttpPut("undo-delete")]
         public async Task<IActionResult> UndoSoftDeleteSalesOrderItem(SalesOrderItem item)
         {
-            var operation_UndoSoftDeleteSalesOrderItem = await _iSalesOrderItem.UndoSoftDeleteSalesOrderItemAsync(item);
-            if (operation_UndoSoftDeleteSalesOrderItem == null)
+            try
             {
-                return NotFound("Unable to restore sales order item.");
+                var operation_UndoSoftDeleteSalesOrderItem = await _iSalesOrderItem.UndoSoftDeleteSalesOrderItemAsync(item);
+                return Ok("Deleted sales order item information restored successfully.");
             }
-            return Ok("Deleted sales order item information restored successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
     }
 }
