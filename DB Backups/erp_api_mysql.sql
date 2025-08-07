@@ -249,32 +249,6 @@ LOCK TABLES `expenses` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `features`
---
-
-DROP TABLE IF EXISTS `features`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `features` (
-  `id` int NOT NULL,
-  `name` varchar(100) DEFAULT NULL,
-  `module` varchar(100) DEFAULT NULL,
-  `description` text,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `features`
---
-
-LOCK TABLES `features` WRITE;
-/*!40000 ALTER TABLE `features` DISABLE KEYS */;
-INSERT INTO `features` VALUES (101,'User.GetAllUsers','User','View all users'),(102,'User.GetUserById','User','View user by id'),(103,'User.AddUser','User','Add new user'),(104,'User.UpdateUser','User','Update existing user'),(105,'User.SoftDeleteUser','User','Delete user'),(106,'User.UndoSoftDeleteUser','User','Restore a deleted user'),(107,'User.ChangePassword','User','Change users password'),(108,'User.ValidateUser','User','For login purpose'),(109,'Role.GetAllRoles','Role','View all roles'),(110,'Role.GetRoleById','Role','View role by id'),(111,'Role.AddRoles','Role','Add new role'),(113,'Role.SoftDeleteRole','Role','Delete role'),(114,'Role.UndoSoftDeleteRole','Role','Restore a deleted role'),(115,'UserRole.GetAllUserRoles','UserRole','View all user role'),(116,'UserRole.GetUserRolesById','UserRole','View user role by id'),(117,'UserRole.GetUserRoleByUserId','UserRole','View user role by user id'),(118,'UserRole.AssignUserRole','UserRole','Assign a role to the user'),(119,'UserRole.UpdateUserRole','UserRole','Update users role'),(120,'UserRole.RemoveUserRole','UserRole','Remove role of users');
-/*!40000 ALTER TABLE `features` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `inventory`
 --
 
@@ -561,66 +535,6 @@ LOCK TABLES `reports` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `role_permissions`
---
-
-DROP TABLE IF EXISTS `role_permissions`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `role_permissions` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `role_id` int DEFAULT NULL,
-  `feature_id` int DEFAULT NULL,
-  `can_read` tinyint DEFAULT NULL,
-  `can_create` tinyint DEFAULT NULL,
-  `can_update` tinyint DEFAULT NULL,
-  `can_delete` tinyint DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_role_permissions_roles_idx` (`role_id`),
-  KEY `fk_role_permission_features_idx` (`feature_id`),
-  CONSTRAINT `fk_role_permission_features` FOREIGN KEY (`feature_id`) REFERENCES `features` (`id`),
-  CONSTRAINT `fk_role_permissions_roles` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `role_permissions`
---
-
-LOCK TABLES `role_permissions` WRITE;
-/*!40000 ALTER TABLE `role_permissions` DISABLE KEYS */;
-INSERT INTO `role_permissions` VALUES (1,1,101,1,1,1,1),(2,1,102,1,1,1,1),(3,1,103,1,1,1,1),(4,1,104,1,1,1,1);
-/*!40000 ALTER TABLE `role_permissions` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `roles`
---
-
-DROP TABLE IF EXISTS `roles`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `roles` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) DEFAULT NULL,
-  `description` text,
-  `is_deleted` tinyint DEFAULT NULL,
-  `deleted_at` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `roles`
---
-
-LOCK TABLES `roles` WRITE;
-/*!40000 ALTER TABLE `roles` DISABLE KEYS */;
-INSERT INTO `roles` VALUES (1,'Admin','',0,NULL),(2,'HR','',0,NULL),(3,'Manager','',0,NULL),(4,'Junior Manager','',0,NULL),(5,'Junior HR','',0,NULL),(6,'Cashier','',0,NULL),(7,'Junior Cashier','',0,NULL);
-/*!40000 ALTER TABLE `roles` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `sales_order_items`
 --
 
@@ -641,7 +555,7 @@ CREATE TABLE `sales_order_items` (
   KEY `fk_sales_order_items_products_idx` (`product_id`),
   CONSTRAINT `fk_sales_order_items_products` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`),
   CONSTRAINT `fk_sales_order_items_sales_orders` FOREIGN KEY (`sales_order_id`) REFERENCES `sales_orders` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -650,6 +564,7 @@ CREATE TABLE `sales_order_items` (
 
 LOCK TABLES `sales_order_items` WRITE;
 /*!40000 ALTER TABLE `sales_order_items` DISABLE KEYS */;
+INSERT INTO `sales_order_items` VALUES (1,2,1,25,15.00,20.00,0,NULL),(2,3,1,25,15.00,20.00,1,'2025-08-05 10:23:01'),(3,4,2,25,15.00,20.00,0,NULL);
 /*!40000 ALTER TABLE `sales_order_items` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -673,7 +588,7 @@ CREATE TABLE `sales_orders` (
   PRIMARY KEY (`id`),
   KEY `fk_sales_orders_customers_idx` (`customer_id`),
   CONSTRAINT `fk_sales_orders_customers` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -682,7 +597,7 @@ CREATE TABLE `sales_orders` (
 
 LOCK TABLES `sales_orders` WRITE;
 /*!40000 ALTER TABLE `sales_orders` DISABLE KEYS */;
-INSERT INTO `sales_orders` VALUES (1,1,NULL,NULL,0,0,NULL,0,NULL);
+INSERT INTO `sales_orders` VALUES (1,1,NULL,NULL,0,0,NULL,1,'2025-08-05 06:07:13'),(2,1,'2025-08-05 06:38:30','2025-08-08 06:38:30',0,0,NULL,0,NULL),(3,3,'2025-08-05 05:57:41','2025-08-08 05:57:41',0,0,NULL,1,'2025-08-05 06:07:18'),(4,2,'2025-08-05 00:00:00','2025-08-09 00:00:00',3,1,NULL,0,NULL),(5,1,'2025-08-05 00:00:00','2025-08-10 00:00:00',0,0,NULL,0,NULL);
 /*!40000 ALTER TABLE `sales_orders` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -773,35 +688,6 @@ LOCK TABLES `transactions` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `user_roles`
---
-
-DROP TABLE IF EXISTS `user_roles`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `user_roles` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `user_id` int DEFAULT NULL,
-  `role_id` int DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_user_roles_users_idx` (`user_id`),
-  KEY `fk_user_roles_roles_idx` (`role_id`),
-  CONSTRAINT `fk_user_roles_roles` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`),
-  CONSTRAINT `fk_user_roles_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `user_roles`
---
-
-LOCK TABLES `user_roles` WRITE;
-/*!40000 ALTER TABLE `user_roles` DISABLE KEYS */;
-INSERT INTO `user_roles` VALUES (1,9,2),(2,1,1);
-/*!40000 ALTER TABLE `user_roles` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `users`
 --
 
@@ -840,4 +726,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-08-04 21:54:16
+-- Dump completed on 2025-08-07 21:04:29
