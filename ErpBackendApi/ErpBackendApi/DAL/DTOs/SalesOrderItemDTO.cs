@@ -4,7 +4,6 @@
     {
         public int id { get; set; }
         public int? sales_order_id { get; set; }
-        public string? sales_order_number { get; set; }
         public int? product_id { get; set; }
         public string? product_name { get; set; }
         public int? quantity { get; set; }

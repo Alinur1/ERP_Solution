@@ -29,7 +29,7 @@ namespace ErpBackendApi.BLL.Services
                 select new SalesOrderItemDTO
                 {
                     id = soi.id,
-                    sales_order_id = so != null ? so.id : null,
+                    sales_order_id = so != null && so.is_deleted == false ? so.id : 0,
                     product_id = p != null ? p.id : null,
                     product_name = p != null && p.is_deleted == false ? p.name : null,
                     quantity = soi.quantity,
@@ -52,7 +52,7 @@ namespace ErpBackendApi.BLL.Services
                 select new SalesOrderItemDTO
                 {
                     id = soi.id,
-                    sales_order_id = so != null ? so.id : null,
+                    sales_order_id = so != null && so.is_deleted == false ? so.id : 0,
                     product_id = p != null ? p.id : null,
                     product_name = p != null && p.is_deleted == false ? p.name : null,
                     quantity = soi.quantity,
@@ -75,7 +75,7 @@ namespace ErpBackendApi.BLL.Services
                 select new SalesOrderItemDTO
                 {
                     id = soi.id,
-                    sales_order_id = so != null ? so.id : null,
+                    sales_order_id = so != null && so.is_deleted == false ? so.id : 0,
                     product_id = p != null ? p.id : null,
                     product_name = p != null && p.is_deleted == false ? p.name : null,
                     quantity = soi.quantity,
