@@ -131,24 +131,32 @@ TODO
 ---------------------------------------------------------------------------------------------------------------------------------
 Testing TODO
 ---------------------------------------------------------------------------------------------------------------------------------
-1. = COMPLETE = Test Inventory API
-2. = COMPLETE = Test Customer API
-3. = COMPLETE = Test SalesOrder API
-4. = COMPLETE = Test SalesOrderItem API
-5. Test Invoice API
-6. Test PurchaseOrder API
-7. Test PurchaseOrderItem API
-8. Test Expense API
-9. Test Department API
-10. Test Employee API
-11. Test Attendance API
-12. Test Payroll API
-13. Test Account API
-14. Test Transaction API
-15. Test Ledger API
-16. Test Report API
-17. Test Notification API
-18. Test Setting API
-19. Test CompanyProfile API
+1. users
+2. roles
+3. user_roles
+4. features
+5. role_permissions
+6. categories
+7. suppliers
+8. products
+9. inventory
+10. customers
+11. sales_orders
+12. sales_order_items
+13. invoices
+14. purchase_orders
+15. purchase_order_items
+16. expenses
+17. departments
+18. employees
+19. attendance
+20. payroll
+21. accounts
+22. transactions
+23. ledgers
+24. reports
+25. notifications
+26. settings
+27. company_profile
 
 */
