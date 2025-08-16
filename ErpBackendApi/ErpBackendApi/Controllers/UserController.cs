@@ -1,6 +1,7 @@
 ﻿using ErpBackendApi.BLL.Interfaces;
 using ErpBackendApi.DAL.Models;
 using Microsoft.AspNetCore.Mvc;
+using ZstdSharp.Unsafe;
 
 namespace ErpBackendApi.Controllers
 {
@@ -94,6 +95,13 @@ namespace ErpBackendApi.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [HttpGet("deleted-users")]
+        public async Task<IActionResult> GetAllDeletedUser()
+        {
+            var operation_GetAllDeletedUser = await _iUsers.GetAllDeletedUsersAsync();
+            return Ok(operation_GetAllDeletedUser);
         }
     }
 }

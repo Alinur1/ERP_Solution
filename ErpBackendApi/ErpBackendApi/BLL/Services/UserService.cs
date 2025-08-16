@@ -157,5 +157,19 @@ namespace ErpBackendApi.BLL.Services
         {
             return await _context.users.FirstOrDefaultAsync(u => u.email == email && u.password == password && u.is_deleted == false);
         }
+
+        public async Task<IEnumerable<User>> GetAllDeletedUsersAsync()
+        {
+            return await _context.users
+                .Where(u => u.is_deleted == true)
+                .Select(u => new User
+                {
+                    id = u.id,
+                    name = u.name,
+                    email = u.email,
+                    phone = u.phone,
+                    deleted_at = u.deleted_at,
+                }).ToListAsync();
+        }
     }
 }
