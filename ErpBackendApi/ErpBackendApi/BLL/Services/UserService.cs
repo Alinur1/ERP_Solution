@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
 using static ErpBackendApi.Utilities.Helper.LoggerClass;
+using static ErpBackendApi.Utilities.Helper.PasswordHasher;
 
 namespace ErpBackendApi.BLL.Services
 {
@@ -38,6 +39,7 @@ namespace ErpBackendApi.BLL.Services
                 Logger("Password is required.");
                 throw new InvalidOperationException("Password is required.");
             }
+            user.password = HashPass(user.password);
             user.created_at = DateTime.UtcNow;
             user.is_deleted = false;
             _context.users.Add(user);
@@ -146,7 +148,7 @@ namespace ErpBackendApi.BLL.Services
                     Logger("Password is required.");
                     throw new InvalidOperationException("Password is required.");
                 }
-                existingUser.password = user.password;
+                existingUser.password = HashPass(user.password);
                 _context.users.Update(existingUser);
                 await _context.SaveChangesAsync();
             }
@@ -155,7 +157,7 @@ namespace ErpBackendApi.BLL.Services
 
         public async Task<User> ValidateUserAsync(string email, string password)
         {
-            return await _context.users.FirstOrDefaultAsync(u => u.email == email && u.password == password && u.is_deleted == false);
+            return await _context.users.FirstOrDefaultAsync(u => u.email == email && u.password == HashPass(password) && u.is_deleted == false);
         }
 
         public async Task<IEnumerable<User>> GetAllDeletedUsersAsync()
