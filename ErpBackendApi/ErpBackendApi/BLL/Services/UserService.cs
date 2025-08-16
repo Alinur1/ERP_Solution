@@ -18,11 +18,25 @@ namespace ErpBackendApi.BLL.Services
 
         public async Task<User> AddUserAsync(User user)
         {
-            var existingUser = await _context.users.FirstOrDefaultAsync(u => u.email == user.email);
-            if (existingUser != null)
+            var existingPhone = await _context.users.FirstOrDefaultAsync(u => u.phone == user.phone && u.is_deleted == false);
+            if (existingPhone != null)
             {
-                Logger("Tried to create an account with same email.");
-                return null;
+                Logger("This phone number is already being used.");
+                throw new InvalidOperationException("This phone number is already being used.");
+            }
+            if (!string.IsNullOrEmpty(user.email) || !string.IsNullOrWhiteSpace(user.email))
+            {
+                var existingEmail = await _context.users.FirstOrDefaultAsync(u => u.email == user.email && u.is_deleted == false);
+                if (existingEmail != null)
+                {
+                    Logger("This email is already being used.");
+                    throw new InvalidOperationException("This email is already being used.");
+                }
+            }
+            if (string.IsNullOrEmpty(user.password))
+            {
+                Logger("Password is required.");
+                throw new InvalidOperationException("Password is required.");
             }
             user.created_at = DateTime.UtcNow;
             user.is_deleted = false;
@@ -89,14 +103,36 @@ namespace ErpBackendApi.BLL.Services
         public async Task<User> UpdateUserAsync(User user)
         {
             var existingUser = await _context.users.FirstOrDefaultAsync(u => u.id == user.id && u.is_deleted == false);
-            if (existingUser != null)
+            if ( existingUser == null )
             {
-                existingUser.name = user.name;
-                existingUser.email = user.email;
-                existingUser.phone = user.phone;
-                _context.users.Update(existingUser);
-                await _context.SaveChangesAsync();
+                Logger($"User ID: {user.id} doesn't exist.");
+                throw new InvalidOperationException($"User ID: {user.id} doesn't exist.");
             }
+
+            if (existingUser.phone != user.phone)
+            {
+                var phoneExists = await _context.users.FirstOrDefaultAsync(u => u.phone == user.phone && u.is_deleted == false);
+                if (phoneExists != null)
+                {
+                    Logger("Can't use this phone number. It is already in use.");
+                    throw new InvalidOperationException("Can't use this phone number. It is already in use.");
+                }
+            }
+
+            if (!string.IsNullOrEmpty(user.email) || !string.IsNullOrWhiteSpace(user.email) && existingUser.email != user.email)
+            {
+                var existingEmail = await _context.users.FirstOrDefaultAsync(u => u.email == user.email && u.is_deleted == false);
+                if (existingEmail != null)
+                {
+                    Logger("Can't use this email. It is already in use.");
+                    throw new InvalidOperationException("Can't use this email. It is already in use.");
+                }
+            }
+
+            existingUser.name = user.name;
+            existingUser.email = user.email;
+            existingUser.phone = user.phone;
+            await _context.SaveChangesAsync();
             return existingUser;
         }
 
@@ -105,6 +141,11 @@ namespace ErpBackendApi.BLL.Services
             var existingUser = await _context.users.FirstOrDefaultAsync(u => u.id == user.id && u.is_deleted == false);
             if (existingUser != null)
             {
+                if (string.IsNullOrEmpty(user.password) || string.IsNullOrWhiteSpace(user.password))
+                {
+                    Logger("Password is required.");
+                    throw new InvalidOperationException("Password is required.");
+                }
                 existingUser.password = user.password;
                 _context.users.Update(existingUser);
                 await _context.SaveChangesAsync();

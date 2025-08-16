@@ -35,23 +35,29 @@ namespace ErpBackendApi.Controllers
         [HttpPost]
         public async Task<IActionResult> AddUser(User user)
         {
-            var operation_AddUser = await _iUsers.AddUserAsync(user);
-            if (operation_AddUser == null)
+            try
             {
-                return NotFound("An user with this email already exists.");
+                var operation_AddUser = await _iUsers.AddUserAsync(user);
+                return Ok("User created Successfully.");
             }
-            return Ok("User created Successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("update")]
         public async Task<IActionResult> UpdateUser(User user)
         {
-            var operation_UpdateUser = await _iUsers.UpdateUserAsync(user);
-            if (operation_UpdateUser == null)
+            try
             {
-                return NotFound("User not found or the user is deleted.");
+                var operation_UpdateUser = await _iUsers.UpdateUserAsync(user);
+                return Ok("User updated successfully.");
             }
-            return Ok("User updated successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("delete")]
@@ -79,12 +85,15 @@ namespace ErpBackendApi.Controllers
         [HttpPut("change-password")]
         public async Task<IActionResult> ChangePassword(User user)
         {
-            var operation_ChangePassword = await _iUsers.ChangePasswordAsync(user);
-            if (operation_ChangePassword == null)
+            try
             {
-                return NotFound("Not a valid user/User not found.");
+                var operation_ChangePassword = await _iUsers.ChangePasswordAsync(user);
+                return Ok("Password changed successfully.");
             }
-            return Ok("Password changed successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
