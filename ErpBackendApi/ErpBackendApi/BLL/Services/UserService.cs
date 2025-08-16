@@ -155,9 +155,14 @@ namespace ErpBackendApi.BLL.Services
             return existingUser;
         }
 
-        public async Task<User> ValidateUserAsync(string email, string password)
+        public async Task<User> ValidateUserByEmailAsync(string email, string password)
         {
             return await _context.users.FirstOrDefaultAsync(u => u.email == email && u.password == HashPass(password) && u.is_deleted == false);
+        }
+
+        public async Task<User> ValidateUserByPhoneAsync(string phone, string password)
+        {
+            return await _context.users.FirstOrDefaultAsync(u => u.phone == phone && u.password == HashPass(password) && u.is_deleted == false);
         }
 
         public async Task<IEnumerable<User>> GetAllDeletedUsersAsync()

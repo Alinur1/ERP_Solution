@@ -4,7 +4,9 @@ using ErpBackendApi.DAL.Models;
 using ErpBackendApi.Utilities.Helper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
+using ErpBackendApi.DAL.DTOs;
 
 namespace ErpBackendApi.Controllers
 {
@@ -31,21 +33,32 @@ namespace ErpBackendApi.Controllers
 
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login(User user, [FromServices] JwtHelper jwtHelper)
+        public async Task<IActionResult> Login([FromBody] LoginDTO request, [FromServices] JwtHelper jwtHelper)
         {
-            var ExistingUser = await _iUsers.ValidateUserAsync(user.email, user.password);
-            if (ExistingUser == null)
+            User existingUser = null;
+
+            if (!string.IsNullOrEmpty(request.Email))
             {
-                return Unauthorized(new { message = "Invalid email or password" });
+                existingUser = await _iUsers.ValidateUserByEmailAsync(request.Email, request.Password);
+            }
+            else if (!string.IsNullOrEmpty(request.Phone))
+            {
+                existingUser = await _iUsers.ValidateUserByPhoneAsync(request.Phone, request.Password);
             }
 
-            var token = jwtHelper.GenerateToken(ExistingUser);
+            if (existingUser == null)
+            {
+                return Unauthorized(new { message = "Invalid credentials" });
+            }
+
+            var token = jwtHelper.GenerateToken(existingUser);
             return Ok(new
             {
                 message = "Login successful",
                 token,
-                user = new { ExistingUser.id, ExistingUser.name, ExistingUser.email }
+                user = new { existingUser.id, existingUser.name, existingUser.email, existingUser.phone }
             });
         }
+
     }
 }

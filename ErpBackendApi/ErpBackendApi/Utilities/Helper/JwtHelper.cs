@@ -19,7 +19,8 @@ namespace ErpBackendApi.Utilities.Helper
             var claims = new[]
             {
                 new Claim(ClaimTypes.NameIdentifier, user.id.ToString()),
-                new Claim(ClaimTypes.Email, user.email),
+                new Claim(ClaimTypes.Email, user.email ?? ""),
+                new Claim(ClaimTypes.MobilePhone, user.phone),
                 new Claim(ClaimTypes.Name, user.name)
             };
 

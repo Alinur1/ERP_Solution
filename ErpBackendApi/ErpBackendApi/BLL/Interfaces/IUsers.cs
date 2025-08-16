@@ -11,7 +11,8 @@ namespace ErpBackendApi.BLL.Interfaces
         Task<User> SoftDeleteUserAsync(User user);
         Task<User> UndoSoftDeleteUserAsync(User user);
         Task<User> ChangePasswordAsync(User user);
-        Task<User> ValidateUserAsync(string email, string password);
+        Task<User> ValidateUserByEmailAsync(string email, string password);
+        Task<User> ValidateUserByPhoneAsync(string phone, string password);
         Task<IEnumerable<User>> GetAllDeletedUsersAsync();
     }
 }
