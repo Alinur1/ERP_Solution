@@ -564,7 +564,7 @@ CREATE TABLE `sales_order_items` (
 
 LOCK TABLES `sales_order_items` WRITE;
 /*!40000 ALTER TABLE `sales_order_items` DISABLE KEYS */;
-INSERT INTO `sales_order_items` VALUES (1,2,1,25,15.00,20.00,0,NULL),(2,3,1,25,15.00,20.00,1,'2025-08-05 10:23:01'),(3,4,2,25,15.00,20.00,0,NULL);
+INSERT INTO `sales_order_items` VALUES (1,2,1,25,15.00,20.00,0,NULL),(2,3,1,25,15.00,20.00,0,NULL),(3,4,2,25,15.00,20.00,0,NULL);
 /*!40000 ALTER TABLE `sales_order_items` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -704,7 +704,7 @@ CREATE TABLE `users` (
   `is_deleted` tinyint DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -713,7 +713,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'First User','firstuser@email.com','1234','123456789','2025-06-21 12:33:23',0,NULL),(2,'Second User','seconduser@email.com','1234','123456789','2025-06-21 12:35:13',0,NULL),(3,'Deleted User','thirduser@email.com','1234','123456789','2025-06-21 12:35:13',1,'2025-06-22 11:48:02'),(4,'Fourth User','fourthuser@email.com','1234','123456789','2025-06-21 12:35:53',0,NULL),(5,'Fifth User','fifthuser@email.com','1234','123456789','2025-06-21 12:36:03',0,NULL),(7,'Sixth User','sixthuser@email.com','1234','123456789','2025-06-22 11:00:23',0,NULL),(8,'Seventh User','seventhuser@email.com','1234','123456789','2025-06-22 11:01:09',0,NULL),(9,'Eighth User','eighthuser@email.com','1234','123456789','2025-06-22 11:07:16',0,NULL),(10,'Ninth User','ninthuser@email.com',NULL,'123456789','2025-07-06 09:42:13',0,NULL);
+INSERT INTO `users` VALUES (1,'First User','firstuser@email.com','1234','123456789','2025-06-21 12:33:23',0,NULL),(2,'Second User','seconduser@email.com','1234','123456789','2025-06-21 12:35:13',0,NULL),(3,'Deleted User','thirduser@email.com','1234','123456789','2025-06-21 12:35:13',1,'2025-06-22 11:48:02'),(4,'Fourth User','fourthuser@email.com','1234','123456789','2025-06-21 12:35:53',0,NULL),(5,'Fifth User','fifthuser@email.com','1234','123456789','2025-06-21 12:36:03',0,NULL),(7,'Sixth User','sixthuser@email.com','1234','123456789','2025-06-22 11:00:23',0,NULL),(8,'Seventh User','seventhuser@email.com','1234','123456789','2025-06-22 11:01:09',0,NULL),(9,'Eighth User','eighthuser@email.com','1234','123456789','2025-06-22 11:07:16',0,NULL),(10,'Ninth User','ninthuser@email.com',NULL,'123456789','2025-07-06 09:42:13',0,NULL),(11,'','','','','2025-08-16 07:20:34',0,NULL),(12,'testId12','alinur@gmail.com','123456789','01234567896','2025-08-16 07:25:08',0,NULL),(13,'test','thirduser@email.com','test','01234567894','2025-08-16 09:02:29',1,'2025-08-16 12:18:39'),(14,'test',NULL,'test','01234567895','2025-08-16 09:05:13',0,NULL),(15,'test','alinur@email.com','03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4','01234567897','2025-08-16 12:28:47',0,NULL);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -726,4 +726,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-08-07 21:04:29
+-- Dump completed on 2025-08-17 15:49:22
