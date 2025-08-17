@@ -125,6 +125,7 @@ TODO
 12. Automatically generate Order number for sales_order.
 13. In AppDataContext, try to convert all the objects of the models to the plural form.
 14. Change all the DateOnly to DateTime
+15. Add pagination as necessity. Check the PaginatedResult.cs in the Utilites/Helper folder.
 
 
 
