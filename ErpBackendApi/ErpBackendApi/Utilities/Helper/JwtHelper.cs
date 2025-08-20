@@ -31,7 +31,8 @@ namespace ErpBackendApi.Utilities.Helper
                 issuer: _config["Jwt:Issuer"],
                 audience: _config["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.Now.AddDays(365),
+                notBefore: DateTime.UtcNow,
+                expires: DateTime.UtcNow.AddHours(12),
                 signingCredentials: creds
             );
 
