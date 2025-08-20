@@ -132,11 +132,11 @@ TODO
 ---------------------------------------------------------------------------------------------------------------------------------
 Testing TODO
 ---------------------------------------------------------------------------------------------------------------------------------
-1. users - ready to implement frontend
-2. roles
-3. user_roles
-4. features
-5. role_permissions
+1. "ready to implement frontend" - users
+2. "will be implemented in future" - roles
+3. "will be implemented in future" - user_roles
+4. "will be implemented in future" - features
+5. "will be implemented in future" - role_permissions
 6. categories
 7. suppliers
 8. products
