@@ -36,45 +36,57 @@ namespace ErpBackendApi.Controllers
         [HttpPost]
         public async Task<IActionResult> AddCategory(Category category)
         {
-            var operation_AddCategory = await _iCategories.AddCategoryAsync(category);
-            if(operation_AddCategory == null)
+            try
             {
-                return NotFound("This category already exists.");
+                var operation_AddCategory = await _iCategories.AddCategoryAsync(category);
+                return Ok("Category added successfully.");
             }
-            return Ok("Category added successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("update")]
         public async Task<IActionResult> UpdateCategory(Category category)
         {
-            var operation_UpdateCategory = await _iCategories.UpdateCategoryAsync(category);
-            if(operation_UpdateCategory == null)
+            try
             {
-                return NotFound("Category not found or category is deleted.");
+                var operation_UpdateCategory = await _iCategories.UpdateCategoryAsync(category);
+                return Ok("Category updated successfully.");
             }
-            return Ok("Category updated successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("delete")]
         public async Task<IActionResult> SoftDeleteCategory(Category category)
         {
-            var operation_SoftDeleteCategory = await _iCategories.SoftDeleteCategoryAsync(category);
-            if (operation_SoftDeleteCategory == null)
+            try
             {
-                return NotFound("Category not found or already deleted.");
+                var operation_SoftDeleteCategory = await _iCategories.SoftDeleteCategoryAsync(category);
+                return Ok("Category deleted successfully.");
             }
-            return Ok("Category deleted successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("undo-delete")]
         public async Task<IActionResult> RestoreDeletedCategory(Category category)
         {
-            var operation_RestoreDeletedCategory = await _iCategories.UndoSoftDeleteCategoryAsync(category);
-            if (operation_RestoreDeletedCategory == null)
+            try
             {
-                return NotFound("Unable to restore deleted category.");
+                var operation_RestoreDeletedCategory = await _iCategories.UndoSoftDeleteCategoryAsync(category);
+                return Ok("Deleted category restored successfully.");
             }
-            return Ok("Deleted category restored successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

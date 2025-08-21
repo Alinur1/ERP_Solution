@@ -44,7 +44,12 @@ namespace ErpBackendApi.BLL.Services
             if (existingCategory != null)
             {
                 Logger("Tried to create same category.");
-                return null;
+                throw new InvalidOperationException("Tried to create same category.");
+            }
+            if (string.IsNullOrEmpty(category.name) || string.IsNullOrWhiteSpace(category.name))
+            {
+                Logger("Category name cannot be empty.");
+                throw new InvalidOperationException("Category name cannot be empty.");
             }
             category.is_deleted = false;
             category.deleted_at = null;
@@ -56,39 +61,58 @@ namespace ErpBackendApi.BLL.Services
         public async Task<Category> UpdateCategoryAsync(Category category)
         {
             var existingCategory = await _context.categories.FirstOrDefaultAsync(c => c.id == category.id && c.is_deleted == false);
-            if (existingCategory != null)
+            if (existingCategory == null)
             {
-                existingCategory.name = category.name;
-                existingCategory.description = category.description;
-                _context.categories.Update(existingCategory);
-                await _context.SaveChangesAsync();
+                Logger("Category not found.");
+                throw new InvalidOperationException("Category not found.");
             }
+            if (!string.Equals(existingCategory.name, category.name, StringComparison.OrdinalIgnoreCase))
+            {
+                var existingCategoryName = await _context.categories.FirstOrDefaultAsync(c => c.name == category.name && c.id != category.id && c.is_deleted == false);
+                if (existingCategoryName != null)
+                {
+                    Logger("This category name already exists.");
+                    throw new InvalidOperationException("This category name already exists.");
+                }               
+            }
+            if (string.IsNullOrEmpty(category.name) || string.IsNullOrWhiteSpace(category.name))
+            {
+                Logger("Category name cannot be empty.");
+                throw new InvalidOperationException("Category name cannot be empty.");
+            }
+            existingCategory.name = category.name;
+            existingCategory.description = category.description;
+            await _context.SaveChangesAsync();
             return existingCategory;
         }
 
         public async Task<Category> SoftDeleteCategoryAsync(Category category)
         {
             var existingCategory = await _context.categories.FirstOrDefaultAsync(c => c.id == category.id && c.is_deleted == false);
-            if (existingCategory != null)
+            if (existingCategory == null)
             {
-                existingCategory.is_deleted = true;
-                existingCategory.deleted_at = DateTime.UtcNow;
-                _context.categories.Update(existingCategory);
-                await _context.SaveChangesAsync();
+                Logger("Unable to delete the category.");
+                throw new InvalidOperationException("Unable to delete the category.");
             }
+            existingCategory.is_deleted = true;
+            existingCategory.deleted_at = DateTime.UtcNow;
+            _context.categories.Update(existingCategory);
+            await _context.SaveChangesAsync();
             return existingCategory;
         }
 
         public async Task<Category> UndoSoftDeleteCategoryAsync(Category category)
         {
             var deletedCategory = await _context.categories.FirstOrDefaultAsync(c => c.id == category.id && c.is_deleted == true);
-            if (deletedCategory != null)
+            if (deletedCategory == null)
             {
-                deletedCategory.is_deleted = false;
-                deletedCategory.deleted_at = null;
-                _context.categories.Update(deletedCategory);
-                await _context.SaveChangesAsync();
+                Logger("Unable to restore deleted category.");
+                throw new InvalidOperationException("Unable to restore deleted category.");
             }
+            deletedCategory.is_deleted = false;
+            deletedCategory.deleted_at = null;
+            _context.categories.Update(deletedCategory);
+            await _context.SaveChangesAsync();
             return deletedCategory;
         }
     }
