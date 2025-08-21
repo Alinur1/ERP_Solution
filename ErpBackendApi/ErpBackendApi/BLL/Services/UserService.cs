@@ -113,7 +113,7 @@ namespace ErpBackendApi.BLL.Services
 
             if (existingUser.phone != user.phone)
             {
-                var phoneExists = await _context.users.FirstOrDefaultAsync(u => u.phone == user.phone && u.is_deleted == false);
+                var phoneExists = await _context.users.FirstOrDefaultAsync(u => u.phone == user.phone && u.id != user.id && u.is_deleted == false);
                 if (phoneExists != null)
                 {
                     Logger("Can't use this phone number. It is already in use.");
@@ -123,7 +123,7 @@ namespace ErpBackendApi.BLL.Services
 
             if (!string.IsNullOrEmpty(user.email) || !string.IsNullOrWhiteSpace(user.email) && existingUser.email != user.email)
             {
-                var existingEmail = await _context.users.FirstOrDefaultAsync(u => u.email == user.email && u.is_deleted == false);
+                var existingEmail = await _context.users.FirstOrDefaultAsync(u => u.email == user.email && u.id != user.id && u.is_deleted == false);
                 if (existingEmail != null)
                 {
                     Logger("Can't use this email. It is already in use.");
