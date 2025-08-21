@@ -10,5 +10,6 @@ namespace ErpBackendApi.BLL.Interfaces
         Task<Category> UpdateCategoryAsync(Category category);
         Task<Category> SoftDeleteCategoryAsync(Category category);
         Task<Category> UndoSoftDeleteCategoryAsync(Category category);
+        Task<IEnumerable<Category>> GetAllDeletedCategoriesAsync();
     }
 }

@@ -115,5 +115,18 @@ namespace ErpBackendApi.BLL.Services
             await _context.SaveChangesAsync();
             return deletedCategory;
         }
+
+        public async Task<IEnumerable<Category>> GetAllDeletedCategoriesAsync()
+        {
+            return await _context.categories
+                .Where(c => c.is_deleted == true)
+                .Select(c => new Category
+                {
+                    id = c.id,
+                    name = c.name,
+                    description = c.description,
+                    deleted_at = c.deleted_at,
+                }).ToListAsync();
+        }
     }
 }
