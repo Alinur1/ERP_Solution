@@ -28,7 +28,7 @@ namespace ErpBackendApi.Controllers
             var operation_GetSupplierById = await _iSuppliers.GetSupplierByIdAsync(id);
             if (operation_GetSupplierById == null)
             {
-                return NotFound("Supplier not found.");
+                return BadRequest("Supplier not found.");
             }
             return Ok(operation_GetSupplierById);
         }
@@ -36,45 +36,57 @@ namespace ErpBackendApi.Controllers
         [HttpPost]
         public async Task<IActionResult> AddSupplier(Supplier supplier)
         {
-            var operation_AddSupplier = await _iSuppliers.AddSupplierAsync(supplier);
-            if (operation_AddSupplier == null)
+            try
             {
-                return NotFound("A supplier with this email already exists.");
+                var operation_AddSupplier = await _iSuppliers.AddSupplierAsync(supplier);
+                return Ok("Supplier added successfully.");
             }
-            return Ok("Supplier added successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("update")]
         public async Task<IActionResult> UpdateSupplier(Supplier supplier)
         {
-            var operation_UpdateSupplier = await _iSuppliers.UpdateSupplierAsync(supplier);
-            if (operation_UpdateSupplier == null)
+            try
             {
-                return NotFound("Supplier not found or is deleted.");
+                var operation_UpdateSupplier = await _iSuppliers.UpdateSupplierAsync(supplier);
+                return Ok("Supplier information updated successfully.");
             }
-            return Ok("Supplier information updated successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("delete")]
         public async Task<IActionResult> SoftDeleteSupplier(Supplier supplier)
         {
-            var operation_SoftDeleteSupplier = await _iSuppliers.SoftDeleteSupplierAsync(supplier);
-            if (operation_SoftDeleteSupplier == null)
+            try
             {
-                return NotFound("Supplier not found or already deleted.");
+                var operation_SoftDeleteSupplier = await _iSuppliers.SoftDeleteSupplierAsync(supplier);
+                return Ok("Supplier information deleted successfully.");
             }
-            return Ok("Supplier information deleted successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("undo-delete")]
         public async Task<IActionResult> UndoSoftDeleteSupplier(Supplier supplier)
         {
-            var operation_UndoSoftDeleteSupplier = await _iSuppliers.UndoSoftDeleteSupplierAsync(supplier);
-            if (operation_UndoSoftDeleteSupplier == null)
+            try
             {
-                return NotFound("Unable to restore delete supplier information.");
+                var operation_UndoSoftDeleteSupplier = await _iSuppliers.UndoSoftDeleteSupplierAsync(supplier);
+                return Ok("Supplier information restored successfully.");
             }
-            return Ok("Supplier information restored successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
