@@ -88,5 +88,12 @@ namespace ErpBackendApi.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet("deleted-suppliers")]
+        public async Task<IActionResult> GetAllDeletedSuppliers()
+        {
+            var operation_GetAllDeletedSuppliers = await _iSuppliers.GetAllDeletedSuppliersAsync();
+            return Ok(operation_GetAllDeletedSuppliers);
+        }
     }
 }

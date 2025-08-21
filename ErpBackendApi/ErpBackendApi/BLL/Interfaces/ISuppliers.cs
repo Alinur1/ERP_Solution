@@ -10,5 +10,6 @@ namespace ErpBackendApi.BLL.Interfaces
         Task<Supplier> UpdateSupplierAsync(Supplier supplier);
         Task<Supplier> SoftDeleteSupplierAsync(Supplier supplier);
         Task<Supplier> UndoSoftDeleteSupplierAsync(Supplier supplier);
+        Task<IEnumerable<Supplier>> GetAllDeletedSuppliersAsync();
     }
 }

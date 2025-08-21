@@ -134,5 +134,21 @@ namespace ErpBackendApi.BLL.Services
             await _context.SaveChangesAsync();
             return existingSupplier;
         }
+
+        public async Task<IEnumerable<Supplier>> GetAllDeletedSuppliersAsync()
+        {
+            return await _context.suppliers
+                .Where(s => s.is_deleted == true)
+                .Select(s => new Supplier
+                {
+                    id = s.id,
+                    company_name = s.company_name,
+                    contact_person_name = s.contact_person_name,
+                    phone = s.phone,
+                    email = s.email,
+                    address = s.address,
+                    deleted_at = s.deleted_at,
+                }).ToListAsync();
+        }
     }
 }
