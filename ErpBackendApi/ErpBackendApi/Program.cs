@@ -138,7 +138,7 @@ Testing TODO
 3. "will be implemented in future" - user_roles
 4. "will be implemented in future" - features
 5. "will be implemented in future" - role_permissions
-6. categories
+6. "ready to implement frontend" - categories
 7. suppliers
 8. products
 9. inventory
