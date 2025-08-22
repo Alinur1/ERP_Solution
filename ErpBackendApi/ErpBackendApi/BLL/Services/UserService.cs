@@ -25,7 +25,7 @@ namespace ErpBackendApi.BLL.Services
                 Logger("This phone number is already being used.");
                 throw new InvalidOperationException("This phone number is already being used.");
             }
-            if (!string.IsNullOrEmpty(user.email) || !string.IsNullOrWhiteSpace(user.email))
+            if (!string.IsNullOrWhiteSpace(user.email))
             {
                 var existingEmail = await _context.users.FirstOrDefaultAsync(u => u.email == user.email && u.is_deleted == false);
                 if (existingEmail != null)
@@ -34,7 +34,7 @@ namespace ErpBackendApi.BLL.Services
                     throw new InvalidOperationException("This email is already being used.");
                 }
             }
-            if (string.IsNullOrEmpty(user.password))
+            if (string.IsNullOrWhiteSpace(user.password))
             {
                 Logger("Password is required.");
                 throw new InvalidOperationException("Password is required.");
@@ -79,26 +79,28 @@ namespace ErpBackendApi.BLL.Services
         public async Task<User> SoftDeleteUserAsync(User user)
         {
             var existingUser = await _context.users.FirstOrDefaultAsync(u => u.id == user.id && u.is_deleted == false);
-            if (existingUser != null)
+            if (existingUser == null)
             {
-                existingUser.is_deleted = true;
-                existingUser.deleted_at = DateTime.UtcNow;
-                _context.users.Update(existingUser);
-                await _context.SaveChangesAsync();
+                Logger("Unable to delete user. User not found.");
+                throw new InvalidOperationException("Unable to delete user. User not found.");
             }
+            existingUser.is_deleted = true;
+            existingUser.deleted_at = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
             return existingUser;
         }
 
         public async Task<User> UndoSoftDeleteUserAsync(User user)
         {
             var existingUser = await _context.users.FirstOrDefaultAsync(u => u.id == user.id && u.is_deleted == true);
-            if (existingUser != null)
+            if (existingUser == null)
             {
-                existingUser.is_deleted = false;
-                existingUser.deleted_at = null;
-                _context.users.Update(existingUser);
-                await _context.SaveChangesAsync();
+                Logger("Unable to restore deleted user. Deleted user not found.");
+                throw new InvalidOperationException("Unable to restore deleted user. Deleted user not found.");
             }
+            existingUser.is_deleted = false;
+            existingUser.deleted_at = null;
+            await _context.SaveChangesAsync();
             return existingUser;
         }
 
@@ -110,7 +112,6 @@ namespace ErpBackendApi.BLL.Services
                 Logger($"User ID: {user.id} doesn't exist.");
                 throw new InvalidOperationException($"User ID: {user.id} doesn't exist.");
             }
-
             if (existingUser.phone != user.phone)
             {
                 var phoneExists = await _context.users.FirstOrDefaultAsync(u => u.phone == user.phone && u.id != user.id && u.is_deleted == false);
@@ -120,8 +121,7 @@ namespace ErpBackendApi.BLL.Services
                     throw new InvalidOperationException("Can't use this phone number. It is already in use.");
                 }
             }
-
-            if (!string.IsNullOrEmpty(user.email) || !string.IsNullOrWhiteSpace(user.email) && existingUser.email != user.email)
+            if (!string.IsNullOrWhiteSpace(user.email) && existingUser.email != user.email)
             {
                 var existingEmail = await _context.users.FirstOrDefaultAsync(u => u.email == user.email && u.id != user.id && u.is_deleted == false);
                 if (existingEmail != null)
@@ -129,6 +129,11 @@ namespace ErpBackendApi.BLL.Services
                     Logger("Can't use this email. It is already in use.");
                     throw new InvalidOperationException("Can't use this email. It is already in use.");
                 }
+            }
+            if (string.IsNullOrWhiteSpace(user.phone))
+            {
+                Logger("Phone number is required.");
+                throw new InvalidOperationException("Phone number is required.");
             }
 
             existingUser.name = user.name;
@@ -143,16 +148,17 @@ namespace ErpBackendApi.BLL.Services
             var existingUser = await _context.users.FirstOrDefaultAsync(u => u.id == user.id && u.is_deleted == false);
             if (existingUser != null)
             {
-                if (string.IsNullOrEmpty(user.password) || string.IsNullOrWhiteSpace(user.password))
+                if (string.IsNullOrWhiteSpace(user.password))
                 {
                     Logger("Password is required.");
                     throw new InvalidOperationException("Password is required.");
                 }
                 existingUser.password = HashPass(user.password);
-                _context.users.Update(existingUser);
                 await _context.SaveChangesAsync();
+                return existingUser;
             }
-            return existingUser;
+            Logger("Unable to updated user password. Something went wrong.");
+            throw new InvalidOperationException("Unable to updated user password. Something went wrong.");
         }
 
         public async Task<User> ValidateUserByEmailAsync(string email, string password)

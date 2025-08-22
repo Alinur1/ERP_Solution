@@ -64,26 +64,32 @@ namespace ErpBackendApi.Controllers
         [HttpPut("delete")]
         public async Task<IActionResult> SoftDeleteUser(User user)
         {
-            var operation_SoftDeleteUser = await _iUsers.SoftDeleteUserAsync(user);
-            if (operation_SoftDeleteUser == null)
+            try
             {
-                return NotFound("User not found or already deleted.");
+                var operation_SoftDeleteUser = await _iUsers.SoftDeleteUserAsync(user);
+                return Ok("User deleted successfully.");
             }
-            return Ok("User deleted successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("undo-delete")]
         public async Task<IActionResult> UndoSoftDeleteUser(User user)
         {
-            var operation_UndoSoftDeleteUser = await _iUsers.UndoSoftDeleteUserAsync(user);
-            if (operation_UndoSoftDeleteUser == null)
+            try
             {
-                return NotFound("User not found.");
+                var operation_UndoSoftDeleteUser = await _iUsers.UndoSoftDeleteUserAsync(user);
+                return Ok("User restored successfully.");
             }
-            return Ok("User restored successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
-        [HttpPut("change-password")]
+        [HttpPatch("change-password")]
         public async Task<IActionResult> ChangePassword(User user)
         {
             try
