@@ -54,13 +54,17 @@ namespace ErpBackendApi.BLL.Services
             }
             if (!string.IsNullOrWhiteSpace(supplier.email))
             {
-                supplier.email = supplier.email.Trim();
                 var existingSupplierEmail = await _context.suppliers.FirstOrDefaultAsync(s => s.email == supplier.email && s.is_deleted == false);
                 if (existingSupplierEmail != null)
                 {
                     Logger("This supplier email is already in use.");
                     throw new InvalidOperationException("This supplier email is already in use.");
                 }
+            }
+            if (string.IsNullOrWhiteSpace(supplier.company_name) || string.IsNullOrWhiteSpace(supplier.contact_person_name) || string.IsNullOrWhiteSpace(supplier.phone))
+            {
+                Logger("Supplier's company name, contact person name and phone number must be filled up.");
+                throw new InvalidOperationException("Supplier's company name, contact person name and phone number must be filled up.");
             }
             supplier.is_deleted = false;
             supplier.deleted_at = null;
@@ -79,7 +83,6 @@ namespace ErpBackendApi.BLL.Services
             }
             if (!string.IsNullOrWhiteSpace(supplier.email) && existingSupplier.email != supplier.email)
             {
-                supplier.email = supplier.email.Trim();
                 var existingSupplierEmail = await _context.suppliers.FirstOrDefaultAsync(s => s.email == supplier.email && s.id != supplier.id && s.is_deleted == false);
                 if (existingSupplierEmail != null)
                 {
@@ -96,6 +99,11 @@ namespace ErpBackendApi.BLL.Services
                     throw new InvalidOperationException("This supplier phone number is already in use.");
                 }
             }
+            if (string.IsNullOrWhiteSpace(supplier.company_name) || string.IsNullOrWhiteSpace(supplier.contact_person_name) || string.IsNullOrWhiteSpace(supplier.phone))
+            {
+                Logger("Supplier's company name, contact person name and phone number must be filled up.");
+                throw new InvalidOperationException("Supplier's company name, contact person name and phone number must be filled up.");
+            }
             existingSupplier.company_name = supplier.company_name;
             existingSupplier.contact_person_name = supplier.contact_person_name;
             existingSupplier.phone = supplier.phone;
@@ -105,9 +113,9 @@ namespace ErpBackendApi.BLL.Services
             return existingSupplier;
         }
 
-        public async Task<Supplier> SoftDeleteSupplierAsync(int id)
+        public async Task<Supplier> SoftDeleteSupplierAsync(Supplier supplier)
         {
-            var existingSupplier = await _context.suppliers.FirstOrDefaultAsync(s => s.id == id && s.is_deleted == false);
+            var existingSupplier = await _context.suppliers.FirstOrDefaultAsync(s => s.id == supplier.id && s.is_deleted == false);
             if (existingSupplier == null)
             {
                 Logger("Supplier not found. Unable to delete supplier information.");
@@ -120,9 +128,9 @@ namespace ErpBackendApi.BLL.Services
             return existingSupplier;
         }
 
-        public async Task<Supplier> UndoSoftDeleteSupplierAsync(int id)
+        public async Task<Supplier> UndoSoftDeleteSupplierAsync(Supplier supplier)
         {
-            var existingSupplier = await _context.suppliers.FirstOrDefaultAsync(s => s.id == id && s.is_deleted == true);
+            var existingSupplier = await _context.suppliers.FirstOrDefaultAsync(s => s.id == supplier.id && s.is_deleted == true);
             if (existingSupplier == null)
             {
                 Logger("Deleted supplier not found. Unable to restore deleted supplier information.");

@@ -8,8 +8,8 @@ namespace ErpBackendApi.BLL.Interfaces
         Task<Supplier> GetSupplierByIdAsync(int id);
         Task<Supplier> AddSupplierAsync(Supplier supplier);
         Task<Supplier> UpdateSupplierAsync(Supplier supplier);
-        Task<Supplier> SoftDeleteSupplierAsync(int id);
-        Task<Supplier> UndoSoftDeleteSupplierAsync(int id);
+        Task<Supplier> SoftDeleteSupplierAsync(Supplier supplier);
+        Task<Supplier> UndoSoftDeleteSupplierAsync(Supplier supplier);
         Task<IEnumerable<Supplier>> GetAllDeletedSuppliersAsync();
     }
 }
