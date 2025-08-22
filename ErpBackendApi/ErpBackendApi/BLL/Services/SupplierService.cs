@@ -105,9 +105,9 @@ namespace ErpBackendApi.BLL.Services
             return existingSupplier;
         }
 
-        public async Task<Supplier> SoftDeleteSupplierAsync(Supplier supplier)
+        public async Task<Supplier> SoftDeleteSupplierAsync(int id)
         {
-            var existingSupplier = await _context.suppliers.FirstOrDefaultAsync(s => s.id == supplier.id && s.is_deleted == false);
+            var existingSupplier = await _context.suppliers.FirstOrDefaultAsync(s => s.id == id && s.is_deleted == false);
             if (existingSupplier == null)
             {
                 Logger("Supplier not found. Unable to delete supplier information.");
@@ -120,9 +120,9 @@ namespace ErpBackendApi.BLL.Services
             return existingSupplier;
         }
 
-        public async Task<Supplier> UndoSoftDeleteSupplierAsync(Supplier supplier)
+        public async Task<Supplier> UndoSoftDeleteSupplierAsync(int id)
         {
-            var existingSupplier = await _context.suppliers.FirstOrDefaultAsync(s => s.id == supplier.id && s.is_deleted == true);
+            var existingSupplier = await _context.suppliers.FirstOrDefaultAsync(s => s.id == id && s.is_deleted == true);
             if (existingSupplier == null)
             {
                 Logger("Deleted supplier not found. Unable to restore deleted supplier information.");

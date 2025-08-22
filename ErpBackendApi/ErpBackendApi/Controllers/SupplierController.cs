@@ -61,12 +61,12 @@ namespace ErpBackendApi.Controllers
             }
         }
 
-        [HttpPut("delete")]
-        public async Task<IActionResult> SoftDeleteSupplier(Supplier supplier)
+        [HttpPut("delete/{id}")]
+        public async Task<IActionResult> SoftDeleteSupplier(int id)
         {
             try
             {
-                var operation_SoftDeleteSupplier = await _iSuppliers.SoftDeleteSupplierAsync(supplier);
+                var operation_SoftDeleteSupplier = await _iSuppliers.SoftDeleteSupplierAsync(id);
                 return Ok("Supplier information deleted successfully.");
             }
             catch (InvalidOperationException ex)
@@ -75,12 +75,12 @@ namespace ErpBackendApi.Controllers
             }
         }
 
-        [HttpPut("undo-delete")]
-        public async Task<IActionResult> UndoSoftDeleteSupplier(Supplier supplier)
+        [HttpPut("undo-delete/{id}")]
+        public async Task<IActionResult> UndoSoftDeleteSupplier(int id)
         {
             try
             {
-                var operation_UndoSoftDeleteSupplier = await _iSuppliers.UndoSoftDeleteSupplierAsync(supplier);
+                var operation_UndoSoftDeleteSupplier = await _iSuppliers.UndoSoftDeleteSupplierAsync(id);
                 return Ok("Supplier information restored successfully.");
             }
             catch (InvalidOperationException ex)
