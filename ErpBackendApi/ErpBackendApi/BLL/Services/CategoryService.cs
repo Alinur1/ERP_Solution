@@ -46,7 +46,7 @@ namespace ErpBackendApi.BLL.Services
                 Logger("Tried to create same category.");
                 throw new InvalidOperationException("Tried to create same category.");
             }
-            if (string.IsNullOrEmpty(category.name) || string.IsNullOrWhiteSpace(category.name))
+            if (string.IsNullOrWhiteSpace(category.name))
             {
                 Logger("Category name cannot be empty.");
                 throw new InvalidOperationException("Category name cannot be empty.");
@@ -75,7 +75,7 @@ namespace ErpBackendApi.BLL.Services
                     throw new InvalidOperationException("This category name already exists.");
                 }               
             }
-            if (string.IsNullOrEmpty(category.name) || string.IsNullOrWhiteSpace(category.name))
+            if (string.IsNullOrWhiteSpace(category.name))
             {
                 Logger("Category name cannot be empty.");
                 throw new InvalidOperationException("Category name cannot be empty.");
