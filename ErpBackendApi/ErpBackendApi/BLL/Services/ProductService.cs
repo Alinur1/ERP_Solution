@@ -30,9 +30,9 @@ namespace ErpBackendApi.BLL.Services
                     id = p.id,
                     name = p.name,
                     category_id = c != null ? c.id : null,
-                    category_name = c != null && c.is_deleted == false ? c.name : "-",
+                    category_name = c != null && c.is_deleted == false ? c.name : null,
                     supplier_id = s != null ? s.id : null,
-                    supplier_company_name = s != null && s.is_deleted == false ? s.company_name : "-",
+                    supplier_company_name = s != null && s.is_deleted == false ? s.company_name : null,
                     sku = p.sku,
                     description = p.description,
                     unit = p.unit,
@@ -57,9 +57,9 @@ namespace ErpBackendApi.BLL.Services
                     id = p.id,
                     name = p.name,
                     category_id = c != null ? c.id : null,
-                    category_name = c != null && c.is_deleted == false ? c.name : "-",
+                    category_name = c != null && c.is_deleted == false ? c.name : null,
                     supplier_id = s != null ? s.id : null,
-                    supplier_company_name = s != null && s.is_deleted == false ? s.company_name : "-",
+                    supplier_company_name = s != null && s.is_deleted == false ? s.company_name : null,
                     sku = p.sku,
                     description = p.description,
                     unit = p.unit,
@@ -75,13 +75,13 @@ namespace ErpBackendApi.BLL.Services
             var existingSupplier = await _context.suppliers.FirstOrDefaultAsync(s => s.id == product.supplier_id && s.is_deleted == false);
             if (existingCategory == null)
             {
-                Logger("Category not found or deleted.#1-AddProductAsync");
-                return null;
+                Logger("Unable to assign a category for this product. Category not found or deleted.");
+                throw new InvalidOperationException("Unable to assign a category for this product. Category not found or deleted.");
             }
             if (existingSupplier == null)
             {
-                Logger("Supplier not found or deleted.#2-AddProductAsync");
-                return null;
+                Logger("Unable to assign a supplier for this product. Supplier not found or deleted.");
+                throw new InvalidOperationException("Unable to assign a supplier for this product. Supplier not found or deleted.");
             }
             if (!string.IsNullOrEmpty(product.sku))
             {
@@ -89,8 +89,13 @@ namespace ErpBackendApi.BLL.Services
                 if (existingProduct != null)
                 {
                     Logger("Same Barcode/QR Code cannot be applied on different types of products.");
-                    return null;
+                    throw new InvalidOperationException("Same Barcode/QR Code cannot be applied on different types of products.");
                 }
+            }
+            if (product.price < 0)
+            {
+                Logger("Product's price cannot be negative.");
+                throw new InvalidOperationException("Product's price cannot be negative.");
             }
             product.created_at = DateTime.UtcNow;
             product.is_deleted = false;
@@ -109,28 +114,32 @@ namespace ErpBackendApi.BLL.Services
 
             if (existingCategory == null)
             {
-                Logger("Category not found or deleted. #1-UpdateProductAsync");
-                return null;
+                Logger("Unable to update category for this product. Category not found or deleted.");
+                throw new InvalidOperationException("Unable to update category for this product. Category not found or deleted.");
             }
-
             if (existingSupplier == null)
             {
-                Logger("Supplier not found or deleted. #2-UpdateProductAsync");
-                return null;
+                Logger("Unable to update supplier for this product. Supplier not found or deleted.");
+                throw new InvalidOperationException("Unable to update supplier for this product. Supplier not found or deleted.");
             }
-
             if (existingProduct == null)
             {
-                Logger("Product to update not found or deleted. #3-UpdateProductAsync");
-                return null;
+                Logger("Product not found or deleted.");
+                throw new InvalidOperationException("Product not found or deleted.");
             }
-
-            if (duplicateSku != null)
+            if (!string.IsNullOrWhiteSpace(product.sku) && existingProduct.sku != product.sku)
             {
-                Logger("Duplicate SKU found on another product. #4-UpdateProductAsync");
-                return null;
+                if (duplicateSku != null)
+                {
+                    Logger("Duplicate SKU found on another product.");
+                    throw new InvalidOperationException("Duplicate SKU found on another product.");
+                }
             }
-
+            if (product.price < 0)
+            {
+                Logger("Product's price cannot be negative.");
+                throw new InvalidOperationException("Product's price cannot be negative.");
+            }
             existingProduct.name = product.name;
             existingProduct.category_id = product.category_id;
             existingProduct.supplier_id = product.supplier_id;
@@ -138,7 +147,6 @@ namespace ErpBackendApi.BLL.Services
             existingProduct.description = product.description;
             existingProduct.unit = product.unit;
             existingProduct.price = product.price;
-            _context.products.Update(existingProduct);
             await _context.SaveChangesAsync();            
             return existingProduct;
         }
@@ -146,27 +154,56 @@ namespace ErpBackendApi.BLL.Services
         public async Task<Product> SoftDeleteProductAsync(Product product)
         {
             var existingProduct = await _context.products.FirstOrDefaultAsync(p => p.id == product.id && p.is_deleted == false);
-            if (existingProduct != null)
+            if (existingProduct == null)
             {
-                existingProduct.is_deleted = true;
-                existingProduct.deleted_at = DateTime.UtcNow;
-                _context.products.Update(existingProduct);
-                await _context.SaveChangesAsync();
+                Logger("Unable to delete product. Product not found.");
+                throw new InvalidOperationException("Unable to delete product. Product not found.");
             }
+            existingProduct.is_deleted = true;
+            existingProduct.deleted_at = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
             return existingProduct;
         }
 
         public async Task<Product> UndoSoftDeleteProductAsync(Product product)
         {
             var existingProduct = await _context.products.FirstOrDefaultAsync(p => p.id == product.id && p.is_deleted == true);
-            if (existingProduct != null)
+            if (existingProduct == null)
             {
-                existingProduct.is_deleted = false;
-                existingProduct.deleted_at = null;
-                _context.products.Update(existingProduct);
-                await _context.SaveChangesAsync();
+                Logger("Unable to restore deleted product. Deleted product not found.");
+                throw new InvalidOperationException("Unable to restore deleted product. Deleted Product not found.");
             }
+            existingProduct.is_deleted = false;
+            existingProduct.deleted_at = null;
+            await _context.SaveChangesAsync();
             return existingProduct;
+        }
+
+        public async Task<IEnumerable<ProductDTO>> GetAllDeletedProductsAsync()
+        {
+            return await
+            (
+                from p in _context.products
+                join c in _context.categories on p.category_id equals c.id into catGroup
+                from c in catGroup.DefaultIfEmpty()
+                join s in _context.suppliers on p.supplier_id equals s.id into supGroup
+                from s in supGroup.DefaultIfEmpty()
+                where p.is_deleted == true
+                select new ProductDTO
+                {
+                    id = p.id,
+                    name = p.name,
+                    category_id = c != null ? c.id : null,
+                    category_name = c != null && c.is_deleted == false ? c.name : null,
+                    supplier_id = s != null ? s.id : null,
+                    supplier_company_name = s != null && s.is_deleted == false ? s.company_name : null,
+                    sku = p.sku,
+                    description = p.description,
+                    unit = p.unit,
+                    price = p.price,
+                    created_at = p.created_at,
+                }
+            ).ToListAsync();
         }
     }
 }

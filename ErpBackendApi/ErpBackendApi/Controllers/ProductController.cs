@@ -28,7 +28,7 @@ namespace ErpBackendApi.Controllers
             var operation_GetProductById = await _iProducts.GetProductByIdAsync(id);
             if (operation_GetProductById == null)
             {
-                return NotFound("Product not found.");
+                return BadRequest("Product not found.");
             }
             return Ok(operation_GetProductById);
         }
@@ -36,45 +36,64 @@ namespace ErpBackendApi.Controllers
         [HttpPost]
         public async Task<IActionResult> AddProduct(Product product)
         {
-            var operation_AddProduct = await _iProducts.AddProductAsync(product);
-            if (operation_AddProduct == null)
+            try
             {
-                return NotFound("Same Barcode/QR Code cannot be applied on different types of products.");
+                var operation_AddProduct = await _iProducts.AddProductAsync(product);
+                return Ok("Product added successfully.");
             }
-            return Ok("Product added successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("update")]
         public async Task<IActionResult> UpdateProduct(Product product)
         {
-            var operation_UpdateProduct = await _iProducts.UpdateProductAsync(product);
-            if (operation_UpdateProduct == null)
+            try
             {
-                return NotFound("Unable to update product information.");
+                var operation_UpdateProduct = await _iProducts.UpdateProductAsync(product);
+                return Ok("Product information updated successfully.");
             }
-            return Ok("Product information updated successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("delete")]
         public async Task<IActionResult> SoftDeleteProduct(Product product)
         {
-            var operation_SoftDeleteProduct = await _iProducts.SoftDeleteProductAsync(product);
-            if (operation_SoftDeleteProduct == null)
+            try
             {
-                return NotFound("Unable to delete the product information.");
+                var operation_SoftDeleteProduct = await _iProducts.SoftDeleteProductAsync(product);
+                return Ok("Product information delete successfully.");
             }
-            return Ok("Product information delete successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("undo-delete")]
         public async Task<IActionResult> UndoSoftDeleteProduct(Product product)
         {
-            var operation_UndoSoftDeleteProduct = await _iProducts.UndoSoftDeleteProductAsync(product);
-            if (operation_UndoSoftDeleteProduct == null)
+            try
             {
-                return NotFound("Unable to restore the deleted product information.");
+                var operation_UndoSoftDeleteProduct = await _iProducts.UndoSoftDeleteProductAsync(product);
+                return Ok("Deleted product information restored successfully.");
             }
-            return Ok("Deleted product information restored successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("deleted-products")]
+        public async Task<IActionResult> GetAllDeletedProducts()
+        {
+            var operation_GetAllDeletedProducts = await _iProducts.GetAllDeletedProductsAsync();
+            return Ok(operation_GetAllDeletedProducts);
         }
     }
 }
