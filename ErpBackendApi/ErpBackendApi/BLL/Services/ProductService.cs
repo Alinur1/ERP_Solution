@@ -73,30 +73,41 @@ namespace ErpBackendApi.BLL.Services
         {
             var existingCategory = await _context.categories.FirstOrDefaultAsync(c => c.id == product.category_id && c.is_deleted == false);
             var existingSupplier = await _context.suppliers.FirstOrDefaultAsync(s => s.id == product.supplier_id && s.is_deleted == false);
+            var existingProduct = await _context.products.FirstOrDefaultAsync(p => p.sku == product.sku && p.is_deleted == false);
+
             if (existingCategory == null)
             {
                 Logger("Unable to assign a category for this product. Category not found or deleted.");
                 throw new InvalidOperationException("Unable to assign a category for this product. Category not found or deleted.");
             }
+
             if (existingSupplier == null)
             {
                 Logger("Unable to assign a supplier for this product. Supplier not found or deleted.");
                 throw new InvalidOperationException("Unable to assign a supplier for this product. Supplier not found or deleted.");
             }
+
             if (!string.IsNullOrEmpty(product.sku))
             {
-                var existingProduct = await _context.products.FirstOrDefaultAsync(p => p.sku == product.sku && p.is_deleted == false);
                 if (existingProduct != null)
                 {
                     Logger("Same Barcode/QR Code cannot be applied on different types of products.");
                     throw new InvalidOperationException("Same Barcode/QR Code cannot be applied on different types of products.");
                 }
             }
+
             if (product.price < 0)
             {
                 Logger("Product's price cannot be negative.");
                 throw new InvalidOperationException("Product's price cannot be negative.");
             }
+
+            if (string.IsNullOrWhiteSpace(product.name) || string.IsNullOrWhiteSpace(product.sku) || string.IsNullOrWhiteSpace(product.unit) || product.price == null)
+            {
+                Logger("Product name, code, unit and price cannot be empty.");
+                throw new InvalidOperationException("Product name, code, unit and price cannot be empty.");
+            }
+
             product.created_at = DateTime.UtcNow;
             product.is_deleted = false;
             product.deleted_at = null;
@@ -117,16 +128,19 @@ namespace ErpBackendApi.BLL.Services
                 Logger("Unable to update category for this product. Category not found or deleted.");
                 throw new InvalidOperationException("Unable to update category for this product. Category not found or deleted.");
             }
+
             if (existingSupplier == null)
             {
                 Logger("Unable to update supplier for this product. Supplier not found or deleted.");
                 throw new InvalidOperationException("Unable to update supplier for this product. Supplier not found or deleted.");
             }
+
             if (existingProduct == null)
             {
                 Logger("Product not found or deleted.");
                 throw new InvalidOperationException("Product not found or deleted.");
             }
+
             if (!string.IsNullOrWhiteSpace(product.sku) && existingProduct.sku != product.sku)
             {
                 if (duplicateSku != null)
@@ -135,11 +149,19 @@ namespace ErpBackendApi.BLL.Services
                     throw new InvalidOperationException("Duplicate SKU found on another product.");
                 }
             }
+
             if (product.price < 0)
             {
                 Logger("Product's price cannot be negative.");
                 throw new InvalidOperationException("Product's price cannot be negative.");
             }
+
+            if (string.IsNullOrWhiteSpace(product.name) || string.IsNullOrWhiteSpace(product.sku) || string.IsNullOrWhiteSpace(product.unit) || product.price == null)
+            {
+                Logger("Product name, code, unit and price cannot be empty.");
+                throw new InvalidOperationException("Product name, code, unit and price cannot be empty.");
+            }
+
             existingProduct.name = product.name;
             existingProduct.category_id = product.category_id;
             existingProduct.supplier_id = product.supplier_id;
@@ -154,11 +176,13 @@ namespace ErpBackendApi.BLL.Services
         public async Task<Product> SoftDeleteProductAsync(Product product)
         {
             var existingProduct = await _context.products.FirstOrDefaultAsync(p => p.id == product.id && p.is_deleted == false);
+
             if (existingProduct == null)
             {
                 Logger("Unable to delete product. Product not found.");
                 throw new InvalidOperationException("Unable to delete product. Product not found.");
             }
+
             existingProduct.is_deleted = true;
             existingProduct.deleted_at = DateTime.UtcNow;
             await _context.SaveChangesAsync();
@@ -168,11 +192,13 @@ namespace ErpBackendApi.BLL.Services
         public async Task<Product> UndoSoftDeleteProductAsync(Product product)
         {
             var existingProduct = await _context.products.FirstOrDefaultAsync(p => p.id == product.id && p.is_deleted == true);
+
             if (existingProduct == null)
             {
                 Logger("Unable to restore deleted product. Deleted product not found.");
                 throw new InvalidOperationException("Unable to restore deleted product. Deleted Product not found.");
             }
+
             existingProduct.is_deleted = false;
             existingProduct.deleted_at = null;
             await _context.SaveChangesAsync();
