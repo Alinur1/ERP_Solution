@@ -84,7 +84,7 @@ CREATE TABLE `categories` (
   `is_deleted` tinyint DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -93,7 +93,7 @@ CREATE TABLE `categories` (
 
 LOCK TABLES `categories` WRITE;
 /*!40000 ALTER TABLE `categories` DISABLE KEYS */;
-INSERT INTO `categories` VALUES (2,'Chips','',0,NULL),(3,'Fries','',1,'2025-07-15 06:56:08'),(4,'Nuts','',0,NULL),(5,'Groceries','',0,NULL),(6,'Drinks','This is drinks category',0,NULL);
+INSERT INTO `categories` VALUES (2,'Chips','',0,NULL),(3,'Fries','',1,'2025-07-15 06:56:08'),(4,'Nuts','',1,'2025-08-20 17:18:41'),(5,'Groceries','',0,NULL),(6,'Drinks','This is drinks category',0,NULL),(7,'Energy drink','',0,NULL),(8,' ','',1,'2025-08-22 15:32:41'),(9,'Juice','',0,NULL),(10,'Chocolate','',0,NULL),(11,'Coffee','',0,NULL),(12,'Soft drink','',0,NULL);
 /*!40000 ALTER TABLE `categories` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -428,7 +428,7 @@ CREATE TABLE `products` (
   KEY `fk_products_suppliers_idx` (`supplier_id`),
   CONSTRAINT `fk_products_categories` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`),
   CONSTRAINT `fk_products_suppliers` FOREIGN KEY (`supplier_id`) REFERENCES `suppliers` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -437,7 +437,7 @@ CREATE TABLE `products` (
 
 LOCK TABLES `products` WRITE;
 /*!40000 ALTER TABLE `products` DISABLE KEYS */;
-INSERT INTO `products` VALUES (1,'Potato crackers',2,3,'2803108',NULL,'500',15.00,'2025-07-10 09:39:10',0,NULL),(2,'Mr. Twist',2,3,'2818971',NULL,'500',20.00,'2025-07-10 09:44:47',0,NULL),(3,'French Fry',3,1,'324798273',NULL,'2000',150.00,'2025-07-15 06:55:00',0,NULL);
+INSERT INTO `products` VALUES (1,'Potato crackers',2,3,'2803108',NULL,'500',15.00,'2025-07-10 09:39:10',0,NULL),(2,'Mr. Twist',2,3,'2818971',NULL,'500',20.00,'2025-07-10 09:44:47',0,NULL),(3,'French Fry',3,1,'324798273',NULL,'2000',150.00,'2025-07-15 06:55:00',0,NULL),(4,NULL,2,1,NULL,NULL,NULL,NULL,'2025-08-24 09:46:03',0,NULL),(5,'Sun small',2,7,'653565645382476',NULL,'piece',20.00,'2025-08-24 10:31:43',0,NULL);
 /*!40000 ALTER TABLE `products` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -643,7 +643,7 @@ CREATE TABLE `suppliers` (
   `is_deleted` tinyint DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -652,7 +652,7 @@ CREATE TABLE `suppliers` (
 
 LOCK TABLES `suppliers` WRITE;
 /*!40000 ALTER TABLE `suppliers` DISABLE KEYS */;
-INSERT INTO `suppliers` VALUES (1,'PRAN','Ajmal karim','01234567890','karim@email.com',NULL,1,'2025-07-15 16:40:30'),(2,'RFL','Abdullah Alam','01234567890','alam@email.com',NULL,0,NULL),(3,'Bombay sweets','Nisho Khan','01234567890','nisho@email.com',NULL,0,NULL),(4,'Cocola','Alamgir chowdhury','01234567890','alamgir@email.com',NULL,0,NULL);
+INSERT INTO `suppliers` VALUES (1,'PRAN','Ajmal karim','01234567890','karim@email.com',NULL,0,NULL),(2,'RFL','Abdullah Alam','01234567890','alam@email.com',NULL,0,NULL),(3,'Bombay sweets','Nisho Khan','01234567890','nisho@email.com',NULL,0,NULL),(4,'Cocola','Alamgir chowdhury','01234567890','alamgir@email.com',NULL,0,NULL),(5,'Akij','Karim khan','01234567890','karim2@email.com',NULL,0,NULL),(6,'Akij','Kashem mia','1234567890',NULL,NULL,0,NULL),(7,'Kashem Foods','kashem ali','1234567891',NULL,NULL,0,NULL),(8,NULL,NULL,NULL,NULL,NULL,0,NULL),(9,'Cocola','HEHE Boi','123456789',NULL,NULL,0,NULL);
 /*!40000 ALTER TABLE `suppliers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -704,7 +704,7 @@ CREATE TABLE `users` (
   `is_deleted` tinyint DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -713,7 +713,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'First User','firstuser@email.com','1234','123456789','2025-06-21 12:33:23',0,NULL),(2,'Second User','seconduser@email.com','1234','123456789','2025-06-21 12:35:13',0,NULL),(3,'Deleted User','thirduser@email.com','1234','123456789','2025-06-21 12:35:13',1,'2025-06-22 11:48:02'),(4,'Fourth User','fourthuser@email.com','1234','123456789','2025-06-21 12:35:53',0,NULL),(5,'Fifth User','fifthuser@email.com','1234','123456789','2025-06-21 12:36:03',0,NULL),(7,'Sixth User','sixthuser@email.com','1234','123456789','2025-06-22 11:00:23',0,NULL),(8,'Seventh User','seventhuser@email.com','1234','123456789','2025-06-22 11:01:09',0,NULL),(9,'Eighth User','eighthuser@email.com','1234','123456789','2025-06-22 11:07:16',0,NULL),(10,'Ninth User','ninthuser@email.com',NULL,'123456789','2025-07-06 09:42:13',0,NULL),(11,'','','','','2025-08-16 07:20:34',0,NULL),(12,'testId12','alinur@gmail.com','123456789','01234567896','2025-08-16 07:25:08',0,NULL),(13,'test','thirduser@email.com','test','01234567894','2025-08-16 09:02:29',1,'2025-08-16 12:18:39'),(14,'test',NULL,'test','01234567895','2025-08-16 09:05:13',0,NULL),(15,'test','alinur@email.com','03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4','01234567897','2025-08-16 12:28:47',0,NULL);
+INSERT INTO `users` VALUES (1,'First User','firstuser@email.com','1234','123456789','2025-06-21 12:33:23',0,NULL),(2,'Second User','seconduser@email.com','1234','123456789','2025-06-21 12:35:13',0,NULL),(3,'Deleted User','thirduser@email.com','1234','123456789','2025-06-21 12:35:13',1,'2025-06-22 11:48:02'),(4,'Fourth User','fourthuser@email.com','1234','123456789','2025-06-21 12:35:53',0,NULL),(5,'Fifth User','fifthuser@email.com','1234','123456789','2025-06-21 12:36:03',0,NULL),(7,'Sixth User','sixthuser@email.com','1234','123456789','2025-06-22 11:00:23',0,NULL),(8,'Seventh User','seventhuser@email.com','1234','123456789','2025-06-22 11:01:09',0,NULL),(9,'Eighth User','eighthuser@email.com','1234','123456789','2025-06-22 11:07:16',0,NULL),(10,'Ninth User','ninthuser@email.com',NULL,'123456789','2025-07-06 09:42:13',0,NULL),(11,'','','','','2025-08-16 07:20:34',0,NULL),(12,'testId12','alinur@gmail.com','8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918','01234567896','2025-08-16 07:25:08',0,NULL),(13,'test','thirduser@email.com','test','01234567894','2025-08-16 09:02:29',1,'2025-08-20 08:43:00'),(14,'test',NULL,'test','01234567895','2025-08-16 09:05:13',0,NULL),(15,'test','alinur@email.com','03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4','01234567897','2025-08-16 12:28:47',0,NULL),(16,'Alinur Hossain','alinur1@email.com','03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4','1234567892','2025-08-22 10:08:37',0,NULL),(17,'Alinur Hossain',NULL,'03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4','1234567892','2025-08-22 10:34:21',1,'2025-08-22 11:18:51');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -726,4 +726,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-08-17 15:49:22
+-- Dump completed on 2025-08-24 21:11:06
