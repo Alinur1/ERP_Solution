@@ -140,7 +140,7 @@ Testing TODO
 5. "will be implemented in future" - role_permissions
 6. "ready to implement frontend" - categories
 7. "ready to implement frontend" - suppliers
-8. products
+8. "ready to implement frontend" - products
 9. inventory
 10. customers
 11. sales_orders
