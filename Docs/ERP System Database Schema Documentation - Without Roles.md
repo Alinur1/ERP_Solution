@@ -57,6 +57,8 @@ Tracks inventory levels per product.
 - **quantity** - INT
 - **reorder_level** - INT (A threshold value — when Quantity drops below this, it flags a low stock alert)
 - **last_updated** - DATETIME
+- **is_deleted** - BIT
+- **deleted_at** - DATETIME
 
 ## C. Sales Module
 
