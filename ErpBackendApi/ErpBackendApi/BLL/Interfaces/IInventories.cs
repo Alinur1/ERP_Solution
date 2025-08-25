@@ -9,6 +9,7 @@ namespace ErpBackendApi.BLL.Interfaces
         Task<InventoryDTO> GetInventoryByIdAsync(int id);
         Task<Inventory> AddInventoryAsync(Inventory inventory);
         Task<Inventory> UpdateInventoryAsync(Inventory inventory);
-        Task<bool> DeleteInventoryAsync(int id);
+        Task<Inventory> SoftDeleteInventoryAsync(Inventory inventory);
+        Task<Inventory> UndoSoftDeleteInventoryAsync(Inventory inventory);
     }
 }

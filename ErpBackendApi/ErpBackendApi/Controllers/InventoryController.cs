@@ -60,19 +60,5 @@ namespace ErpBackendApi.Controllers
                 return NotFound(ex.Message);
             }
         }
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteInventory(int id)
-        {
-            try
-            {
-                var operation_DeleteInventory = await _iInventories.DeleteInventoryAsync(id);
-                return Ok("Inventory deleted successfully.");
-            }
-            catch (InvalidOperationException ex)
-            {
-                return NotFound(ex.Message);
-            }
-        }
     }
 }

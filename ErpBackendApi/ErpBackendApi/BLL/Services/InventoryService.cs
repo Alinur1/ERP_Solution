@@ -68,6 +68,8 @@ namespace ErpBackendApi.BLL.Services
                 throw new InvalidOperationException("Tried to add same product in the inventory.");
             }
             inventory.last_updated = DateTime.UtcNow;
+            inventory.is_deleted = false;
+            inventory.deleted_at = null;
             _context.inventory.Add(inventory);
             await _context.SaveChangesAsync();
             return inventory;
@@ -84,22 +86,38 @@ namespace ErpBackendApi.BLL.Services
             existingInventory.quantity = inventory.quantity;
             existingInventory.reorder_level = inventory.reorder_level;
             existingInventory.last_updated = DateTime.UtcNow;
-            _context.inventory.Update(existingInventory);
             await _context.SaveChangesAsync();
             return existingInventory;
         }
 
-        public async Task<bool> DeleteInventoryAsync(int id)
+        public async Task<Inventory> SoftDeleteInventoryAsync(Inventory inventory)
         {
-            var existingInventory = await _context.inventory.FindAsync(id);
+            var existingInventory = await _context.inventory.FirstOrDefaultAsync(i => i.id == inventory.id && i.is_deleted == false);
+
             if (existingInventory == null)
             {
-                Logger("Inventory not found to delete.");
-                throw new InvalidOperationException("Inventory not found to delete.");
+                Logger("Unable to delete inventory. Inventory not found.");
+                throw new InvalidOperationException("Unable to delete inventory. Inventory not found.");
             }
-            _context.inventory.Remove(existingInventory);
+            existingInventory.is_deleted = true;
+            existingInventory.deleted_at = DateTime.UtcNow;
             await _context.SaveChangesAsync();
-            return true;
+            return existingInventory;
+        }
+
+        public async Task<Inventory> UndoSoftDeleteInventoryAsync(Inventory inventory)
+        {
+            var existingInventory = await _context.inventory.FirstOrDefaultAsync(i => i.id == inventory.id && i.is_deleted == true);
+
+            if (existingInventory == null)
+            {
+                Logger("Unable to restore deleted inventory. Deleted inventory not found.");
+                throw new InvalidOperationException("Unable to restore deleted inventory. Deleted inventory not found.");
+            }
+            existingInventory.is_deleted = false;
+            existingInventory.deleted_at = null;
+            await _context.SaveChangesAsync();
+            return existingInventory;
         }
     }
 }
