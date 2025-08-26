@@ -22,7 +22,7 @@ namespace ErpBackendApi.BLL.Services
                 from i in _context.inventory
                 join p in _context.products on i.product_id equals p.id into productGroup
                 from p in productGroup.DefaultIfEmpty()
-                where p.is_deleted == false
+                where i.is_deleted == false && p.is_deleted == false
                 select new InventoryDTO
                 {
                     id = i.id,
@@ -42,7 +42,7 @@ namespace ErpBackendApi.BLL.Services
                 from i in _context.inventory
                 join p in _context.products on i.product_id equals p.id into productGroup
                 from p in productGroup.DefaultIfEmpty()
-                where i.id == id && p.is_deleted == false
+                where i.id == id && i.is_deleted == false &&  p.is_deleted == false
                 select new InventoryDTO
                 {
                     id = i.id,
@@ -134,7 +134,7 @@ namespace ErpBackendApi.BLL.Services
                 Logger("Unable to restore deleted inventory. Deleted inventory not found.");
                 throw new InvalidOperationException("Unable to restore deleted inventory. Deleted inventory not found.");
             }
-            
+
             existingInventory.is_deleted = false;
             existingInventory.deleted_at = null;
             await _context.SaveChangesAsync();
@@ -148,7 +148,7 @@ namespace ErpBackendApi.BLL.Services
                 from i in _context.inventory
                 join p in _context.products on i.product_id equals p.id into productGroup
                 from p in productGroup.DefaultIfEmpty()
-                where p.is_deleted == true
+                where i.is_deleted == true
                 select new InventoryDTO
                 {
                     id = i.id,
