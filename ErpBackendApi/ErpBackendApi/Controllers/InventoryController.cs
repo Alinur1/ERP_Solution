@@ -89,7 +89,7 @@ namespace ErpBackendApi.Controllers
             }
         }
 
-        [HttpPut("deleted-inventory")]
+        [HttpGet("deleted-inventory")]
         public async Task<IActionResult> GetAllDeletedInventory()
         {            
             var operation_GetAllDeletedInventory = await _iInventories.GetAllDeletedInventoriesAsync();
