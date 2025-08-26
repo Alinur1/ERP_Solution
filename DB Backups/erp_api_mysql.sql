@@ -261,6 +261,8 @@ CREATE TABLE `inventory` (
   `quantity` int DEFAULT NULL,
   `reorder_level` int DEFAULT NULL,
   `last_updated` datetime DEFAULT NULL,
+  `is_deleted` tinyint DEFAULT NULL,
+  `deleted_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_inventory_products_idx` (`product_id`),
   CONSTRAINT `fk_inventory_products` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`)
@@ -273,7 +275,7 @@ CREATE TABLE `inventory` (
 
 LOCK TABLES `inventory` WRITE;
 /*!40000 ALTER TABLE `inventory` DISABLE KEYS */;
-INSERT INTO `inventory` VALUES (2,2,200,30,'2025-07-18 08:52:41'),(3,1,1000,50,'2025-07-18 08:57:41'),(10,3,5000,40,'2025-08-04 11:24:19');
+INSERT INTO `inventory` VALUES (2,2,200,30,'2025-07-18 08:52:41',NULL,NULL),(3,1,1000,50,'2025-07-18 08:57:41',NULL,NULL),(10,3,5000,40,'2025-08-04 11:24:19',NULL,NULL);
 /*!40000 ALTER TABLE `inventory` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -726,4 +728,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-08-24 21:11:06
+-- Dump completed on 2025-08-26 14:49:55
