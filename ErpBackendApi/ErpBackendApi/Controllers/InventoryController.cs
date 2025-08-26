@@ -28,7 +28,7 @@ namespace ErpBackendApi.Controllers
             var operation_GetInventoryById = await _iInventories.GetInventoryByIdAsync(id);
             if (operation_GetInventoryById == null)
             {
-                return NotFound("Inventory not found.");
+                return BadRequest("Inventory not found.");
             }
             return Ok(operation_GetInventoryById);
         }
@@ -47,7 +47,7 @@ namespace ErpBackendApi.Controllers
             }
         }
 
-        [HttpPut]
+        [HttpPut("update")]
         public async Task<IActionResult> UpdateInventory(Inventory inventory)
         {
             try
@@ -57,8 +57,43 @@ namespace ErpBackendApi.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
+        }
+
+        [HttpPut("delete")]
+        public async Task<IActionResult> SoftDeleteInventory(Inventory inventory)
+        {
+            try
+            {
+                var operation_SoftDeleteInventory = await _iInventories.SoftDeleteInventoryAsync(inventory);
+                return Ok("Inventory successfully deleted.");
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("undo-delete")]
+        public async Task<IActionResult> UndoSoftDeleteInventory(Inventory inventory)
+        {
+            try
+            {
+                var operation_UndoSoftDeleteInventory = await _iInventories.UndoSoftDeleteInventoryAsync(inventory);
+                return Ok("Inventory successfully restored.");
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("deleted-inventory")]
+        public async Task<IActionResult> GetAllDeletedInventory()
+        {            
+            var operation_GetAllDeletedInventory = await _iInventories.GetAllDeletedInventoriesAsync();
+            return Ok(operation_GetAllDeletedInventory);
         }
     }
 }

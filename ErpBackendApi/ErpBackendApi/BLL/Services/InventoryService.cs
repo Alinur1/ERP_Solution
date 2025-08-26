@@ -119,5 +119,25 @@ namespace ErpBackendApi.BLL.Services
             await _context.SaveChangesAsync();
             return existingInventory;
         }
+
+        public async Task<IEnumerable<InventoryDTO>> GetAllDeletedInventoriesAsync()
+        {
+            return await
+            (
+                from i in _context.inventory
+                join p in _context.products on i.product_id equals p.id
+                where p.is_deleted == true
+                select new InventoryDTO
+                {
+                    id = i.id,
+                    product_id = p.id,
+                    product_name = p.name,
+                    quantity = i.quantity,
+                    reorder_level = i.reorder_level,
+                    last_updated = i.last_updated,
+                    deleted_at = i.deleted_at,
+                }
+            ).ToListAsync();
+        }
     }
 }

@@ -11,5 +11,6 @@ namespace ErpBackendApi.BLL.Interfaces
         Task<Inventory> UpdateInventoryAsync(Inventory inventory);
         Task<Inventory> SoftDeleteInventoryAsync(Inventory inventory);
         Task<Inventory> UndoSoftDeleteInventoryAsync(Inventory inventory);
+        Task<IEnumerable<InventoryDTO>> GetAllDeletedInventoriesAsync();
     }
 }
