@@ -141,7 +141,7 @@ Testing TODO
 6. "ready to implement frontend" - categories
 7. "ready to implement frontend" - suppliers
 8. "ready to implement frontend" - products
-9. inventory
+9. "ready to implement frontend" - inventory
 10. customers
 11. sales_orders
 12. sales_order_items
