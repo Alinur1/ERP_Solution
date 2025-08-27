@@ -10,5 +10,6 @@ namespace ErpBackendApi.BLL.Interfaces
         Task<Customer> UpdateCustomerAsync(Customer customer);
         Task<Customer> SoftDeleteCustomerAsync(Customer customer);
         Task<Customer> UndoSoftDeleteCustomerAsync(Customer customer);
+        Task<IEnumerable<Customer>> GetAllDeletedCustomerAsync();
     }
 }

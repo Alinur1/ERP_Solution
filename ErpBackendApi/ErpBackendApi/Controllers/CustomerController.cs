@@ -88,5 +88,12 @@ namespace ErpBackendApi.Controllers
                 return NotFound(ex.Message);
             }
         }
+
+        [HttpPut("deleted-customer")]
+        public async Task<IActionResult> GetAllDeletedCustomer()
+        {
+            var operation_GetAllDeletedCustomer = await _iCustomer.GetAllDeletedCustomerAsync();
+            return Ok(operation_GetAllDeletedCustomer);
+        }
     }
 }
