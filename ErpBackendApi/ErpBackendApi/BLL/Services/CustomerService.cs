@@ -45,11 +45,29 @@ namespace ErpBackendApi.BLL.Services
         public async Task<Customer> AddCustomerAsync(Customer customer)
         {
             var existingCustomer = await _context.customers.FirstOrDefaultAsync(c => c.phone == customer.phone && c.is_deleted == false);
+            var existingCustomerEmail = await _context.customers.FirstOrDefaultAsync(c => c.email == customer.email && c.is_deleted == false);
+
             if (existingCustomer != null)
             {
                 Logger("A customer with same phone number already exists.");
                 throw new InvalidOperationException("A customer with same phone number already exists.");
             }
+
+            if (string.IsNullOrWhiteSpace(customer.name) || string.IsNullOrWhiteSpace(customer.phone))
+            {
+                Logger("Customer name and phone number are required.");
+                throw new InvalidOperationException("Customer name and phone number are required.");
+            }
+
+            if (!string.IsNullOrWhiteSpace(customer.email))
+            {                
+                if (existingCustomerEmail != null)
+                {
+                    Logger("A customer with same email already exists.");
+                    throw new InvalidOperationException("A customer with same email already exists.");
+                }
+            }
+
             customer.is_deleted = false;
             customer.deleted_at = null;
             _context.customers.Add(customer);
@@ -60,22 +78,43 @@ namespace ErpBackendApi.BLL.Services
         public async Task<Customer> UpdateCustomerAsync(Customer customer)
         {
             var existingCustomer = await _context.customers.FirstOrDefaultAsync(c => c.id == customer.id && c.is_deleted == false);
-            var existingPhone = await _context.customers.FirstOrDefaultAsync(c => c.phone == customer.phone && c.is_deleted == false);
+            var existingCustomerPhone = await _context.customers.FirstOrDefaultAsync(c => c.phone == customer.phone && c.id != customer.id && c.is_deleted == false);
+            var existingCustomerEmail = await _context.customers.FirstOrDefaultAsync(c => c.email == customer.email && c.id != customer.id && c.is_deleted == false);
+
             if (existingCustomer == null)
             {
                 Logger("Customer not found to update information.");
                 throw new InvalidOperationException("Customer not found to update information.");
             }
-            if (existingPhone != null)
+
+            if (existingCustomer.phone != customer.phone)
             {
-                Logger("Error! Duplicate phone number for a customer.");
-                throw new InvalidOperationException("Error! Duplicate phone number for a customer.");
+                if (existingCustomerPhone != null)
+                {
+                    Logger("Error! Duplicate phone number for a customer.");
+                    throw new InvalidOperationException("Error! Duplicate phone number for a customer.");
+                }
             }
+
+            if (string.IsNullOrWhiteSpace(customer.name) || string.IsNullOrWhiteSpace(customer.phone))
+            {
+                Logger("Customer name and phone number are required.");
+                throw new InvalidOperationException("Customer name and phone number are required.");
+            }
+
+            if (!string.IsNullOrWhiteSpace(customer.email) && existingCustomer.email != customer.email)
+            {                
+                if (existingCustomerEmail != null)
+                {
+                    Logger("Error! Duplicate email for a customer.");
+                    throw new InvalidOperationException("Error! Duplicate email for a customer.");
+                }
+            }
+
             existingCustomer.name = customer.name;
             existingCustomer.email = customer.email;
             existingCustomer.phone = customer.phone;
             existingCustomer.address = customer.address;
-            _context.customers.Update(existingCustomer);
             await _context.SaveChangesAsync();
             return existingCustomer;
         }
@@ -90,7 +129,6 @@ namespace ErpBackendApi.BLL.Services
             }
             existingCustomer.is_deleted = true;
             existingCustomer.deleted_at = DateTime.UtcNow;
-            _context.customers.Update(existingCustomer);
             await _context.SaveChangesAsync();
             return existingCustomer;
         }
@@ -105,7 +143,6 @@ namespace ErpBackendApi.BLL.Services
             }
             existingCustomer.is_deleted = false;
             existingCustomer.deleted_at = null;
-            _context.customers.Update(existingCustomer);
             await _context.SaveChangesAsync();
             return existingCustomer;
         }
