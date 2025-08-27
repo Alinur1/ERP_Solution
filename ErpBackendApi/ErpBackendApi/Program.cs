@@ -127,6 +127,7 @@ TODO
 13. In AppDataContext, try to convert all the objects of the models to the plural form.
 14. Change all the DateOnly to DateTime
 15. Add pagination as necessity. Check the PaginatedResult.cs in the Utilites/Helper folder.
+16. Add transaction [CommitAsync(), RollbackAsync()] in services as necessary (except the methods that uses HTTPGET).
 
 
 
