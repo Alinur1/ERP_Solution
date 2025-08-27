@@ -81,6 +81,7 @@ Tracks sales orders.
 - **delivery_status** - ENUM - INT - ('Pending', 'Confirmed', 'Processing', 'Shipped', 'Delivered')
 - **status** - ENUM - INT - ('Open', 'Closed', 'Cancelled')
 - **notes** - TEXT
+- **last_updated** - DATETIME
 - **is_deleted** - BIT
 - **deleted_at** - DATETIME
 

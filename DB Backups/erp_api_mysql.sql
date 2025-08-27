@@ -143,7 +143,7 @@ CREATE TABLE `customers` (
   `is_deleted` tinyint DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -152,7 +152,7 @@ CREATE TABLE `customers` (
 
 LOCK TABLES `customers` WRITE;
 /*!40000 ALTER TABLE `customers` DISABLE KEYS */;
-INSERT INTO `customers` VALUES (1,'Md. Alinur Hossain','alinur@gmail.com','123456789','East Kafrul',0,NULL),(2,'Md. Jidan Rahman','jidan@email.com','1233453459',NULL,0,NULL),(3,'Md. Jidan Rahman','alinur@email.com','1233dsad453459',NULL,1,'2025-07-18 09:53:36'),(4,'Saad Muhammod Bijoy','bijoy@email.com','08927578293',NULL,0,NULL),(5,'Saad Muhammod Bijoy','','763278479283',NULL,1,'2025-07-18 09:54:07'),(6,'Barrister Sumon','sumon01@gmail.com','123456789110','Dhaka Central Jail',1,'2025-08-04 13:46:24');
+INSERT INTO `customers` VALUES (1,'Md. Alinur Hossain','alinur@gmail.com','123456789','East Kafrul',0,NULL),(2,'Md. Jidan Rahman','jidan@email.com','1233453459',NULL,0,NULL),(3,'Md. Jidan Rahman','alinur@email.com','1233dsad453459',NULL,1,'2025-07-18 09:53:36'),(4,'Saad Muhammod Bijoy','bijoy@email.com','08927578293',NULL,0,NULL),(5,'Saad Muhammod Bijoy','','763278479283',NULL,1,'2025-07-18 09:54:07'),(6,'Barrister Sumon','sumon01@gmail.com','123456789110','Dhaka Central Jail',1,'2025-08-04 13:46:24'),(7,'Nawab Sirajuddaula',NULL,'1234567890',NULL,0,NULL);
 /*!40000 ALTER TABLE `customers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -585,6 +585,7 @@ CREATE TABLE `sales_orders` (
   `delivery_status` int DEFAULT NULL,
   `status` int DEFAULT NULL,
   `notes` text,
+  `last_updated` datetime DEFAULT NULL,
   `is_deleted` tinyint DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -599,7 +600,7 @@ CREATE TABLE `sales_orders` (
 
 LOCK TABLES `sales_orders` WRITE;
 /*!40000 ALTER TABLE `sales_orders` DISABLE KEYS */;
-INSERT INTO `sales_orders` VALUES (1,1,NULL,NULL,0,0,NULL,1,'2025-08-05 06:07:13'),(2,1,'2025-08-05 06:38:30','2025-08-08 06:38:30',0,0,NULL,0,NULL),(3,3,'2025-08-05 05:57:41','2025-08-08 05:57:41',0,0,NULL,1,'2025-08-05 06:07:18'),(4,2,'2025-08-05 00:00:00','2025-08-09 00:00:00',3,1,NULL,0,NULL),(5,1,'2025-08-05 00:00:00','2025-08-10 00:00:00',0,0,NULL,0,NULL);
+INSERT INTO `sales_orders` VALUES (1,1,NULL,NULL,0,0,NULL,NULL,1,'2025-08-05 06:07:13'),(2,1,'2025-08-05 06:38:30','2025-08-08 06:38:30',0,0,NULL,NULL,0,NULL),(3,3,'2025-08-05 05:57:41','2025-08-08 05:57:41',0,0,NULL,NULL,1,'2025-08-05 06:07:18'),(4,2,'2025-08-05 00:00:00','2025-08-09 00:00:00',3,1,NULL,NULL,0,NULL),(5,1,'2025-08-05 00:00:00','2025-08-10 00:00:00',0,0,NULL,NULL,0,NULL);
 /*!40000 ALTER TABLE `sales_orders` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -728,4 +729,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-08-26 14:49:55
+-- Dump completed on 2025-08-27 23:08:10
