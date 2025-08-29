@@ -173,5 +173,28 @@ namespace ErpBackendApi.BLL.Services
             await _context.SaveChangesAsync();
             return existingSalesOrder;
         }
+
+        public async Task<IEnumerable<SalesOrderDTO>> GetAllDeletedSalesOrdersAsync()
+        {
+            return await
+            (
+                from so in _context.sales_orders
+                join c in _context.customers on so.customer_id equals c.id into customerGroup
+                from c in customerGroup.DefaultIfEmpty()
+                where so.is_deleted == true
+                select new SalesOrderDTO
+                {
+                    id = so.id,
+                    customer_id = c != null && c.is_deleted == false ? c.id : null,
+                    customer_name = c != null && c.is_deleted == false ? c.name : null,
+                    order_date = so.order_date,
+                    delivery_date = so.delivery_date,
+                    delivery_status = so.delivery_status,
+                    status = so.status,
+                    notes = so.notes,
+                    last_updated = so.last_updated,
+                }
+            ).ToListAsync();
+        }
     }
 }
