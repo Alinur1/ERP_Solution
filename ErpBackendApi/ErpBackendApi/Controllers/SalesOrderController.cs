@@ -28,7 +28,7 @@ namespace ErpBackendApi.Controllers
             var operation_GetSalesOrderById = await _iSalesOrders.GetSalesOrderByIdAsync(id);
             if (operation_GetSalesOrderById == null)
             {
-                return NotFound("Sales order not found.");
+                return BadRequest("Sales order not found.");
             }
             return Ok(operation_GetSalesOrderById);
         }
@@ -39,7 +39,7 @@ namespace ErpBackendApi.Controllers
             var operation_GetSalesOrderByCustomerId = await _iSalesOrders.GetSalesOrderByCustomerIdAsync(customerId);
             if (operation_GetSalesOrderByCustomerId == null)
             {
-                return NotFound("Sales order not found for this customer.");
+                return BadRequest("Sales order not found for this customer.");
             }
             return Ok(operation_GetSalesOrderByCustomerId);
         }
@@ -68,7 +68,7 @@ namespace ErpBackendApi.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -82,7 +82,7 @@ namespace ErpBackendApi.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -96,7 +96,7 @@ namespace ErpBackendApi.Controllers
             }
             catch(InvalidOperationException ex)
             {
-                return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
     }

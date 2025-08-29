@@ -26,7 +26,7 @@ namespace ErpBackendApi.BLL.Services
                 select new SalesOrderDTO
                 {
                     id = so.id,
-                    customer_id = c != null ? c.id : null,
+                    customer_id = c != null && c.is_deleted == false ? c.id : null,
                     customer_name = c != null && c.is_deleted == false ? c.name : null,
                     order_date = so.order_date,
                     delivery_date = so.delivery_date,
@@ -49,7 +49,7 @@ namespace ErpBackendApi.BLL.Services
                 select new SalesOrderDTO
                 {
                     id = so.id,
-                    customer_id = c != null ? c.id : null,
+                    customer_id = c != null && c.is_deleted == false ? c.id : null,
                     customer_name = c != null && c.is_deleted == false ? c.name : null,
                     order_date = so.order_date,
                     delivery_date = so.delivery_date,
@@ -68,11 +68,11 @@ namespace ErpBackendApi.BLL.Services
                 from so in _context.sales_orders
                 join c in _context.customers on so.customer_id equals c.id into customerGroup
                 from c in customerGroup.DefaultIfEmpty()
-                where c.id == customerId && so.is_deleted == false
+                where c.id == customerId && c.is_deleted == false && so.is_deleted == false
                 select new SalesOrderDTO
                 {
                     id = so.id,
-                    customer_id = c != null ? c.id : null,
+                    customer_id = c != null && c.is_deleted == false ? c.id : null,
                     customer_name = c != null && c.is_deleted == false ? c.name : null,
                     order_date = so.order_date,
                     delivery_date = so.delivery_date,
@@ -94,6 +94,12 @@ namespace ErpBackendApi.BLL.Services
                 throw new InvalidOperationException("Customer not found.");
             }
 
+            if (salesOrder.order_date == null || salesOrder.delivery_status == null || salesOrder.status == null)
+            {
+                Logger("Order date, delivery status and order status cannot be empty.");
+                throw new InvalidOperationException("Order date, delivery status and order status cannot be empty.");
+            }
+
             salesOrder.last_updated = DateTime.UtcNow;
             salesOrder.is_deleted = false;
             salesOrder.deleted_at = null;
@@ -105,6 +111,13 @@ namespace ErpBackendApi.BLL.Services
         public async Task<SalesOrder> UpdateSalesOrderAsync(SalesOrder salesOrder)
         {
             var existingSalesOrder = await _context.sales_orders.FirstOrDefaultAsync(so => so.id == salesOrder.id && so.is_deleted == false);
+            var existingCustomer = await _context.customers.FirstOrDefaultAsync(c => c.id == salesOrder.customer_id && c.is_deleted == false);
+
+            if (existingCustomer == null)
+            {
+                Logger("Customer not found.");
+                throw new InvalidOperationException("Customer not found.");
+            }
 
             if (existingSalesOrder == null)
             {
@@ -112,6 +125,13 @@ namespace ErpBackendApi.BLL.Services
                 throw new InvalidOperationException("Unable to update sales order. Check if it is not deleted.");
             }
 
+            if (salesOrder.order_date == null || salesOrder.delivery_status == null || salesOrder.status == null)
+            {
+                Logger("Order date, delivery status and order status cannot be empty.");
+                throw new InvalidOperationException("Order date, delivery status and order status cannot be empty.");
+            }
+
+            existingSalesOrder.customer_id = salesOrder.customer_id;
             existingSalesOrder.order_date = salesOrder.order_date;
             existingSalesOrder.delivery_date = salesOrder.delivery_date;
             existingSalesOrder.delivery_status = salesOrder.delivery_status;
