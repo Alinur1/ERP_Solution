@@ -25,11 +25,15 @@ namespace ErpBackendApi.BLL.Services
                 from so in salesOrderGroup.DefaultIfEmpty()
                 join p in _context.products on soi.product_id equals p.id into productGroup
                 from p in productGroup.DefaultIfEmpty()
+                join c in _context.customers on so.customer_id equals c.id into customersGroup
+                from c in customersGroup.DefaultIfEmpty()
                 where soi.is_deleted == false
                 select new SalesOrderItemDTO
                 {
                     id = soi.id,
                     sales_order_id = so != null && so.is_deleted == false ? so.id : null,
+                    customer_id = c != null && c.is_deleted == false ? c.id : null,
+                    customer_name = c != null && c.is_deleted == false ? c.name : null,
                     product_id = p != null && p.is_deleted == false ? p.id : null,
                     product_name = p != null && p.is_deleted == false ? p.name : null,
                     sku = p != null && p.is_deleted == false ? p.sku : null,
@@ -50,11 +54,15 @@ namespace ErpBackendApi.BLL.Services
                 from so in salesOrderGroup.DefaultIfEmpty()
                 join p in _context.products on soi.product_id equals p.id into productGroup
                 from p in productGroup.DefaultIfEmpty()
+                join c in _context.customers on so.customer_id equals c.id into customersGroup
+                from c in customersGroup.DefaultIfEmpty()
                 where soi.id == id && soi.is_deleted == false
                 select new SalesOrderItemDTO
                 {
                     id = soi.id,
                     sales_order_id = so != null && so.is_deleted == false ? so.id : null,
+                    customer_id = c != null && c.is_deleted == false ? c.id : null,
+                    customer_name = c != null && c.is_deleted == false ? c.name : null,
                     product_id = p != null && p.is_deleted == false ? p.id : null,
                     product_name = p != null && p.is_deleted == false ? p.name : null,
                     sku = p != null && p.is_deleted == false ? p.sku : null,
@@ -75,11 +83,15 @@ namespace ErpBackendApi.BLL.Services
                 from so in salesOrderGroup.DefaultIfEmpty()
                 join p in _context.products on soi.product_id equals p.id into productGroup
                 from p in productGroup.DefaultIfEmpty()
+                join c in _context.customers on so.customer_id equals c.id into customersGroup
+                from c in customersGroup.DefaultIfEmpty()
                 where so.id == orderId && soi.is_deleted == false
                 select new SalesOrderItemDTO
                 {
                     id = soi.id,
                     sales_order_id = so != null && so.is_deleted == false ? so.id : null,
+                    customer_id = c != null && c.is_deleted == false ? c.id : null,
+                    customer_name = c != null && c.is_deleted == false ? c.name : null,
                     product_id = p != null && p.is_deleted == false ? p.id : null,
                     product_name = p != null && p.is_deleted == false ? p.name : null,
                     sku = p != null && p.is_deleted == false ? p.sku : null,
@@ -91,52 +103,64 @@ namespace ErpBackendApi.BLL.Services
             ).FirstOrDefaultAsync();
         }
 
-        public async Task<SalesOrderItem> AddSalesOrderItemAsync(SalesOrderItem item)
+        public async Task<IEnumerable<SalesOrderItem>> AddSalesOrderItemsAsync(IEnumerable<SalesOrderItem> items)
         {
-            var existingSalesOrderItem = await _context.sales_order_items.FirstOrDefaultAsync(sot => sot.sales_order_id == item.sales_order_id && sot.product_id == item.product_id && sot.is_deleted == false);
-            var existingSalesOrder = await _context.sales_orders.FirstOrDefaultAsync(so => so.id == item.sales_order_id && so.is_deleted == false);
-            var existingProduct = await _context.products.FirstOrDefaultAsync(p => p.id == item.product_id && p.is_deleted == false);
+            using var transaction = await _context.Database.BeginTransactionAsync();
 
-            if (existingSalesOrderItem != null)
+            try
             {
-                Logger("This product is already added to the order.");
-                throw new InvalidOperationException("This product is already added to the order.");
-            }
+                foreach (var item in items)
+                {
+                    var existingSalesOrder = await _context.sales_orders.FirstOrDefaultAsync(so => so.id == item.sales_order_id && so.is_deleted == false);
 
-            if (existingSalesOrder == null)
+                    if (existingSalesOrder == null)
+                    {
+                        Logger($"Order ID {item.sales_order_id} not found or is deleted.");
+                        throw new InvalidOperationException($"Order ID {item.sales_order_id} not found or is deleted.");
+                    }
+                    var existingProduct = await _context.products.FirstOrDefaultAsync(p => p.id == item.product_id && p.is_deleted == false);
+
+                    if (existingProduct == null)
+                    {
+                        Logger($"Product ID {item.product_id} not found or is deleted.");
+                        throw new InvalidOperationException($"Product ID {item.product_id} not found or is deleted.");
+                    }
+
+                    var existingSalesOrderItem = await _context.sales_order_items.FirstOrDefaultAsync(sot => sot.sales_order_id == item.sales_order_id && sot.product_id == item.product_id && sot.is_deleted == false);
+
+                    if (existingSalesOrderItem != null)
+                    {
+                        Logger($"Product ID {item.product_id} is already added to the order {item.sales_order_id}.");
+                        throw new InvalidOperationException($"Product ID {item.product_id} is already added to the order {item.sales_order_id}.");
+                    }
+
+                    if (item.quantity < 0 || item.amount < 0 || item.discount < 0)
+                    {
+                        Logger("Quantity, amount, or discount cannot be negative.");
+                        throw new InvalidOperationException("Quantity, amount, or discount cannot be negative.");
+                    }
+
+                    if (item.quantity == null)
+                    {
+                        Logger("Quantity cannot be empty.");
+                        throw new InvalidOperationException("Quantity cannot be empty.");
+                    }
+
+                    item.amount = item.quantity * existingProduct.price;
+                    item.is_deleted = false;
+                    item.deleted_at = null;
+                    _context.sales_order_items.Add(item);
+                }
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return items;
+            }
+            catch
             {
-                Logger("Order ID not found or is deleted.");
-                throw new InvalidOperationException("Order ID not found or is deleted.");
+                await transaction.RollbackAsync();
+                throw new InvalidOperationException("Changes rollback occurred unexpectedly.");
             }
-
-            if (existingProduct == null)
-            {
-                Logger("Product not found or is deleted.");
-                throw new InvalidOperationException("Product not found or is deleted.");
-            }
-
-            if (item.quantity < 0 || item.amount < 0 || item.discount < 0)
-            {
-                Logger("Quantity, amount, or discount cannot be negative.");
-                throw new InvalidOperationException("Quantity, amount, or discount cannot be negative.");
-            }
-
-            if (item.quantity == null || item.amount == null)
-            {
-                Logger("Quantity or amount cannot be empty.");
-                throw new InvalidOperationException("Quantity or amount cannot be empty.");
-            }
-
-            item.amount = item.quantity * existingProduct.price;
-            item.is_deleted = false;
-            item.deleted_at = null;
-
-            _context.sales_order_items.Add(item);
-            await _context.SaveChangesAsync();
-
-            return item;
         }
-
 
         public async Task<SalesOrderItem> UpdateSalesOrderItemAsync(SalesOrderItem item)
         {
@@ -161,18 +185,28 @@ namespace ErpBackendApi.BLL.Services
                 throw new InvalidOperationException("Quantity, amount, or discount cannot be negative.");
             }
 
-            if (item.quantity == null || item.amount == null)
+            if (item.quantity == null)
             {
-                Logger("Quantity or amount cannot be empty.");
-                throw new InvalidOperationException("Quantity or amount cannot be empty.");
+                Logger("Quantity cannot be empty.");
+                throw new InvalidOperationException("Quantity cannot be empty.");
             }
 
-            existingSalesOrderItem.product_id = item.product_id;
-            existingSalesOrderItem.quantity = item.quantity;
-            existingSalesOrderItem.discount = item.discount;
-            existingSalesOrderItem.amount = item.quantity * existingProduct.price;
-            await _context.SaveChangesAsync();
-            return existingSalesOrderItem;
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                existingSalesOrderItem.product_id = item.product_id;
+                existingSalesOrderItem.quantity = item.quantity;
+                existingSalesOrderItem.discount = item.discount;
+                existingSalesOrderItem.amount = item.quantity * existingProduct.price;
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return existingSalesOrderItem;
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw new InvalidOperationException("Changes rollback occurred unexpectedly.");
+            }
         }
 
         public async Task<SalesOrderItem> SoftDeleteSalesOrderItemAsync(SalesOrderItem item)
@@ -216,11 +250,15 @@ namespace ErpBackendApi.BLL.Services
                 from so in salesOrderGroup.DefaultIfEmpty()
                 join p in _context.products on soi.product_id equals p.id into productGroup
                 from p in productGroup.DefaultIfEmpty()
+                join c in _context.customers on so.customer_id equals c.id into customersGroup
+                from c in customersGroup.DefaultIfEmpty()
                 where soi.is_deleted == true
                 select new SalesOrderItemDTO
                 {
                     id = soi.id,
                     sales_order_id = so != null && so.is_deleted == false ? so.id : null,
+                    customer_id = c != null && c.is_deleted == false ? c.id : null,
+                    customer_name = c != null && c.is_deleted == false ? c.name : null,
                     product_id = p != null && p.is_deleted == false ? p.id : null,
                     product_name = p != null && p.is_deleted == false ? p.name : null,
                     sku = p != null && p.is_deleted == false ? p.sku : null,

@@ -45,12 +45,12 @@ namespace ErpBackendApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddSalesOrderItem(SalesOrderItem item)
+        public async Task<IActionResult> AddSalesOrderItems(IEnumerable<SalesOrderItem> items)
         {
             try
             {
-                var operation_AddSalesOrderItem = await _iSalesOrderItem.AddSalesOrderItemAsync(item);
-                return Ok("Sales order item added successfully.");
+                var addedItems = await _iSalesOrderItem.AddSalesOrderItemsAsync(items);
+                return Ok("Sales order items added successfully.");
             }
             catch (InvalidOperationException ex)
             {
