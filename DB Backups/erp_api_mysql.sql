@@ -548,7 +548,7 @@ CREATE TABLE `sales_order_items` (
   `sales_order_id` int DEFAULT NULL,
   `product_id` int DEFAULT NULL,
   `quantity` int DEFAULT NULL,
-  `unit_price` decimal(12,2) DEFAULT NULL,
+  `amount` decimal(12,2) DEFAULT NULL,
   `discount` decimal(12,2) DEFAULT NULL,
   `is_deleted` tinyint DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
@@ -591,7 +591,7 @@ CREATE TABLE `sales_orders` (
   PRIMARY KEY (`id`),
   KEY `fk_sales_orders_customers_idx` (`customer_id`),
   CONSTRAINT `fk_sales_orders_customers` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -600,7 +600,7 @@ CREATE TABLE `sales_orders` (
 
 LOCK TABLES `sales_orders` WRITE;
 /*!40000 ALTER TABLE `sales_orders` DISABLE KEYS */;
-INSERT INTO `sales_orders` VALUES (1,1,NULL,NULL,0,0,NULL,NULL,1,'2025-08-05 06:07:13'),(2,1,'2025-08-05 06:38:30','2025-08-08 06:38:30',0,0,NULL,NULL,0,NULL),(3,3,'2025-08-05 05:57:41','2025-08-08 05:57:41',0,0,NULL,NULL,1,'2025-08-05 06:07:18'),(4,2,'2025-08-05 00:00:00','2025-08-09 00:00:00',3,1,NULL,NULL,0,NULL),(5,1,'2025-08-05 00:00:00','2025-08-10 00:00:00',0,0,NULL,NULL,0,NULL);
+INSERT INTO `sales_orders` VALUES (1,1,NULL,NULL,0,0,NULL,NULL,1,'2025-08-05 06:07:13'),(2,1,'2025-08-05 06:38:30','2025-08-08 06:38:30',0,0,NULL,NULL,0,NULL),(3,3,'2025-08-05 05:57:41','2025-08-08 05:57:41',0,0,NULL,NULL,1,'2025-08-05 06:07:18'),(4,2,'2025-08-05 00:00:00','2025-08-09 00:00:00',3,1,NULL,NULL,1,'2025-08-29 09:37:02'),(5,1,'2025-08-05 00:00:00','2025-08-10 00:00:00',0,0,NULL,NULL,0,NULL),(6,7,'2025-08-29 02:25:30','2025-08-29 03:28:12',4,1,NULL,'2025-08-29 09:33:48',0,NULL);
 /*!40000 ALTER TABLE `sales_orders` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -729,4 +729,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-08-27 23:08:10
+-- Dump completed on 2025-08-29 19:12:20
