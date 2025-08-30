@@ -99,5 +99,12 @@ namespace ErpBackendApi.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet("deleted-salesorderitem")]
+        public async Task<IActionResult> GetAllDeletedSalesOrderItems()
+        {
+            var operation_GetAllDeletedSalesOrderItems = await _iSalesOrderItem.GetAllDeletedSalesOrderItemAsync();
+            return Ok(operation_GetAllDeletedSalesOrderItems);
+        }
     }
 }

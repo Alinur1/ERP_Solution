@@ -12,5 +12,6 @@ namespace ErpBackendApi.BLL.Interfaces
         Task<SalesOrderItem> UpdateSalesOrderItemAsync(SalesOrderItem item);
         Task<SalesOrderItem> SoftDeleteSalesOrderItemAsync(SalesOrderItem item);
         Task<SalesOrderItem> UndoSoftDeleteSalesOrderItemAsync(SalesOrderItem item);
+        Task<IEnumerable<SalesOrderItemDTO>> GetAllDeletedSalesOrderItemAsync();
     }
 }
