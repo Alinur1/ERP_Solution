@@ -93,43 +93,84 @@ namespace ErpBackendApi.BLL.Services
 
         public async Task<SalesOrderItem> AddSalesOrderItemAsync(SalesOrderItem item)
         {
-            var existingSalesOrderItem = await _context.sales_order_items.FirstOrDefaultAsync(soi => soi.sales_order_id == item.sales_order_id && soi.is_deleted == false);
-            var exisintngSalesOrder = await _context.sales_orders.FirstOrDefaultAsync(so => so.id == item.sales_order_id && so.is_deleted == false);
+            var existingSalesOrderItem = await _context.sales_order_items.FirstOrDefaultAsync(sot => sot.sales_order_id == item.sales_order_id && sot.product_id == item.product_id && sot.is_deleted == false);
+            var existingSalesOrder = await _context.sales_orders.FirstOrDefaultAsync(so => so.id == item.sales_order_id && so.is_deleted == false);
+            var existingProduct = await _context.products.FirstOrDefaultAsync(p => p.id == item.product_id && p.is_deleted == false);
 
             if (existingSalesOrderItem != null)
             {
-                Logger("Same order number for an item is not allowed.");
-                throw new InvalidOperationException("Same order number for an item is not allowed.");
+                Logger("This product is already added to the order.");
+                throw new InvalidOperationException("This product is already added to the order.");
             }
 
-            if (exisintngSalesOrder == null)
+            if (existingSalesOrder == null)
             {
-                Logger("Sales order doesn't exist.");
-                throw new InvalidOperationException("Sales order doesn't exist.");
+                Logger("Order ID not found or is deleted.");
+                throw new InvalidOperationException("Order ID not found or is deleted.");
             }
 
+            if (existingProduct == null)
+            {
+                Logger("Product not found or is deleted.");
+                throw new InvalidOperationException("Product not found or is deleted.");
+            }
+
+            if (item.quantity < 0 || item.amount < 0 || item.discount < 0)
+            {
+                Logger("Quantity, amount, or discount cannot be negative.");
+                throw new InvalidOperationException("Quantity, amount, or discount cannot be negative.");
+            }
+
+            if (item.quantity == null || item.amount == null)
+            {
+                Logger("Quantity or amount cannot be empty.");
+                throw new InvalidOperationException("Quantity or amount cannot be empty.");
+            }
+
+            item.amount = item.quantity * existingProduct.price;
             item.is_deleted = false;
             item.deleted_at = null;
+
             _context.sales_order_items.Add(item);
             await _context.SaveChangesAsync();
+
             return item;
         }
+
 
         public async Task<SalesOrderItem> UpdateSalesOrderItemAsync(SalesOrderItem item)
         {
             var existingSalesOrderItem = await _context.sales_order_items.FirstOrDefaultAsync(soi => soi.id == item.id && soi.is_deleted == false);
+            var existingProduct = await _context.products.FirstOrDefaultAsync(p => p.id == item.product_id && p.is_deleted == false);
 
             if (existingSalesOrderItem == null)
             {
-                Logger("Unable to update sales order item.");
-                throw new InvalidOperationException("Unable to update sales order item.");
+                Logger("Sales order item not found or is deleted.");
+                throw new InvalidOperationException("Sales order item not found or is deleted.");
             }
 
-            existingSalesOrderItem.sales_order_id = item.sales_order_id;
+            if (existingProduct == null)
+            {
+                Logger("Product not found or is deleted.");
+                throw new InvalidOperationException("Product not found or is deleted.");
+            }
+
+            if (item.quantity < 0 || item.amount < 0 || item.discount < 0)
+            {
+                Logger("Quantity, amount, or discount cannot be negative.");
+                throw new InvalidOperationException("Quantity, amount, or discount cannot be negative.");
+            }
+
+            if (item.quantity == null || item.amount == null)
+            {
+                Logger("Quantity or amount cannot be empty.");
+                throw new InvalidOperationException("Quantity or amount cannot be empty.");
+            }
+
             existingSalesOrderItem.product_id = item.product_id;
             existingSalesOrderItem.quantity = item.quantity;
-            existingSalesOrderItem.amount = item.amount;
             existingSalesOrderItem.discount = item.discount;
+            existingSalesOrderItem.amount = item.quantity * existingProduct.price;
             await _context.SaveChangesAsync();
             return existingSalesOrderItem;
         }
