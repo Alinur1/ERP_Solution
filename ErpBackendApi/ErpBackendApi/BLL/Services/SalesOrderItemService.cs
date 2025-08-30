@@ -29,11 +29,13 @@ namespace ErpBackendApi.BLL.Services
                 select new SalesOrderItemDTO
                 {
                     id = soi.id,
-                    sales_order_id = so != null && so.is_deleted == false ? so.id : 0,
-                    product_id = p != null ? p.id : null,
+                    sales_order_id = so != null && so.is_deleted == false ? so.id : null,
+                    product_id = p != null && p.is_deleted == false ? p.id : null,
                     product_name = p != null && p.is_deleted == false ? p.name : null,
+                    sku = p != null && p.is_deleted == false ? p.sku : null,
+                    price = p != null && p.is_deleted == false ? p.price : null,
                     quantity = soi.quantity,
-                    unit_price = soi.unit_price,
+                    amount = soi.amount,
                     discount = soi.discount
                 }
             ).ToListAsync();
@@ -52,11 +54,13 @@ namespace ErpBackendApi.BLL.Services
                 select new SalesOrderItemDTO
                 {
                     id = soi.id,
-                    sales_order_id = so != null && so.is_deleted == false ? so.id : 0,
-                    product_id = p != null ? p.id : null,
+                    sales_order_id = so != null && so.is_deleted == false ? so.id : null,
+                    product_id = p != null && p.is_deleted == false ? p.id : null,
                     product_name = p != null && p.is_deleted == false ? p.name : null,
+                    sku = p != null && p.is_deleted == false ? p.sku : null,
+                    price = p != null && p.is_deleted == false ? p.price : null,
                     quantity = soi.quantity,
-                    unit_price = soi.unit_price,
+                    amount = soi.amount,
                     discount = soi.discount
                 }
             ).FirstOrDefaultAsync();
@@ -75,11 +79,13 @@ namespace ErpBackendApi.BLL.Services
                 select new SalesOrderItemDTO
                 {
                     id = soi.id,
-                    sales_order_id = so != null && so.is_deleted == false ? so.id : 0,
-                    product_id = p != null ? p.id : null,
+                    sales_order_id = so != null && so.is_deleted == false ? so.id : null,
+                    product_id = p != null && p.is_deleted == false ? p.id : null,
                     product_name = p != null && p.is_deleted == false ? p.name : null,
+                    sku = p != null && p.is_deleted == false ? p.sku : null,
+                    price = p != null && p.is_deleted == false ? p.price : null,
                     quantity = soi.quantity,
-                    unit_price = soi.unit_price,
+                    amount = soi.amount,
                     discount = soi.discount
                 }
             ).FirstOrDefaultAsync();
@@ -89,16 +95,19 @@ namespace ErpBackendApi.BLL.Services
         {
             var existingSalesOrderItem = await _context.sales_order_items.FirstOrDefaultAsync(soi => soi.sales_order_id == item.sales_order_id && soi.is_deleted == false);
             var exisintngSalesOrder = await _context.sales_orders.FirstOrDefaultAsync(so => so.id == item.sales_order_id && so.is_deleted == false);
+
             if (existingSalesOrderItem != null)
             {
                 Logger("Same order number for an item is not allowed.");
                 throw new InvalidOperationException("Same order number for an item is not allowed.");
             }
+
             if (exisintngSalesOrder == null)
             {
                 Logger("Sales order doesn't exist.");
                 throw new InvalidOperationException("Sales order doesn't exist.");
             }
+
             item.is_deleted = false;
             item.deleted_at = null;
             _context.sales_order_items.Add(item);
@@ -109,17 +118,18 @@ namespace ErpBackendApi.BLL.Services
         public async Task<SalesOrderItem> UpdateSalesOrderItemAsync(SalesOrderItem item)
         {
             var existingSalesOrderItem = await _context.sales_order_items.FirstOrDefaultAsync(soi => soi.id == item.id && soi.is_deleted == false);
+
             if (existingSalesOrderItem == null)
             {
                 Logger("Unable to update sales order item.");
                 throw new InvalidOperationException("Unable to update sales order item.");
             }
+
             existingSalesOrderItem.sales_order_id = item.sales_order_id;
             existingSalesOrderItem.product_id = item.product_id;
             existingSalesOrderItem.quantity = item.quantity;
-            existingSalesOrderItem.unit_price = item.unit_price;
+            existingSalesOrderItem.amount = item.amount;
             existingSalesOrderItem.discount = item.discount;
-            _context.sales_order_items.Update(existingSalesOrderItem);
             await _context.SaveChangesAsync();
             return existingSalesOrderItem;
         }
@@ -127,14 +137,15 @@ namespace ErpBackendApi.BLL.Services
         public async Task<SalesOrderItem> SoftDeleteSalesOrderItemAsync(SalesOrderItem item)
         {
             var existingSalesOrderItem = await _context.sales_order_items.FirstOrDefaultAsync(soi => soi.id == item.id && soi.is_deleted == false);
+
             if (existingSalesOrderItem == null)
             {
                 Logger("Unable to delete sales order item.");
                 throw new InvalidOperationException("Unable to delete sales order item.");
             }
+
             existingSalesOrderItem.is_deleted = true;
             existingSalesOrderItem.deleted_at = DateTime.UtcNow;
-            _context.sales_order_items.Update(existingSalesOrderItem);
             await _context.SaveChangesAsync();
             return existingSalesOrderItem;
         }
@@ -142,14 +153,15 @@ namespace ErpBackendApi.BLL.Services
         public async Task<SalesOrderItem> UndoSoftDeleteSalesOrderItemAsync(SalesOrderItem item)
         {
             var existingSalesOrderItem = await _context.sales_order_items.FirstOrDefaultAsync(soi => soi.id == item.id && soi.is_deleted == true);
+
             if (existingSalesOrderItem == null)
             {
                 Logger("Unable to delete sales order item.");
                 throw new InvalidOperationException("Unable to delete sales order item.");
             }
+
             existingSalesOrderItem.is_deleted = false;
             existingSalesOrderItem.deleted_at = null;
-            _context.sales_order_items.Update(existingSalesOrderItem);
             await _context.SaveChangesAsync();
             return existingSalesOrderItem;
         }
