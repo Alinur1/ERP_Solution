@@ -112,21 +112,20 @@ namespace ErpBackendApi.BLL.Services
                 foreach (var item in items)
                 {
                     var existingSalesOrder = await _context.sales_orders.FirstOrDefaultAsync(so => so.id == item.sales_order_id && so.is_deleted == false);
+                    var existingProduct = await _context.products.FirstOrDefaultAsync(p => p.id == item.product_id && p.is_deleted == false);
+                    var existingSalesOrderItem = await _context.sales_order_items.FirstOrDefaultAsync(sot => sot.sales_order_id == item.sales_order_id && sot.product_id == item.product_id && sot.is_deleted == false);
 
                     if (existingSalesOrder == null)
                     {
                         Logger($"Order ID {item.sales_order_id} not found or is deleted.");
                         throw new InvalidOperationException($"Order ID {item.sales_order_id} not found or is deleted.");
                     }
-                    var existingProduct = await _context.products.FirstOrDefaultAsync(p => p.id == item.product_id && p.is_deleted == false);
 
                     if (existingProduct == null)
                     {
                         Logger($"Product ID {item.product_id} not found or is deleted.");
                         throw new InvalidOperationException($"Product ID {item.product_id} not found or is deleted.");
                     }
-
-                    var existingSalesOrderItem = await _context.sales_order_items.FirstOrDefaultAsync(sot => sot.sales_order_id == item.sales_order_id && sot.product_id == item.product_id && sot.is_deleted == false);
 
                     if (existingSalesOrderItem != null)
                     {
@@ -166,6 +165,13 @@ namespace ErpBackendApi.BLL.Services
         {
             var existingSalesOrderItem = await _context.sales_order_items.FirstOrDefaultAsync(soi => soi.id == item.id && soi.is_deleted == false);
             var existingProduct = await _context.products.FirstOrDefaultAsync(p => p.id == item.product_id && p.is_deleted == false);
+            var invoiceExists = await _context.invoices.FirstOrDefaultAsync(i => i.sales_order_id == item.sales_order_id && i.is_deleted == false);
+
+            if (invoiceExists != null)
+            {
+                Logger("Cannot modify sales order item once invoiced.");
+                throw new InvalidOperationException("Cannot modify sales order item once invoiced.");
+            }
 
             if (existingSalesOrderItem == null)
             {
@@ -212,6 +218,13 @@ namespace ErpBackendApi.BLL.Services
         public async Task<SalesOrderItem> SoftDeleteSalesOrderItemAsync(SalesOrderItem item)
         {
             var existingSalesOrderItem = await _context.sales_order_items.FirstOrDefaultAsync(soi => soi.id == item.id && soi.is_deleted == false);
+            var invoiceExists = await _context.invoices.FirstOrDefaultAsync(i => i.sales_order_id == item.sales_order_id && i.is_deleted == false);
+
+            if (invoiceExists != null)
+            {
+                Logger("Cannot modify sales order item once invoiced.");
+                throw new InvalidOperationException("Cannot modify sales order item once invoiced.");
+            }
 
             if (existingSalesOrderItem == null)
             {
@@ -231,8 +244,16 @@ namespace ErpBackendApi.BLL.Services
 
             if (existingSalesOrderItem == null)
             {
-                Logger("Unable to delete sales order item.");
-                throw new InvalidOperationException("Unable to delete sales order item.");
+                Logger("Unable to restore sales order item.");
+                throw new InvalidOperationException("Unable to restore sales order item.");
+            }
+
+            var invoiceExists = await _context.invoices.FirstOrDefaultAsync(i => i.sales_order_id == existingSalesOrderItem.sales_order_id && i.is_deleted == false);
+
+            if (invoiceExists != null)
+            {
+                Logger("Cannot restore sales order item once invoiced.");
+                throw new InvalidOperationException("Cannot restore sales order item once invoiced.");
             }
 
             existingSalesOrderItem.is_deleted = false;

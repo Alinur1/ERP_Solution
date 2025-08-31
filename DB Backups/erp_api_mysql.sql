@@ -263,6 +263,7 @@ CREATE TABLE `inventory` (
   `last_updated` datetime DEFAULT NULL,
   `is_deleted` tinyint DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
+  `RowVersion` binary(8) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_inventory_products_idx` (`product_id`),
   CONSTRAINT `fk_inventory_products` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`)
@@ -275,7 +276,7 @@ CREATE TABLE `inventory` (
 
 LOCK TABLES `inventory` WRITE;
 /*!40000 ALTER TABLE `inventory` DISABLE KEYS */;
-INSERT INTO `inventory` VALUES (2,2,200,30,'2025-07-18 08:52:41',NULL,NULL),(3,1,1000,50,'2025-07-18 08:57:41',NULL,NULL),(10,3,5000,40,'2025-08-04 11:24:19',NULL,NULL);
+INSERT INTO `inventory` VALUES (2,2,200,30,'2025-07-18 08:52:41',NULL,NULL,NULL),(3,1,1000,50,'2025-07-18 08:57:41',NULL,NULL,NULL),(10,3,5000,40,'2025-08-04 11:24:19',NULL,NULL,NULL);
 /*!40000 ALTER TABLE `inventory` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -557,7 +558,7 @@ CREATE TABLE `sales_order_items` (
   KEY `fk_sales_order_items_products_idx` (`product_id`),
   CONSTRAINT `fk_sales_order_items_products` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`),
   CONSTRAINT `fk_sales_order_items_sales_orders` FOREIGN KEY (`sales_order_id`) REFERENCES `sales_orders` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -566,7 +567,7 @@ CREATE TABLE `sales_order_items` (
 
 LOCK TABLES `sales_order_items` WRITE;
 /*!40000 ALTER TABLE `sales_order_items` DISABLE KEYS */;
-INSERT INTO `sales_order_items` VALUES (1,2,1,25,15.00,20.00,0,NULL),(2,3,1,25,15.00,20.00,0,NULL),(3,4,2,25,15.00,20.00,0,NULL);
+INSERT INTO `sales_order_items` VALUES (1,2,1,25,375.00,NULL,0,NULL),(2,3,1,25,15.00,20.00,1,'2025-08-30 14:55:45'),(3,4,2,25,15.00,20.00,0,NULL),(4,2,5,25,500.00,NULL,0,NULL),(5,2,3,20,3000.00,NULL,0,NULL),(6,2,2,2,40.00,NULL,0,NULL),(7,7,5,2,40.00,NULL,0,NULL);
 /*!40000 ALTER TABLE `sales_order_items` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -591,7 +592,7 @@ CREATE TABLE `sales_orders` (
   PRIMARY KEY (`id`),
   KEY `fk_sales_orders_customers_idx` (`customer_id`),
   CONSTRAINT `fk_sales_orders_customers` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -600,7 +601,7 @@ CREATE TABLE `sales_orders` (
 
 LOCK TABLES `sales_orders` WRITE;
 /*!40000 ALTER TABLE `sales_orders` DISABLE KEYS */;
-INSERT INTO `sales_orders` VALUES (1,1,NULL,NULL,0,0,NULL,NULL,1,'2025-08-05 06:07:13'),(2,1,'2025-08-05 06:38:30','2025-08-08 06:38:30',0,0,NULL,NULL,0,NULL),(3,3,'2025-08-05 05:57:41','2025-08-08 05:57:41',0,0,NULL,NULL,1,'2025-08-05 06:07:18'),(4,2,'2025-08-05 00:00:00','2025-08-09 00:00:00',3,1,NULL,NULL,1,'2025-08-29 09:37:02'),(5,1,'2025-08-05 00:00:00','2025-08-10 00:00:00',0,0,NULL,NULL,0,NULL),(6,7,'2025-08-29 02:25:30','2025-08-29 03:28:12',4,1,NULL,'2025-08-29 09:33:48',0,NULL);
+INSERT INTO `sales_orders` VALUES (1,1,NULL,NULL,0,0,NULL,NULL,1,'2025-08-05 06:07:13'),(2,1,'2025-08-05 06:38:30','2025-08-08 06:38:30',0,0,NULL,NULL,0,NULL),(3,3,'2025-08-05 05:57:41','2025-08-08 05:57:41',0,0,NULL,NULL,1,'2025-08-05 06:07:18'),(4,2,'2025-08-05 00:00:00','2025-08-09 00:00:00',3,1,NULL,NULL,1,'2025-08-29 09:37:02'),(5,1,'2025-08-05 00:00:00','2025-08-10 00:00:00',0,0,NULL,NULL,0,NULL),(6,7,'2025-08-29 02:25:30','2025-08-29 03:28:12',4,1,NULL,'2025-08-29 09:33:48',0,NULL),(7,7,'2025-08-31 12:11:32',NULL,0,0,NULL,'2025-08-31 12:13:56',0,NULL);
 /*!40000 ALTER TABLE `sales_orders` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -729,4 +730,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-08-29 19:12:20
+-- Dump completed on 2025-08-31 21:27:24

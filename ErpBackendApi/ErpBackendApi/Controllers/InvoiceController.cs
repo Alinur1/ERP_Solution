@@ -28,7 +28,7 @@ namespace ErpBackendApi.Controllers
             var operation_GetInvoiceById = await _iInvoices.GetInvoiceByIdAsync(id);
             if (operation_GetInvoiceById == null)
             {
-                return NotFound("Invoice not found.");
+                return BadRequest("Invoice not found.");
             }
             return Ok(operation_GetInvoiceById);
         }
@@ -36,56 +36,71 @@ namespace ErpBackendApi.Controllers
         [HttpGet("by-order/{id}")]
         public async Task<IActionResult> GetInvoiceByOrderId(int orderId)
         {
-            var operation_GetInvoiceByOrderId = await _iInvoices.GetInvoiceByOrderIdAsync(orderId);
-            if (operation_GetInvoiceByOrderId == null)
+            try
             {
-                return NotFound("Invoice not found or sales order is deleted.");
+                var operation_GetInvoiceByOrderId = await _iInvoices.GetInvoiceByOrderIdAsync(orderId);
+                return Ok(operation_GetInvoiceByOrderId);
             }
-            return Ok(operation_GetInvoiceByOrderId);
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPost]
         public async Task<IActionResult> AddInvoice(Invoice invoice)
         {
-            var operation_AddInvoice = await _iInvoices.AddInvoiceAsync(invoice);
-            if (operation_AddInvoice == null)
+            try
             {
-                return NotFound("Unable to add invoice or same sales order cannot be added to an invoice.");
+                var operation_AddInvoice = await _iInvoices.AddInvoiceAsync(invoice);
+                return Ok("Invoice added successfully.");
             }
-            return Ok("Invoice added successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
-        [HttpPost("update")]
+        [HttpPut("update")]
         public async Task<IActionResult> UpdateInvoice(Invoice invoice)
         {
-            var operation_UpdateInvoice = await _iInvoices.UpdateInvoiceAsync(invoice);
-            if (operation_UpdateInvoice == null)
+            try
             {
-                return NotFound("Invoice not found or deleted. Unable to update invoice.");
+                var operation_UpdateInvoice = await _iInvoices.UpdateInvoiceAsync(invoice);
+                return Ok("Invoice information updated successfully.");
             }
-            return Ok("Invoice information updated successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
-        [HttpPost("delete")]
+        [HttpPut("delete")]
         public async Task<IActionResult> SoftDeleteInvoice(Invoice invoice)
         {
-            var operation_SoftDeleteInvoice = await _iInvoices.SoftDeleteInvoiceAsync(invoice);
-            if (operation_SoftDeleteInvoice == null)
+            try
             {
-                return NotFound("Invoice not found or deleted. Unable to delete invoice.");
+                var operation_SoftDeleteInvoice = await _iInvoices.SoftDeleteInvoiceAsync(invoice);
+                return Ok("Invoice deleted successfully.");
             }
-            return Ok("Invoice deleted successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
-        [HttpPost("undo-delete")]
+        [HttpPut("undo-delete")]
         public async Task<IActionResult> UndoSoftDeleteInvoice(Invoice invoice)
         {
-            var operation_UndoSoftDeleteInvoice = await _iInvoices.UndoSoftDeleteInvoiceAsync(invoice);
-            if (operation_UndoSoftDeleteInvoice == null)
+            try
             {
-                return NotFound("Invoice not found. Unable to restore deleted invoice.");
+                var operation_UndoSoftDeleteInvoice = await _iInvoices.UndoSoftDeleteInvoiceAsync(invoice);
+                return Ok("Deleted invoice restored successfully.");
             }
-            return Ok("Deleted invoice restored successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
