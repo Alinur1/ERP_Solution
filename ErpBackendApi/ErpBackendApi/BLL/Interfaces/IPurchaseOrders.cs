@@ -12,6 +12,5 @@ namespace ErpBackendApi.BLL.Interfaces
         Task<PurchaseOrder> UpdatePurchaseOrderAsync(PurchaseOrder purchaseOrder);
         Task<PurchaseOrder> SoftDeletePurchaseOrderAsync(PurchaseOrder purchaseOrder);
         Task<PurchaseOrder> UndoSoftDeletePurchaseOrderAsync(PurchaseOrder purchaseOrder);
-
     }
 }

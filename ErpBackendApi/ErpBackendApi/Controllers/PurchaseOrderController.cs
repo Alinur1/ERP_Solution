@@ -28,7 +28,7 @@ namespace ErpBackendApi.Controllers
             var operation_GetPurchaseOrderById = await _iPurchaseOrders.GetPurchaseOrderByIdAsync(id);
             if (operation_GetPurchaseOrderById == null)
             {
-                return NotFound("Purchase order not found.");
+                return BadRequest("Purchase order not found.");
             }
             return Ok(operation_GetPurchaseOrderById);
         }
@@ -39,7 +39,7 @@ namespace ErpBackendApi.Controllers
             var operation_GetPurchaseOrderBySupplierId = await _iPurchaseOrders.GetPurchaseOrderBySupplierIdAsync(supplierId);
             if (operation_GetPurchaseOrderBySupplierId == null)
             {
-                return NotFound("Purchase order not found. Filtered by the suppier.");
+                return BadRequest("Purchase order not found. Filtered by the suppier.");
             }
             return Ok(operation_GetPurchaseOrderBySupplierId);
         }
@@ -47,45 +47,57 @@ namespace ErpBackendApi.Controllers
         [HttpPost]
         public async Task<IActionResult> AddPurchaseOrder(PurchaseOrder purchaseOrder)
         {
-            var operation_AddPurchaseOrder = await _iPurchaseOrders.AddPurchaseOrderAsync(purchaseOrder);
-            if (operation_AddPurchaseOrder == null)
+            try
             {
-                return NotFound("Unable to add purchase order information.");
+                var operation_AddPurchaseOrder = await _iPurchaseOrders.AddPurchaseOrderAsync(purchaseOrder);
+                return Ok("Purchase order information added successfully.");
             }
-            return Ok("Purchase order information added successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
-        [HttpPut]
+        [HttpPut("update")]
         public async Task<IActionResult> UpdatePurchaseOrder(PurchaseOrder purchaseOrder)
         {
-            var operation_UpdatePurchaseOrder = await _iPurchaseOrders.UpdatePurchaseOrderAsync(purchaseOrder);
-            if (operation_UpdatePurchaseOrder == null)
+            try
             {
-                return NotFound("Unable to update purchase order information.");
+                var operation_UpdatePurchaseOrder = await _iPurchaseOrders.UpdatePurchaseOrderAsync(purchaseOrder);
+                return Ok("Purchase order information updated successfullly.");
             }
-            return Ok("Purchase order information updated successfullly.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("delete")]
         public async Task<IActionResult> SoftDeletePurchaseOrder(PurchaseOrder purchaseOrder)
         {
-            var operation_SoftDeletePurchaseOrder = await _iPurchaseOrders.SoftDeletePurchaseOrderAsync(purchaseOrder);
-            if (operation_SoftDeletePurchaseOrder == null)
+            try
             {
-                return NotFound("Unable to delete purchase order information.");
+                var operation_SoftDeletePurchaseOrder = await _iPurchaseOrders.SoftDeletePurchaseOrderAsync(purchaseOrder);
+                return Ok("Purchase order information deleted successfully.");
             }
-            return Ok("Purchase order information deleted successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("undo-delete")]
         public async Task<IActionResult> UndoSoftDeletePurchaseOrder(PurchaseOrder purchaseOrder)
         {
-            var operation_UndoSoftDeletePurchaseOrder = await _iPurchaseOrders.UndoSoftDeletePurchaseOrderAsync(purchaseOrder);
-            if (operation_UndoSoftDeletePurchaseOrder == null)
+            try
             {
-                return NotFound("Unable to restore deleted purchase order information.");
+                var operation_UndoSoftDeletePurchaseOrder = await _iPurchaseOrders.UndoSoftDeletePurchaseOrderAsync(purchaseOrder);
+                return Ok("Deleted purchase order information restored successfully.");
             }
-            return Ok("Deleted purchase order information restored successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
