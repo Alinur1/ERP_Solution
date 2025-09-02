@@ -144,9 +144,9 @@ Testing TODO
 8. "ready to implement frontend" - products
 9. "ready to implement frontend" - inventory
 10. "ready to implement frontend" - customers
-11. sales_orders
-12. sales_order_items
-13. invoices
+11. "ready to implement frontend" - sales_orders
+12. "ready to implement frontend" - sales_order_items
+13. "ready to implement frontend" - invoices
 14. purchase_orders
 15. purchase_order_items
 16. expenses
