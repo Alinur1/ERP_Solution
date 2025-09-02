@@ -99,5 +99,12 @@ namespace ErpBackendApi.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet("deleted-purchase-order")]
+        public async Task<IActionResult> GetAllDeletedPurchaseOrders()
+        {
+            var operation_GetAllDeletedPurchaseOrders = await _iPurchaseOrders.GetAllDeletedPurchaseOrdersAsync();
+            return Ok(operation_GetAllDeletedPurchaseOrders);
+        }
     }
 }

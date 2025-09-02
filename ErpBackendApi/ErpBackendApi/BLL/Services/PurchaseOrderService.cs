@@ -26,8 +26,8 @@ namespace ErpBackendApi.BLL.Services
                 select new PurchaseOrderDTO
                 {
                     id = po.id,
-                    supplier_id = s != null ? s.id : null,
-                    company_name = s != null && s.is_deleted == false ? s.company_name : "-",
+                    supplier_id = s != null && s.is_deleted == false ? s.id : null,
+                    company_name = s != null && s.is_deleted == false ? s.company_name : null,
                     order_date = po.order_date,
                     expected_delivery_date = po.expected_delivery_date,
                     delivery_status = po.delivery_status,
@@ -47,8 +47,8 @@ namespace ErpBackendApi.BLL.Services
                 select new PurchaseOrderDTO
                 {
                     id = po.id,
-                    supplier_id = s != null ? s.id : null,
-                    company_name = s != null && s.is_deleted == false ? s.company_name : "-",
+                    supplier_id = s != null && s.is_deleted == false ? s.id : null,
+                    company_name = s != null && s.is_deleted == false ? s.company_name : null,
                     order_date = po.order_date,
                     expected_delivery_date = po.expected_delivery_date,
                     delivery_status = po.delivery_status,
@@ -68,8 +68,8 @@ namespace ErpBackendApi.BLL.Services
                 select new PurchaseOrderDTO
                 {
                     id = po.id,
-                    supplier_id = s != null ? s.id : null,
-                    company_name = s != null && s.is_deleted == false ? s.company_name : "-",
+                    supplier_id = s != null && s.is_deleted == false ? s.id : null,
+                    company_name = s != null && s.is_deleted == false ? s.company_name : null,
                     order_date = po.order_date,
                     expected_delivery_date = po.expected_delivery_date,
                     delivery_status = po.delivery_status,
@@ -201,6 +201,27 @@ namespace ErpBackendApi.BLL.Services
             existingPurchaseOrder.deleted_at = null;
             await _context.SaveChangesAsync();
             return existingPurchaseOrder;
+        }
+
+        public async Task<IEnumerable<PurchaseOrderDTO>> GetAllDeletedPurchaseOrdersAsync()
+        {
+            return await
+            (
+                from po in _context.purchase_orders
+                join s in _context.suppliers on po.supplier_id equals s.id into supplierGroup
+                from s in supplierGroup.DefaultIfEmpty()
+                where po.is_deleted == true
+                select new PurchaseOrderDTO
+                {
+                    id = po.id,
+                    supplier_id = s != null && s.is_deleted == false ? s.id : null,
+                    company_name = s != null && s.is_deleted == false ? s.company_name : null,
+                    order_date = po.order_date,
+                    expected_delivery_date = po.expected_delivery_date,
+                    delivery_status = po.delivery_status,
+                    notes = po.notes
+                }
+            ).ToListAsync();
         }
     }
 }
