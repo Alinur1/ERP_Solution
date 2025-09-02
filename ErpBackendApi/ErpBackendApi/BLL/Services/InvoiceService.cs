@@ -17,62 +17,78 @@ namespace ErpBackendApi.BLL.Services
 
         public async Task<IEnumerable<InvoiceDTO>> GetAllInvoiceAsync()
         {
-            return await
-            (
-                from i in _context.invoices
-                join so in _context.sales_orders on i.sales_order_id equals so.id into salesOrdersGroup
-                from so in salesOrdersGroup.DefaultIfEmpty()
-                where i.is_deleted == false
-                select new InvoiceDTO
+            var invoices = await _context.invoices
+                .Where(i => i.is_deleted == false)
+                .Select(i => new InvoiceDTO
                 {
                     id = i.id,
-                    sales_order_id = so != null ? so.id : null,
                     invoice_date = i.invoice_date,
                     total_amount = i.total_amount,
                     is_paid = i.is_paid,
-                    due_date = i.due_date
-                }
-            ).ToListAsync();
+                    due_date = i.due_date,
+                    is_deleted = i.is_deleted,
+                    deleted_at = i.deleted_at,
+
+                    sales_order = _context.sales_orders
+                        .Where(so => so.id == i.sales_order_id && so.is_deleted == false)
+                        .Select(so => new SalesOrderDTO
+                        {
+                            id = so.id,
+                            order_date = so.order_date,
+                            delivery_date = so.delivery_date,
+                            delivery_status = so.delivery_status,
+                            status = so.status,
+                            notes = so.notes,
+                            last_updated = so.last_updated,
+
+                            customer = _context.customers
+                                .Where(c => c.id == so.customer_id && c.is_deleted == false)
+                                .Select(c => new CustomerDTO
+                                {
+                                    id = c.id,
+                                    name = c.name,
+                                    email = c.email,
+                                    phone = c.phone
+                                })
+                                .FirstOrDefault(),
+
+                            items = _context.sales_order_items
+                                .Where(soi => soi.sales_order_id == so.id && soi.is_deleted == false)
+                                .Select(soi => new SalesOrderItemDTO
+                                {
+                                    id = soi.id,
+                                    quantity = soi.quantity,
+                                    amount = soi.amount,
+                                    discount = soi.discount,
+                                    product = _context.products
+                                        .Where(p => p.id == soi.product_id && p.is_deleted == false)
+                                        .Select(p => new ProductDTO
+                                        {
+                                            id = p.id,
+                                            name = p.name,
+                                            sku = p.sku,
+                                            unit = p.unit,
+                                            price = p.price
+                                        })
+                                        .FirstOrDefault()
+                                })
+                                .ToList()
+                        })
+                        .FirstOrDefault()
+                })
+                .ToListAsync();
+
+            return invoices;
         }
 
         public async Task<InvoiceDTO> GetInvoiceByIdAsync(int id)
         {
-            return await
-            (
-                from i in _context.invoices
-                join so in _context.sales_orders on i.sales_order_id equals so.id into salesOrdersGroup
-                from so in salesOrdersGroup.DefaultIfEmpty()
-                where i.id == id && i.is_deleted == false
-                select new InvoiceDTO
-                {
-                    id = i.id,
-                    sales_order_id = so != null ? so.id : null,
-                    invoice_date = i.invoice_date,
-                    total_amount = i.total_amount,
-                    is_paid = i.is_paid,
-                    due_date = i.due_date
-                }
-            ).FirstOrDefaultAsync();
+            return await GetAllInvoiceAsync().ContinueWith(t => t.Result.FirstOrDefault(i => i.id == id));
         }
 
         public async Task<InvoiceDTO> GetInvoiceByOrderIdAsync(int orderId)
         {
-            return await
-            (
-                from i in _context.invoices
-                join so in _context.sales_orders on i.sales_order_id equals so.id into salesOrdersGroup
-                from so in salesOrdersGroup.DefaultIfEmpty()
-                where so.id == orderId && i.is_deleted == false
-                select new InvoiceDTO
-                {
-                    id = i.id,
-                    sales_order_id = so != null ? so.id : null,
-                    invoice_date = i.invoice_date,
-                    total_amount = i.total_amount,
-                    is_paid = i.is_paid,
-                    due_date = i.due_date
-                }
-            ).FirstOrDefaultAsync();
+            return await GetAllInvoiceAsync().ContinueWith(t => t.Result.FirstOrDefault(i => i.sales_order != null && i.sales_order.id == orderId));
         }
 
         public async Task<Invoice> AddInvoiceAsync(Invoice invoice)

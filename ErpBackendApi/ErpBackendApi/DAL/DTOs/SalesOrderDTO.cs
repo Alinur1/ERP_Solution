@@ -15,5 +15,7 @@ namespace ErpBackendApi.DAL.DTOs
         public DateTime? last_updated { get; set; }
         public bool? is_deleted { get; set; }
         public DateTime? deleted_at { get; set; }
+        public CustomerDTO? customer { get; set; }
+        public List<SalesOrderItemDTO> items { get; set; } = new();
     }
 }
