@@ -123,7 +123,7 @@ namespace ErpBackendApi.BLL.Services
                 invoice.total_amount = orderItems.Sum(item =>
                 {
                     var discount = item.discount ?? 0;
-                    var lineTotal = item.quantity * item.amount;
+                    var lineTotal = item.amount ?? 0;
                     return discount <= 1
                         ? lineTotal - (lineTotal * discount)   // treat <=1 as percentage
                         : lineTotal - discount;                // treat >1 as flat amount
