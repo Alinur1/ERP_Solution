@@ -88,10 +88,13 @@ namespace ErpBackendApi.BLL.Services
         {
             var existingCustomer = await _context.customers.FirstOrDefaultAsync(c => c.id == salesOrder.customer_id && c.is_deleted == false);
 
-            if (existingCustomer == null)
+            if (salesOrder.customer_id != null)
             {
-                Logger("Customer not found.");
-                throw new InvalidOperationException("Customer not found.");
+                if (existingCustomer == null)
+                {
+                    Logger("Customer not found.");
+                    throw new InvalidOperationException("Customer not found.");
+                }
             }
 
             if (salesOrder.order_date == null || salesOrder.delivery_status == null || salesOrder.status == null)
@@ -113,10 +116,13 @@ namespace ErpBackendApi.BLL.Services
             var existingSalesOrder = await _context.sales_orders.FirstOrDefaultAsync(so => so.id == salesOrder.id && so.is_deleted == false);
             var existingCustomer = await _context.customers.FirstOrDefaultAsync(c => c.id == salesOrder.customer_id && c.is_deleted == false);
 
-            if (existingCustomer == null)
+            if (salesOrder.customer_id != null)
             {
-                Logger("Customer not found.");
-                throw new InvalidOperationException("Customer not found.");
+                if (existingCustomer == null)
+                {
+                    Logger("Customer not found.");
+                    throw new InvalidOperationException("Customer not found.");
+                }
             }
 
             if (existingSalesOrder == null)
