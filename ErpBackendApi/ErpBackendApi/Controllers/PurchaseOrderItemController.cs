@@ -18,63 +18,75 @@ namespace ErpBackendApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllPurchaseOrderItem()
         {
-            var POitem = await _items.GetAllPurchaseOrderItemsAsync();
-            return Ok(POitem);
+            var operation_GetAllPurchaseOrderItem = await _items.GetAllPurchaseOrderItemsAsync();
+            return Ok(operation_GetAllPurchaseOrderItem);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPurchaseOrderItemById(int id)
         {
-            var POitem = await _items.GetPurchaseOrderItemByIdAsync(id);
-            if (POitem == null)
+            var operation_GetPurchaseOrderItemById = await _items.GetPurchaseOrderItemByIdAsync(id);
+            if (operation_GetPurchaseOrderItemById == null)
             {
                 return NotFound("Purchase order item not found.");
             }
-            return Ok(POitem);
+            return Ok(operation_GetPurchaseOrderItemById);
         }
 
         [HttpPost]
         public async Task<IActionResult> AddPurchaseOrderItem(PurchaseOrderItem item)
         {
-            var POitem = await _items.AddPurchaseOrderItemAsync(item);
-            if (POitem == null)
+            try
             {
-                return NotFound("Unable to add purchase order item or this order already exists.");
+                var operation_AddPurchaseOrderItem = await _items.AddPurchaseOrderItemAsync(item);
+                return Ok("Purchase order item added successfully.");
             }
-            return Ok("Purchase order item added successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut]
         public async Task<IActionResult> UpdatePurchaseOrderItem(PurchaseOrderItem item)
         {
-            var POitem = await _items.UpdatePurchaseOrderItemAsync(item);
-            if (POitem == null)
+            try
             {
-                return NotFound("Unable to update purchase order item.");
+                var operation_UpdatePurchaseOrderItem = await _items.UpdatePurchaseOrderItemAsync(item);
+                return Ok("Purchase order item updated successfully.");
             }
-            return Ok("Purchase order item updated successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("delete")]
         public async Task<IActionResult> SoftDeletePurchaseOrderItem(PurchaseOrderItem item)
         {
-            var POitem = await _items.SoftDeletePurchaseOrderItemAsync(item);
-            if (POitem == null)
+            try
             {
-                return NotFound("Unable to delete purchase order item.");
+                var operation_SoftDeletePurchaseOrderItem = await _items.SoftDeletePurchaseOrderItemAsync(item);
+                return Ok("Purchase order item deleted successfully.");
             }
-            return Ok("Purchase order item deleted successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("undo-delete")]
         public async Task<IActionResult> UndoSoftDeletePurchaseOrderItem(PurchaseOrderItem item)
         {
-            var POitem = await _items.UndoSoftDeletePurchaseOrderItemAsync(item);
-            if (POitem == null)
+            try
             {
-                return NotFound("Unable to restore deleted purchase order item.");
+                var operation_UndoSoftDeletePurchaseOrderItem = await _items.UndoSoftDeletePurchaseOrderItemAsync(item);
+                return Ok("Purchase order item restored successfully.");
             }
-            return Ok("Purchase order item restored successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
