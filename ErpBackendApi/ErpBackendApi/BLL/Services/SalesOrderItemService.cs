@@ -232,10 +232,20 @@ namespace ErpBackendApi.BLL.Services
                 throw new InvalidOperationException("Unable to delete sales order item.");
             }
 
-            existingSalesOrderItem.is_deleted = true;
-            existingSalesOrderItem.deleted_at = DateTime.UtcNow;
-            await _context.SaveChangesAsync();
-            return existingSalesOrderItem;
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                existingSalesOrderItem.is_deleted = true;
+                existingSalesOrderItem.deleted_at = DateTime.UtcNow;
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return existingSalesOrderItem;
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw new InvalidOperationException("Changes rollback occurred unexpectedly.");
+            }
         }
 
         public async Task<SalesOrderItem> UndoSoftDeleteSalesOrderItemAsync(SalesOrderItem item)
@@ -256,10 +266,20 @@ namespace ErpBackendApi.BLL.Services
                 throw new InvalidOperationException("Cannot restore sales order item once invoiced.");
             }
 
-            existingSalesOrderItem.is_deleted = false;
-            existingSalesOrderItem.deleted_at = null;
-            await _context.SaveChangesAsync();
-            return existingSalesOrderItem;
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                existingSalesOrderItem.is_deleted = false;
+                existingSalesOrderItem.deleted_at = null;
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return existingSalesOrderItem;
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw new InvalidOperationException("Changes rollback occurred unexpectedly.");
+            }
         }
 
         public async Task<IEnumerable<SalesOrderItemDTO>> GetAllDeletedSalesOrderItemAsync()
