@@ -262,5 +262,28 @@ namespace ErpBackendApi.BLL.Services
                 throw new InvalidOperationException("Changes rollback occurred unexpectedly.");
             }
         }
+
+        public async Task<IEnumerable<PurchaseOrderItemDTO>> GetAllDeletedPurchaseOrderItemsAsync()
+        {
+            return await
+            (
+                from poi in _context.purchase_order_items
+                join po in _context.purchase_orders on poi.purchase_order_id equals po.id into purchaseGroup
+                from po in purchaseGroup.DefaultIfEmpty()
+                join p in _context.products on poi.product_id equals p.id into productGroup
+                from p in productGroup.DefaultIfEmpty()
+                where poi.is_deleted == true
+                select new PurchaseOrderItemDTO
+                {
+                    id = poi.id,
+                    purchase_order_id = po != null && po.is_deleted == false ? po.id : null,
+                    product_id = p != null && p.is_deleted == false ? p.id : null,
+                    product_name = p != null && p.is_deleted == false ? p.name : null,
+                    quantity = poi.quantity,
+                    amount = poi.amount,
+                    discount = poi.discount,
+                }
+            ).ToListAsync();
+        }
     }
 }
