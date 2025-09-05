@@ -25,13 +25,19 @@ namespace ErpBackendApi.BLL.Services
                 from po in purchaseGroup.DefaultIfEmpty()
                 join p in _context.products on poi.product_id equals p.id into productGroup
                 from p in productGroup.DefaultIfEmpty()
+                join s in _context.suppliers on po.supplier_id equals s.id into supplierGroup
+                from s in supplierGroup.DefaultIfEmpty()
                 where poi.is_deleted == false
                 select new PurchaseOrderItemDTO
                 {
                     id = poi.id,
                     purchase_order_id = po != null && po.is_deleted == false ? po.id : null,
+                    supplier_id = s != null && s.is_deleted == false ? s.id : null,
+                    supplier_name = s != null && s.is_deleted == false ? s.contact_person_name : null,
                     product_id = p != null && p.is_deleted == false ? p.id : null,
                     product_name = p != null && p.is_deleted == false ? p.name : null,
+                    sku = p != null && p.is_deleted == false ? p.sku : null,
+                    price = p != null && p.is_deleted == false ? p.price : null,
                     quantity = poi.quantity,
                     amount = poi.amount,
                     discount = poi.discount,
@@ -48,13 +54,19 @@ namespace ErpBackendApi.BLL.Services
                 from po in purchaseGroup.DefaultIfEmpty()
                 join p in _context.products on poi.product_id equals p.id into productGroup
                 from p in productGroup.DefaultIfEmpty()
+                join s in _context.suppliers on po.supplier_id equals s.id into supplierGroup
+                from s in supplierGroup.DefaultIfEmpty()
                 where poi.id == id && poi.is_deleted == false
                 select new PurchaseOrderItemDTO
                 {
                     id = poi.id,
                     purchase_order_id = po != null && po.is_deleted == false ? po.id : null,
+                    supplier_id = s != null && s.is_deleted == false ? s.id : null,
+                    supplier_name = s != null && s.is_deleted == false ? s.contact_person_name : null,
                     product_id = p != null && p.is_deleted == false ? p.id : null,
                     product_name = p != null && p.is_deleted == false ? p.name : null,
+                    sku = p != null && p.is_deleted == false ? p.sku : null,
+                    price = p != null && p.is_deleted == false ? p.price : null,
                     quantity = poi.quantity,
                     amount = poi.amount,
                     discount = poi.discount,
@@ -71,13 +83,19 @@ namespace ErpBackendApi.BLL.Services
                 from po in purchaseGroup.DefaultIfEmpty()
                 join p in _context.products on poi.product_id equals p.id into productGroup
                 from p in productGroup.DefaultIfEmpty()
+                join s in _context.suppliers on po.supplier_id equals s.id into supplierGroup
+                from s in supplierGroup.DefaultIfEmpty()
                 where po.id == orderId && poi.is_deleted == false
                 select new PurchaseOrderItemDTO
                 {
                     id = poi.id,
                     purchase_order_id = po != null && po.is_deleted == false ? po.id : null,
+                    supplier_id = s != null && s.is_deleted == false ? s.id : null,
+                    supplier_name = s != null && s.is_deleted == false ? s.contact_person_name : null,
                     product_id = p != null && p.is_deleted == false ? p.id : null,
                     product_name = p != null && p.is_deleted == false ? p.name : null,
+                    sku = p != null && p.is_deleted == false ? p.sku : null,
+                    price = p != null && p.is_deleted == false ? p.price : null,
                     quantity = poi.quantity,
                     amount = poi.amount,
                     discount = poi.discount,
@@ -272,13 +290,19 @@ namespace ErpBackendApi.BLL.Services
                 from po in purchaseGroup.DefaultIfEmpty()
                 join p in _context.products on poi.product_id equals p.id into productGroup
                 from p in productGroup.DefaultIfEmpty()
+                join s in _context.suppliers on po.supplier_id equals s.id into supplierGroup
+                from s in supplierGroup.DefaultIfEmpty()
                 where poi.is_deleted == true
                 select new PurchaseOrderItemDTO
                 {
                     id = poi.id,
                     purchase_order_id = po != null && po.is_deleted == false ? po.id : null,
+                    supplier_id = s != null && s.is_deleted == false ? s.id : null,
+                    supplier_name = s != null && s.is_deleted == false ? s.contact_person_name : null,
                     product_id = p != null && p.is_deleted == false ? p.id : null,
                     product_name = p != null && p.is_deleted == false ? p.name : null,
+                    sku = p != null && p.is_deleted == false ? p.sku : null,
+                    price = p != null && p.is_deleted == false ? p.price : null,
                     quantity = poi.quantity,
                     amount = poi.amount,
                     discount = poi.discount,
