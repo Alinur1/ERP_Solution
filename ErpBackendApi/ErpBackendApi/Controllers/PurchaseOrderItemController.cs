@@ -28,9 +28,20 @@ namespace ErpBackendApi.Controllers
             var operation_GetPurchaseOrderItemById = await _items.GetPurchaseOrderItemByIdAsync(id);
             if (operation_GetPurchaseOrderItemById == null)
             {
-                return NotFound("Purchase order item not found.");
+                return BadRequest("Purchase order item not found.");
             }
             return Ok(operation_GetPurchaseOrderItemById);
+        }
+
+        [HttpGet("purchase-order/{orderId}")]
+        public async Task<IActionResult> GetPurchaseOrderItemByPurchaseOrderId(int orderId)
+        {
+            var operation_GetPurchaseOrderItemByPurchaseOrderId = await _items.GetPurchaseOrderItemByPurchaseOrderIdAsync(orderId);
+            if (operation_GetPurchaseOrderItemByPurchaseOrderId == null)
+            {
+                return BadRequest("Purchase order item not found.");
+            }
+            return Ok(operation_GetPurchaseOrderItemByPurchaseOrderId);
         }
 
         [HttpPost]
@@ -47,7 +58,7 @@ namespace ErpBackendApi.Controllers
             }
         }
 
-        [HttpPut]
+        [HttpPut("update")]
         public async Task<IActionResult> UpdatePurchaseOrderItem(PurchaseOrderItem item)
         {
             try

@@ -7,7 +7,8 @@ namespace ErpBackendApi.BLL.Interfaces
     {
         Task<IEnumerable<PurchaseOrderItemDTO>> GetAllPurchaseOrderItemsAsync();
         Task<PurchaseOrderItemDTO> GetPurchaseOrderItemByIdAsync(int id);
-        Task<PurchaseOrderItem> AddPurchaseOrderItemAsync(PurchaseOrderItem item);
+        Task<PurchaseOrderItemDTO> GetPurchaseOrderItemByPurchaseOrderIdAsync(int orderId);
+        Task<IEnumerable<PurchaseOrderItem>> AddPurchaseOrderItemAsync(IEnumerable<PurchaseOrderItem> items);
         Task<PurchaseOrderItem> UpdatePurchaseOrderItemAsync(PurchaseOrderItem item);
         Task<PurchaseOrderItem> SoftDeletePurchaseOrderItemAsync(PurchaseOrderItem item);
         Task<PurchaseOrderItem> UndoSoftDeletePurchaseOrderItemAsync(PurchaseOrderItem item);
