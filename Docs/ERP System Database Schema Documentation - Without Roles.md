@@ -127,7 +127,7 @@ Line items for purchase orders.
 - **purchase_order_id** (FK to purchase_orders.id) - INT
 - **product_id** (FK to products.id) - INT
 - **quantity** - INT
-- **unit_price** - DECIMAL(12,2)
+- **amount** - DECIMAL(12,2)
 - **discount** - DECIMAL(12,2)
 - **is_deleted** - BIT
 - **deleted_at** - DATETIME
