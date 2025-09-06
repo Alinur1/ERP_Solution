@@ -31,10 +31,10 @@ namespace ErpBackendApi.BLL.Services
                 select new ExpenseDTO
                 {
                     id = e.id,
-                    purchase_order_id = po != null ? po.id : null,
-                    product_id = p != null ? p.id : null,
-                    category_id = c != null ? c.id : null,
-                    category_name = c != null && c.is_deleted == false ? c.name : "-",
+                    purchase_order_id = po != null && po.is_deleted == false ? po.id : null,
+                    product_id = p != null && p.is_deleted == false ? p.id : null,
+                    category_id = c != null && c.is_deleted == false ? c.id : null,
+                    category_name = c != null && c.is_deleted == false ? c.name : null,
                     description = e.description,
                     amount = e.amount,
                     expense_date = e.expense_date,
@@ -57,10 +57,10 @@ namespace ErpBackendApi.BLL.Services
                 select new ExpenseDTO
                 {
                     id = e.id,
-                    purchase_order_id = po != null ? po.id : null,
-                    product_id = p != null ? p.id : null,
-                    category_id = c != null ? c.id : null,
-                    category_name = c != null && c.is_deleted == false ? c.name : "-",
+                    purchase_order_id = po != null && po.is_deleted == false ? po.id : null,
+                    product_id = p != null && p.is_deleted == false ? p.id : null,
+                    category_id = c != null && c.is_deleted == false ? c.id : null,
+                    category_name = c != null && c.is_deleted == false ? c.name : null,
                     description = e.description,
                     amount = e.amount,
                     expense_date = e.expense_date,
@@ -71,11 +71,13 @@ namespace ErpBackendApi.BLL.Services
         public async Task<Expense> AddExpenseAsync(Expense expense)
         {
             var existingExpense = await _context.expenses.FirstOrDefaultAsync(e => e.purchase_order_id == expense.purchase_order_id && e.is_deleted == false);
+            
             if (existingExpense != null)
             {
                 Logger("Unable to add expense. Same product order id already exists.");
-                return null;
+                throw new InvalidOperationException("Unable to add expense. Same product order id already exists.");
             }
+
             expense.is_deleted = false;
             expense.deleted_at = null;
             _context.expenses.Add(expense);
@@ -86,16 +88,17 @@ namespace ErpBackendApi.BLL.Services
         public async Task<Expense> UpdateExpenseAsync(Expense expense)
         {
             var existingExpense = await _context.expenses.FirstOrDefaultAsync(e => e.id == expense.id && e.is_deleted == false);
+
             if (existingExpense == null)
             {
                 Logger("Unable to update expense.");
-                return null;
+                throw new InvalidOperationException("Unable to update expense.");
             }
+
             existingExpense.product_id = expense.product_id;
             existingExpense.description = expense.description;
             existingExpense.amount = expense.amount;
             existingExpense.expense_date = expense.expense_date;
-
             _context.expenses.Update(existingExpense);
             await _context.SaveChangesAsync();
             return existingExpense;
@@ -104,14 +107,15 @@ namespace ErpBackendApi.BLL.Services
         public async Task<Expense> SoftDeleteExpenseAsync(Expense expense)
         {
             var existingExpense = await _context.expenses.FirstOrDefaultAsync(e => e.id == expense.id && e.is_deleted == false);
+
             if (existingExpense == null)
             {
                 Logger("Unable to delete expense.");
-                return null;
+                throw new InvalidOperationException("Unable to delete expense.");
             }
+
             existingExpense.is_deleted = true;
             existingExpense.deleted_at = DateTime.UtcNow;
-
             _context.expenses.Update(existingExpense);
             await _context.SaveChangesAsync();
             return existingExpense;
@@ -120,14 +124,15 @@ namespace ErpBackendApi.BLL.Services
         public async Task<Expense> UndoSoftDeleteExpenseAsync(Expense expense)
         {
             var existingExpense = await _context.expenses.FirstOrDefaultAsync(e => e.id == expense.id && e.is_deleted == true);
+
             if (existingExpense == null)
             {
                 Logger("Unable to restore deleted expense.");
-                return null;
+                throw new InvalidOperationException("Unable to restore deleted expense.");
             }
+
             existingExpense.is_deleted = false;
             existingExpense.deleted_at = null;
-
             _context.expenses.Update(existingExpense);
             await _context.SaveChangesAsync();
             return existingExpense;

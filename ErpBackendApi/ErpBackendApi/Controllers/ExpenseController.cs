@@ -36,45 +36,57 @@ namespace ErpBackendApi.Controllers
         [HttpPost]
         public async Task<IActionResult> AddExpense(Expense expense)
         {
-            var operation_AddExpense = await _iExpenses.AddExpenseAsync(expense);
-            if (operation_AddExpense == null)
+            try
             {
-                return NotFound("Unable to add expense.");
+                var operation_AddExpense = await _iExpenses.AddExpenseAsync(expense);
+                return Ok("Expense added successfully.");
             }
-            return Ok("Expense added successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
-        [HttpPut]
+        [HttpPut("update")]
         public async Task<IActionResult> UpdateExpense(Expense expense)
         {
-            var operation_UpdateExpense = await _iExpenses.UpdateExpenseAsync(expense);
-            if (operation_UpdateExpense == null)
+            try
             {
-                return NotFound("Unable to update expense.");
+                var operation_UpdateExpense = await _iExpenses.UpdateExpenseAsync(expense);
+                return Ok("Expense updated successfully.");
             }
-            return Ok("Expense updated successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("delete")]
         public async Task<IActionResult> SoftDeleteExpense(Expense expense)
         {
-            var operation_SoftDeleteExpense  = await _iExpenses.SoftDeleteExpenseAsync(expense);
-            if (operation_SoftDeleteExpense == null)
+            try
             {
-                return NotFound("Unable to delete expense.");
+                var operation_SoftDeleteExpense = await _iExpenses.SoftDeleteExpenseAsync(expense);
+                return Ok("Expense deleted successfully.");
             }
-            return Ok("Expense deleted successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("undo-delete")]
         public async Task<IActionResult> UndoSoftDeleteExpense(Expense expense)
         {
-            var operation_UndoSoftDeleteExpense = await _iExpenses.UndoSoftDeleteExpenseAsync(expense);
-            if (operation_UndoSoftDeleteExpense == null)
+            try
             {
-                return NotFound("Unable to restore deleted expense.");
+                var operation_UndoSoftDeleteExpense = await _iExpenses.UndoSoftDeleteExpenseAsync(expense);
+                return Ok("Expense restored successfully.");
             }
-            return Ok("Expense restored successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
