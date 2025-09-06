@@ -15,5 +15,6 @@
         public decimal? discount { get; set; }
         public bool? is_deleted { get; set; }
         public DateTime? deleted_at { get; set; }
+        public ProductDTO? product { get; set; }
     }
 }
