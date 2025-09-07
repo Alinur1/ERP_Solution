@@ -164,21 +164,20 @@ namespace ErpBackendApi.BLL.Services
         public async Task<SalesOrderItem> UpdateSalesOrderItemAsync(SalesOrderItem item)
         {
             var existingSalesOrderItem = await _context.sales_order_items.FirstOrDefaultAsync(soi => soi.id == item.id && soi.is_deleted == false);
-            var existingProduct = await _context.products.FirstOrDefaultAsync(p => p.id == item.product_id && p.is_deleted == false);
-            var invoiceExists = await _context.invoices.FirstOrDefaultAsync(i => i.sales_order_id == item.sales_order_id && i.is_deleted == false);
-
-            if (invoiceExists != null)
-            {
-                Logger("Cannot modify sales order item once invoiced.");
-                throw new InvalidOperationException("Cannot modify sales order item once invoiced.");
-            }
-
             if (existingSalesOrderItem == null)
             {
                 Logger("Sales order item not found or is deleted.");
                 throw new InvalidOperationException("Sales order item not found or is deleted.");
             }
 
+            var invoiceExists = await _context.invoices.FirstOrDefaultAsync(i => i.sales_order_id == existingSalesOrderItem.sales_order_id && i.is_deleted == false);
+            if (invoiceExists != null)
+            {
+                Logger("Cannot modify sales order item once invoiced.");
+                throw new InvalidOperationException("Cannot modify sales order item once invoiced.");
+            }
+
+            var existingProduct = await _context.products.FirstOrDefaultAsync(p => p.id == item.product_id && p.is_deleted == false);
             if (existingProduct == null)
             {
                 Logger("Product not found or is deleted.");
@@ -218,18 +217,17 @@ namespace ErpBackendApi.BLL.Services
         public async Task<SalesOrderItem> SoftDeleteSalesOrderItemAsync(SalesOrderItem item)
         {
             var existingSalesOrderItem = await _context.sales_order_items.FirstOrDefaultAsync(soi => soi.id == item.id && soi.is_deleted == false);
-            var invoiceExists = await _context.invoices.FirstOrDefaultAsync(i => i.sales_order_id == item.sales_order_id && i.is_deleted == false);
-
-            if (invoiceExists != null)
-            {
-                Logger("Cannot modify sales order item once invoiced.");
-                throw new InvalidOperationException("Cannot modify sales order item once invoiced.");
-            }
-
             if (existingSalesOrderItem == null)
             {
                 Logger("Unable to delete sales order item.");
                 throw new InvalidOperationException("Unable to delete sales order item.");
+            }
+
+            var invoiceExists = await _context.invoices.FirstOrDefaultAsync(i => i.sales_order_id == existingSalesOrderItem.sales_order_id && i.is_deleted == false);
+            if (invoiceExists != null)
+            {
+                Logger("Cannot modify sales order item once invoiced.");
+                throw new InvalidOperationException("Cannot modify sales order item once invoiced.");
             }
 
             using var transaction = await _context.Database.BeginTransactionAsync();
@@ -251,7 +249,6 @@ namespace ErpBackendApi.BLL.Services
         public async Task<SalesOrderItem> UndoSoftDeleteSalesOrderItemAsync(SalesOrderItem item)
         {
             var existingSalesOrderItem = await _context.sales_order_items.FirstOrDefaultAsync(soi => soi.id == item.id && soi.is_deleted == true);
-
             if (existingSalesOrderItem == null)
             {
                 Logger("Unable to restore sales order item.");
@@ -259,7 +256,6 @@ namespace ErpBackendApi.BLL.Services
             }
 
             var invoiceExists = await _context.invoices.FirstOrDefaultAsync(i => i.sales_order_id == existingSalesOrderItem.sales_order_id && i.is_deleted == false);
-
             if (invoiceExists != null)
             {
                 Logger("Cannot restore sales order item once invoiced.");
