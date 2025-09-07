@@ -22,7 +22,6 @@ namespace ErpBackendApi.BLL.Services
                 .Select(e => new ExpenseDTO
                 {
                     id = e.id,
-                    product_id = e.product_id,
                     description = e.description,
                     total_amount = e.total_amount,
                     expense_date = e.expense_date,
@@ -185,7 +184,6 @@ namespace ErpBackendApi.BLL.Services
                     throw new InvalidOperationException("Expense not found or deleted. Unable to update.");
                 }
 
-                existingExpense.product_id = expense.product_id;
                 existingExpense.description = expense.description;
                 existingExpense.total_amount = expense.total_amount;
                 existingExpense.expense_date = expense.expense_date;
