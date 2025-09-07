@@ -33,7 +33,7 @@ namespace ErpBackendApi.Controllers
             return Ok(operation_GetPurchaseOrderById);
         }
 
-        [HttpGet("by-supplierId/{id}")]
+        [HttpGet("by-supplierId/{supplierId}")]
         public async Task<IActionResult> GetPurchaseOrderBySupplierId(int supplierId)
         {
             var operation_GetPurchaseOrderBySupplierId = await _iPurchaseOrders.GetPurchaseOrderBySupplierIdAsync(supplierId);
