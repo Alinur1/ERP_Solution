@@ -226,7 +226,7 @@ CREATE TABLE `expenses` (
   `id` int NOT NULL AUTO_INCREMENT,
   `purchase_order_id` int DEFAULT NULL,
   `description` text,
-  `amount` decimal(12,2) DEFAULT NULL,
+  `total_amount` decimal(12,2) DEFAULT NULL,
   `expense_date` datetime DEFAULT NULL,
   `category_id` int DEFAULT NULL,
   `is_deleted` tinyint DEFAULT NULL,
@@ -732,4 +732,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-09-05 15:30:59
+-- Dump completed on 2025-09-07 14:48:42
