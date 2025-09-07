@@ -165,18 +165,20 @@ namespace ErpBackendApi.BLL.Services
         {
             var existingPurchaseOrderItem = await _context.purchase_order_items.FirstOrDefaultAsync(poi => poi.id == item.id && poi.is_deleted == false);
             var existingProduct = await _context.products.FirstOrDefaultAsync(p => p.id == item.product_id && p.is_deleted == false);
-            var existingExpense = await _context.expenses.FirstOrDefaultAsync(e => e.purchase_order_id == item.purchase_order_id && e.is_deleted == false);
-            
-            if (existingExpense != null)
-            {
-                Logger("Cannot modify purchase order item once expense is created.");
-                throw new InvalidOperationException("Cannot modify purchase order item once expense is created.");
-            }
+            //var existingExpense = await _context.expenses.FirstOrDefaultAsync(e => e.purchase_order_id == item.purchase_order_id && e.is_deleted == false);
 
             if (existingPurchaseOrderItem == null)
             {
                 Logger("Purchase order item not found or deleted.");
                 throw new InvalidOperationException("Purchase order item not found or deleted.");
+            }
+
+            var existingExpense = await _context.expenses.FirstOrDefaultAsync(e => e.purchase_order_id == existingPurchaseOrderItem.purchase_order_id && e.is_deleted == false);
+
+            if (existingExpense != null)
+            {
+                Logger("Cannot modify purchase order item once expense is created.");
+                throw new InvalidOperationException("Cannot modify purchase order item once expense is created.");
             }
 
             if (existingProduct == null)
@@ -218,18 +220,20 @@ namespace ErpBackendApi.BLL.Services
         public async Task<PurchaseOrderItem> SoftDeletePurchaseOrderItemAsync(PurchaseOrderItem item)
         {
             var existingPurchaseOrderItem = await _context.purchase_order_items.FirstOrDefaultAsync(poi => poi.id == item.id && poi.is_deleted == false);
-            var existingExpense = await _context.expenses.FirstOrDefaultAsync(e => e.purchase_order_id == item.purchase_order_id && e.is_deleted == false);
-
-            if (existingExpense != null)
-            {
-                Logger("Cannot delete purchase order item once expense is created.");
-                throw new InvalidOperationException("Cannot delete purchase order item once expense is created.");
-            }
+            //var existingExpense = await _context.expenses.FirstOrDefaultAsync(e => e.purchase_order_id == item.purchase_order_id && e.is_deleted == false);
 
             if (existingPurchaseOrderItem == null)
             {
                 Logger("Unable to delete. Purchase order item not found.");
                 throw new InvalidOperationException("Unable to delete. Purchase order item not found.");
+            }
+
+            var existingExpense = await _context.expenses.FirstOrDefaultAsync(e => e.purchase_order_id == existingPurchaseOrderItem.purchase_order_id && e.is_deleted == false);
+
+            if (existingExpense != null)
+            {
+                Logger("Cannot delete purchase order item once expense is created.");
+                throw new InvalidOperationException("Cannot delete purchase order item once expense is created.");
             }
 
             using var transaction = await _context.Database.BeginTransactionAsync();
@@ -251,18 +255,20 @@ namespace ErpBackendApi.BLL.Services
         public async Task<PurchaseOrderItem> UndoSoftDeletePurchaseOrderItemAsync(PurchaseOrderItem item)
         {
             var existingPurchaseOrderItem = await _context.purchase_order_items.FirstOrDefaultAsync(poi => poi.id == item.id && poi.is_deleted == true);
-            var existingExpense = await _context.expenses.FirstOrDefaultAsync(e => e.purchase_order_id == item.purchase_order_id && e.is_deleted == false);
-
-            if (existingExpense != null)
-            {
-                Logger("Cannot restore deleted purchase order item once expense is created.");
-                throw new InvalidOperationException("Cannot restore deleted purchase order item once expense is created.");
-            }
+            //var existingExpense = await _context.expenses.FirstOrDefaultAsync(e => e.purchase_order_id == item.purchase_order_id && e.is_deleted == false);
 
             if (existingPurchaseOrderItem == null)
             {
                 Logger("Unable to restore deleted purchase order item.");
                 throw new InvalidOperationException("Unable to restore deleted purchase order item.");
+            }
+
+            var existingExpense = await _context.expenses.FirstOrDefaultAsync(e => e.purchase_order_id == existingPurchaseOrderItem.purchase_order_id && e.is_deleted == false);
+
+            if (existingExpense != null)
+            {
+                Logger("Cannot restore deleted purchase order item once expense is created.");
+                throw new InvalidOperationException("Cannot restore deleted purchase order item once expense is created.");
             }
 
             using var transaction = await _context.Database.BeginTransactionAsync();
