@@ -33,7 +33,7 @@ namespace ErpBackendApi.Controllers
             return Ok(operation_GetInvoiceById);
         }
 
-        [HttpGet("by-order/{id}")]
+        [HttpGet("by-order/{orderId}")]
         public async Task<IActionResult> GetInvoiceByOrderId(int orderId)
         {
             try
