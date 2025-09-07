@@ -97,7 +97,6 @@ namespace ErpBackendApi.BLL.Services
             try
             {
                 var existingInvoice = await _context.invoices.FirstOrDefaultAsync(i => i.sales_order_id == invoice.sales_order_id && i.is_deleted == false);
-
                 if (existingInvoice != null)
                 {
                     Logger("Same sales order cannot be added to an invoice.");
@@ -107,7 +106,6 @@ namespace ErpBackendApi.BLL.Services
                 var orderItems = await _context.sales_order_items
                     .Where(soi => soi.sales_order_id == invoice.sales_order_id && soi.is_deleted == false)
                     .ToListAsync();
-
                 if (orderItems == null || orderItems.Count == 0)
                 {
                     Logger("Cannot create invoice without sales order items.");
@@ -118,7 +116,6 @@ namespace ErpBackendApi.BLL.Services
                 foreach (var item in orderItems)
                 {
                     var inventory = await _context.inventory.FirstOrDefaultAsync(inv => inv.product_id == item.product_id && inv.is_deleted == false);
-
                     if (inventory == null)
                     {
                         Logger($"Inventory not found for product {item.product_id}.");
@@ -172,7 +169,6 @@ namespace ErpBackendApi.BLL.Services
             try
             {
                 var existingInvoice = await _context.invoices.FirstOrDefaultAsync(i => i.id == invoice.id && i.is_deleted == false);
-
                 if (existingInvoice == null)
                 {
                     Logger("Invoice not found or deleted. Unable to update.");
@@ -200,7 +196,6 @@ namespace ErpBackendApi.BLL.Services
             try
             {
                 var existingInvoice = await _context.invoices.FirstOrDefaultAsync(i => i.id == invoice.id && i.is_deleted == false);
-
                 if (existingInvoice == null)
                 {
                     Logger("Invoice not found or deleted. Unable to delete.");
@@ -214,7 +209,6 @@ namespace ErpBackendApi.BLL.Services
                 foreach (var item in orderItems)
                 {
                     var inventory = await _context.inventory.FirstOrDefaultAsync(inv => inv.product_id == item.product_id && inv.is_deleted == false);
-
                     if (inventory != null)
                     {
                         inventory.quantity += item.quantity;
@@ -242,7 +236,6 @@ namespace ErpBackendApi.BLL.Services
             try
             {
                 var existingInvoice = await _context.invoices.FirstOrDefaultAsync(i => i.id == invoice.id && i.is_deleted == true);
-
                 if (existingInvoice == null)
                 {
                     Logger("Invoice not found. Unable to restore.");
@@ -252,11 +245,9 @@ namespace ErpBackendApi.BLL.Services
                 var orderItems = await _context.sales_order_items
                     .Where(soi => soi.sales_order_id == existingInvoice.sales_order_id && soi.is_deleted == false)
                     .ToListAsync();
-
                 foreach (var item in orderItems)
                 {
                     var inventory = await _context.inventory.FirstOrDefaultAsync(inv => inv.product_id == item.product_id && inv.is_deleted == false);
-
                     if (inventory == null || inventory.quantity < item.quantity)
                     {
                         Logger($"Not enough stock to restore invoice for product {item.product_id}.");

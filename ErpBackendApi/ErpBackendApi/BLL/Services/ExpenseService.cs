@@ -94,9 +94,7 @@ namespace ErpBackendApi.BLL.Services
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
-                var existingExpense = await _context.expenses
-                    .FirstOrDefaultAsync(e => e.purchase_order_id == expense.purchase_order_id && e.is_deleted == false);
-
+                var existingExpense = await _context.expenses.FirstOrDefaultAsync(e => e.purchase_order_id == expense.purchase_order_id && e.is_deleted == false);
                 if (existingExpense != null)
                 {
                     Logger("Unable to add expense. Same purchase order id already exists.");
@@ -106,7 +104,6 @@ namespace ErpBackendApi.BLL.Services
                 var purchaseOrderItems = await _context.purchase_order_items
                     .Where(poi => poi.purchase_order_id == expense.purchase_order_id && poi.is_deleted == false)
                     .ToListAsync();
-
                 if (purchaseOrderItems == null || purchaseOrderItems.Count == 0)
                 {
                     Logger("Cannot create expense without purchase order items.");
@@ -116,9 +113,7 @@ namespace ErpBackendApi.BLL.Services
                 // ADD to inventory (opposite of invoice which deducts)
                 foreach (var item in purchaseOrderItems)
                 {
-                    var inventory = await _context.inventory
-                        .FirstOrDefaultAsync(inv => inv.product_id == item.product_id && inv.is_deleted == false);
-
+                    var inventory = await _context.inventory.FirstOrDefaultAsync(inv => inv.product_id == item.product_id && inv.is_deleted == false);
                     if (inventory == null)
                     {
                         // Create new inventory entry if it doesn't exist
@@ -177,7 +172,6 @@ namespace ErpBackendApi.BLL.Services
             try
             {
                 var existingExpense = await _context.expenses.FirstOrDefaultAsync(e => e.id == expense.id && e.is_deleted == false);
-
                 if (existingExpense == null)
                 {
                     Logger("Expense not found or deleted. Unable to update.");
@@ -205,9 +199,7 @@ namespace ErpBackendApi.BLL.Services
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
-                var existingExpense = await _context.expenses
-                    .FirstOrDefaultAsync(e => e.id == expense.id && e.is_deleted == false);
-
+                var existingExpense = await _context.expenses.FirstOrDefaultAsync(e => e.id == expense.id && e.is_deleted == false);
                 if (existingExpense == null)
                 {
                     Logger("Expense not found or deleted. Unable to delete.");
@@ -221,9 +213,7 @@ namespace ErpBackendApi.BLL.Services
                 // DEDUCT from inventory when deleting expense (opposite of add)
                 foreach (var item in purchaseOrderItems)
                 {
-                    var inventory = await _context.inventory
-                        .FirstOrDefaultAsync(inv => inv.product_id == item.product_id && inv.is_deleted == false);
-
+                    var inventory = await _context.inventory.FirstOrDefaultAsync(inv => inv.product_id == item.product_id && inv.is_deleted == false);
                     if (inventory != null)
                     {
                         if (inventory.quantity < item.quantity)
@@ -256,9 +246,7 @@ namespace ErpBackendApi.BLL.Services
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
-                var existingExpense = await _context.expenses
-                    .FirstOrDefaultAsync(e => e.id == expense.id && e.is_deleted == true);
-
+                var existingExpense = await _context.expenses.FirstOrDefaultAsync(e => e.id == expense.id && e.is_deleted == true);
                 if (existingExpense == null)
                 {
                     Logger("Expense not found. Unable to restore.");
@@ -272,9 +260,7 @@ namespace ErpBackendApi.BLL.Services
                 // ADD back to inventory when undoing delete
                 foreach (var item in purchaseOrderItems)
                 {
-                    var inventory = await _context.inventory
-                        .FirstOrDefaultAsync(inv => inv.product_id == item.product_id && inv.is_deleted == false);
-
+                    var inventory = await _context.inventory.FirstOrDefaultAsync(inv => inv.product_id == item.product_id && inv.is_deleted == false);
                     if (inventory == null)
                     {
                         // Create new inventory entry if it doesn't exist
