@@ -44,13 +44,24 @@ namespace ErpBackendApi.BLL.Services
             if (existingDept != null)
             {
                 Logger("Same department name already exists.");
-                return null;
+                throw new InvalidOperationException("Same department name already exists.");
             }
-            department.is_deleted = false;
-            department.deleted_at = null;
-            _context.departments.Add(department);
-            await _context.SaveChangesAsync();
-            return department;
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                department.is_deleted = false;
+                department.deleted_at = null;
+                _context.departments.Add(department);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return department;
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw new InvalidOperationException("Unable to save department information.");
+            }
         }
 
         public async Task<Department> UpdateDepartmentAsync(Department department)
@@ -59,13 +70,24 @@ namespace ErpBackendApi.BLL.Services
             if (existingDept == null)
             {
                 Logger("Unable to update department information. Department not found.");
-                return null;
+                throw new InvalidOperationException("Unable to update department information. Department not found.");
             }
-            existingDept.name = department.name;
-            existingDept.description = department.description;
-            _context.departments.Update(existingDept);
-            await _context.SaveChangesAsync();
-            return existingDept;
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                existingDept.name = department.name;
+                existingDept.description = department.description;
+                _context.departments.Update(existingDept);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return existingDept;
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw new InvalidOperationException("Unable to update department information.");
+            }
         }
 
         public async Task<Department> SoftDeleteDepartmentAsync(Department department)
@@ -74,13 +96,24 @@ namespace ErpBackendApi.BLL.Services
             if (existingDept == null)
             {
                 Logger("Unable to delete department information. Department not found.");
-                return null;
+                throw new InvalidOperationException("Unable to delete department information. Department not found.");
             }
-            existingDept.is_deleted = true;
-            existingDept.deleted_at = DateTime.UtcNow;
-            _context.departments.Update(existingDept);
-            await _context.SaveChangesAsync();
-            return existingDept;
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                existingDept.is_deleted = true;
+                existingDept.deleted_at = DateTime.UtcNow;
+                _context.departments.Update(existingDept);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return existingDept;
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw new InvalidOperationException("Unable to delete department information.");
+            }
         }
 
         public async Task<Department> UndoSoftDeleteDepartmentAsync(Department department)
@@ -89,13 +122,24 @@ namespace ErpBackendApi.BLL.Services
             if (existingDept == null)
             {
                 Logger("Unable to restore deleted department information. Department not found.");
-                return null;
+                throw new InvalidOperationException("Unable to restore deleted department information. Department not found.");
             }
-            existingDept.is_deleted = false;
-            existingDept.deleted_at = null;
-            _context.departments.Update(existingDept);
-            await _context.SaveChangesAsync();
-            return existingDept;
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                existingDept.is_deleted = false;
+                existingDept.deleted_at = null;
+                _context.departments.Update(existingDept);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return existingDept;
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw new InvalidOperationException("Unable to restore deleted department information.");
+            }
         }
     }
 }

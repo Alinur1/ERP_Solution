@@ -28,7 +28,7 @@ namespace ErpBackendApi.Controllers
             var operation_GetDepartmentById = await _iDept.GetDepartmentByIdAsync(id);
             if (operation_GetDepartmentById == null)
             {
-                return NotFound("Department not found.");
+                return BadRequest("Department not found.");
             }
             return Ok(operation_GetDepartmentById);
         }
@@ -36,45 +36,57 @@ namespace ErpBackendApi.Controllers
         [HttpPost]
         public async Task<IActionResult> AddDepartment(Department dept)
         {
-            var operation_AddDepartment = await _iDept.AddDepartmentAsync(dept);
-            if (operation_AddDepartment == null)
+            try
             {
-                return NotFound("Unable to add department. Same department name already exists.");
+                var operation_AddDepartment = await _iDept.AddDepartmentAsync(dept);
+                return Ok("Department added successfully.");
             }
-            return Ok("Department added successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
-        [HttpPut]
+        [HttpPut("update")]
         public async Task<IActionResult> UpdateDepartment(Department department)
         {
-            var operation_UpdateDepartment = await _iDept.UpdateDepartmentAsync(department);
-            if (operation_UpdateDepartment == null)
+            try
             {
-                return NotFound("Unable to update department information. Department not found.");
+                var operation_UpdateDepartment = await _iDept.UpdateDepartmentAsync(department);
+                return Ok("Department information updated successfully.");
             }
-            return Ok("Department information updated successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("delete")]
         public async Task<IActionResult> SoftDeleteDepartment(Department department)
         {
-            var operation_SoftDeleteDepartment = await _iDept.SoftDeleteDepartmentAsync(department);
-            if (operation_SoftDeleteDepartment == null)
+            try
             {
-                return NotFound("Unable to delete department information. Department not found.");
+                var operation_SoftDeleteDepartment = await _iDept.SoftDeleteDepartmentAsync(department);
+                return Ok("Department information deleted successfully.");
             }
-            return Ok("Department information deleted successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("undo-delete")]
         public async Task<IActionResult> UndoSoftDeleteDepartment(Department department)
         {
-            var operation_UndoSoftDeleteDepartment = await _iDept.UndoSoftDeleteDepartmentAsync(department);
-            if (operation_UndoSoftDeleteDepartment == null)
+            try
             {
-                return NotFound("Unable to restore deleted department information. Department not found.");
+                var operation_UndoSoftDeleteDepartment = await _iDept.UndoSoftDeleteDepartmentAsync(department);
+                return Ok("Department information restored successfully.");
             }
-            return Ok("Department information restored successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
