@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace ErpBackendApi.DAL.Models
+﻿namespace ErpBackendApi.DAL.Models
 {
     public class Inventory
     {
@@ -11,7 +9,5 @@ namespace ErpBackendApi.DAL.Models
         public DateTime? last_updated { get; set; }
         public bool? is_deleted { get; set; }
         public DateTime? deleted_at { get; set; }
-        [Timestamp]
-        public byte[]? RowVersion { get; set; }
     }
 }

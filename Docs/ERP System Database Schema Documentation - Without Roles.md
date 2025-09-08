@@ -59,7 +59,6 @@ Tracks inventory levels per product.
 - **last_updated** - DATETIME
 - **is_deleted** - BIT
 - **deleted_at** - DATETIME
-- **RowVersion** - BYTE[]
 
 ## C. Sales Module
 
