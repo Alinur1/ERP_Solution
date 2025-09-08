@@ -141,5 +141,17 @@ namespace ErpBackendApi.BLL.Services
                 throw new InvalidOperationException("Unable to restore deleted department information.");
             }
         }
+
+        public async Task<IEnumerable<Department>> GetAllDeletedDepartmentsAsync()
+        {
+            return await _context.departments
+                .Where(d => d.is_deleted == true)
+                .Select(d => new Department
+                {
+                    id = d.id,
+                    name = d.name,
+                    description = d.description,
+                }).ToListAsync();
+        }
     }
 }

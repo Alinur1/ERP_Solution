@@ -10,5 +10,6 @@ namespace ErpBackendApi.BLL.Interfaces
         Task<Department> UpdateDepartmentAsync(Department department);
         Task<Department> SoftDeleteDepartmentAsync(Department department);
         Task<Department> UndoSoftDeleteDepartmentAsync(Department department);
+        Task<IEnumerable<Department>> GetAllDeletedDepartmentsAsync();
     }
 }

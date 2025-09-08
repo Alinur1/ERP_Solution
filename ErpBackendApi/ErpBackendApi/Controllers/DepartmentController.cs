@@ -88,5 +88,12 @@ namespace ErpBackendApi.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet("deleted-departments")]
+        public async Task<IActionResult> GetAllDeletedDepartments()
+        {
+            var operation_GetAllDeletedDepartments = await _iDept.GetAllDeletedDepartmentsAsync();
+            return Ok(operation_GetAllDeletedDepartments);
+        }
     }
 }
