@@ -147,9 +147,9 @@ Testing TODO
 11. "ready to implement frontend" - sales_orders
 12. "ready to implement frontend" - sales_order_items
 13. "ready to implement frontend" - invoices
-14. purchase_orders
-15. purchase_order_items
-16. expenses
+14. "ready to implement frontend" - purchase_orders
+15. "ready to implement frontend" - purchase_order_items
+16. "ready to implement frontend" - expenses
 17. departments
 18. employees
 19. attendance
