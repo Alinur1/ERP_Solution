@@ -228,15 +228,12 @@ CREATE TABLE `expenses` (
   `description` text,
   `total_amount` decimal(12,2) DEFAULT NULL,
   `expense_date` datetime DEFAULT NULL,
-  `category_id` int DEFAULT NULL,
   `is_deleted` tinyint DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_expenses_purchase_orders_idx` (`purchase_order_id`),
-  KEY `fk_expenses_categories_idx` (`category_id`),
-  CONSTRAINT `fk_expenses_categories` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`),
   CONSTRAINT `fk_expenses_purchase_orders` FOREIGN KEY (`purchase_order_id`) REFERENCES `purchase_orders` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -245,6 +242,7 @@ CREATE TABLE `expenses` (
 
 LOCK TABLES `expenses` WRITE;
 /*!40000 ALTER TABLE `expenses` DISABLE KEYS */;
+INSERT INTO `expenses` VALUES (1,3,NULL,120.00,'2025-09-07 09:39:03',0,NULL);
 /*!40000 ALTER TABLE `expenses` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -276,7 +274,7 @@ CREATE TABLE `inventory` (
 
 LOCK TABLES `inventory` WRITE;
 /*!40000 ALTER TABLE `inventory` DISABLE KEYS */;
-INSERT INTO `inventory` VALUES (2,2,100,30,'2025-09-02 10:25:26',0,NULL,NULL),(3,1,800,50,'2025-09-02 10:25:26',0,NULL,NULL),(10,3,5000,40,'2025-08-04 11:24:19',0,NULL,NULL),(11,5,394,15,'2025-09-02 12:53:57',0,NULL,NULL);
+INSERT INTO `inventory` VALUES (2,2,100,30,'2025-09-02 10:25:26',0,NULL,NULL),(3,1,800,50,'2025-09-02 10:25:26',0,NULL,NULL),(10,3,5000,40,'2025-08-04 11:24:19',0,NULL,NULL),(11,5,400,15,'2025-09-07 09:40:11',0,NULL,NULL);
 /*!40000 ALTER TABLE `inventory` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -466,7 +464,7 @@ CREATE TABLE `purchase_order_items` (
   KEY `fk_purchase_order_items_products_idx` (`product_id`),
   CONSTRAINT `fk_purchase_order_items_products` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`),
   CONSTRAINT `fk_purchase_order_items_purchase_orders` FOREIGN KEY (`purchase_order_id`) REFERENCES `purchase_orders` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -475,6 +473,7 @@ CREATE TABLE `purchase_order_items` (
 
 LOCK TABLES `purchase_order_items` WRITE;
 /*!40000 ALTER TABLE `purchase_order_items` DISABLE KEYS */;
+INSERT INTO `purchase_order_items` VALUES (1,3,5,6,120.00,NULL,0,NULL);
 /*!40000 ALTER TABLE `purchase_order_items` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -497,7 +496,7 @@ CREATE TABLE `purchase_orders` (
   PRIMARY KEY (`id`),
   KEY `fk_purchase_orders_suppliers_idx` (`supplier_id`),
   CONSTRAINT `fk_purchase_orders_suppliers` FOREIGN KEY (`supplier_id`) REFERENCES `suppliers` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -506,7 +505,7 @@ CREATE TABLE `purchase_orders` (
 
 LOCK TABLES `purchase_orders` WRITE;
 /*!40000 ALTER TABLE `purchase_orders` DISABLE KEYS */;
-INSERT INTO `purchase_orders` VALUES (1,7,'2025-09-03 08:35:10','2025-09-03 08:35:10',0,NULL,0,NULL),(2,7,'2025-09-03 08:35:10','2025-09-03 08:35:10',0,NULL,1,'2025-09-03 08:51:29');
+INSERT INTO `purchase_orders` VALUES (1,7,'2025-09-03 08:35:10','2025-09-03 08:35:10',0,NULL,1,'2025-09-07 08:57:11'),(2,7,'2025-09-03 08:35:10','2025-09-03 08:35:10',0,NULL,1,'2025-09-03 08:51:29'),(3,7,'2025-09-07 08:57:24','2025-09-07 09:10:24',2,NULL,0,NULL);
 /*!40000 ALTER TABLE `purchase_orders` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -732,4 +731,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-09-07 14:48:42
+-- Dump completed on 2025-09-08 12:57:57

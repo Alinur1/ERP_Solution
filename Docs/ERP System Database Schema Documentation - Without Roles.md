@@ -136,7 +136,6 @@ Line items for purchase orders.
 Tracks company expenses.
 - **id** (PK) - INT
 - **purchase_order_id** (FK to purchase_orders.id) - INT
-- **product_id** (FK to products.id) - INT
 - **description** - TEXT
 - **amount** - DECIMAL(12,2)
 - **expense_date** - DATETIME
