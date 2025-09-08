@@ -75,13 +75,24 @@ namespace ErpBackendApi.BLL.Services
             if (existingEmployee != null)
             {
                 Logger("Same employee cannot be added in the same department.");
-                return null;
+                throw new InvalidOperationException("Same employee cannot be added in the same department.");
             }
-            emp.is_deleted = false;
-            emp.deleted_at = null;
-            _context.employees.Add(emp);
-            await _context.SaveChangesAsync();
-            return emp;
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                emp.is_deleted = false;
+                emp.deleted_at = null;
+                _context.employees.Add(emp);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return emp;
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw new InvalidOperationException("Unable to add employee information.");
+            }
         }
 
         public async Task<Employee> UpdateEmployeeAsync(Employee emp)
@@ -90,15 +101,25 @@ namespace ErpBackendApi.BLL.Services
             if (existingEmployee == null)
             {
                 Logger("Employee not found. Unable to update employee information.");
-                return null;
+                throw new InvalidOperationException("Employee not found. Unable to update employee information.");
             }
-            existingEmployee.department_id = emp.department_id;
-            existingEmployee.date_hired = emp.date_hired;
-            existingEmployee.salary = emp.salary;
-            existingEmployee.status = emp.status;
-            _context.employees.Update(existingEmployee);
-            await _context.SaveChangesAsync();
-            return existingEmployee;
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                existingEmployee.department_id = emp.department_id;
+                existingEmployee.date_hired = emp.date_hired;
+                existingEmployee.salary = emp.salary;
+                existingEmployee.status = emp.status;
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return existingEmployee;
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw new InvalidOperationException("Unable to update employee information.");
+            }
         }
 
         public async Task<Employee> SoftDeleteEmployeeAsync(Employee emp)
@@ -107,13 +128,23 @@ namespace ErpBackendApi.BLL.Services
             if (existingEmployee == null)
             {
                 Logger("Employee not found. Unable to delete employee information.");
-                return null;
+                throw new InvalidOperationException("Employee not found. Unable to delete employee information.");
             }
-            existingEmployee.is_deleted = true;
-            existingEmployee.deleted_at = DateTime.UtcNow;
-            _context.employees.Update(existingEmployee);
-            await _context.SaveChangesAsync();
-            return existingEmployee;
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                existingEmployee.is_deleted = true;
+                existingEmployee.deleted_at = DateTime.UtcNow;
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return existingEmployee;
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw new InvalidOperationException("Unable to delete employee information.");
+            }
         }
 
         public async Task<Employee> UndoSoftDeleteEmployeeAsync(Employee emp)
@@ -122,13 +153,23 @@ namespace ErpBackendApi.BLL.Services
             if (existingEmployee == null)
             {
                 Logger("Employee not found. Unable to restore deleted employee information.");
-                return null;
+                throw new InvalidOperationException("Employee not found. Unable to restore deleted employee information.");
             }
-            existingEmployee.is_deleted = false;
-            existingEmployee.deleted_at = null;
-            _context.employees.Update(existingEmployee);
-            await _context.SaveChangesAsync();
-            return existingEmployee;
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                existingEmployee.is_deleted = false;
+                existingEmployee.deleted_at = null;
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return existingEmployee;
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw new InvalidOperationException("Unable to restore deleted employee information.");
+            }
         }
     }
 }

@@ -28,7 +28,7 @@ namespace ErpBackendApi.Controllers
             var operation_GetEmployeeById = await _iEmployee.GetEmployeeByIdAsync(id);
             if (operation_GetEmployeeById == null)
             {
-                return NotFound("Employee not found.");
+                return BadRequest("Employee not found.");
             }
             return Ok(operation_GetEmployeeById);
         }
@@ -36,45 +36,57 @@ namespace ErpBackendApi.Controllers
         [HttpPost]
         public async Task<IActionResult> AddEmployee(Employee emp)
         {
-            var operation_AddEmployee = await _iEmployee.AddEmployeeAsync(emp);
-            if (operation_AddEmployee == null)
+            try
             {
-                return NotFound("Same employee cannot be added in the same department.");
+                var operation_AddEmployee = await _iEmployee.AddEmployeeAsync(emp);
+                return Ok("Employee added successfully.");
             }
-            return Ok("Employee added successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
-        [HttpPut]
+        [HttpPut("update")]
         public async Task<IActionResult> UpdateEmployee(Employee emp)
         {
-            var operation_UpdateEmployee = await _iEmployee.UpdateEmployeeAsync(emp);
-            if (operation_UpdateEmployee == null)
+            try
             {
-                return NotFound("Employee not found. Unable to update employee information.");
+                var operation_UpdateEmployee = await _iEmployee.UpdateEmployeeAsync(emp);
+                return Ok("Employee information updated successfully.");
             }
-            return Ok("Employee information updated successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("delete")]
         public async Task<IActionResult> SoftDeleteEmployee(Employee emp)
         {
-            var operation_SoftDeleteEmployee = await _iEmployee.SoftDeleteEmployeeAsync(emp);
-            if (operation_SoftDeleteEmployee == null)
+            try
             {
-                return NotFound("Employee not found. Unable to delete employee information.");
+                var operation_SoftDeleteEmployee = await _iEmployee.SoftDeleteEmployeeAsync(emp);
+                return Ok("Employee information deleted successfully.");
             }
-            return Ok("Employee information deleted successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("undo-delete")]
         public async Task<IActionResult> UndoSoftDeleteEmployee(Employee emp)
         {
-            var operation_UndoSoftDeleteEmployee = await _iEmployee.UndoSoftDeleteEmployeeAsync(emp);
-            if (operation_UndoSoftDeleteEmployee == null)
+            try
             {
-                return NotFound("Employee not found. Unable to restore deleted employee information.");
+                var operation_UndoSoftDeleteEmployee = await _iEmployee.UndoSoftDeleteEmployeeAsync(emp);
+                return Ok("Employee information restored successfully.");
             }
-            return Ok("Employee information restored successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
