@@ -47,6 +47,12 @@ namespace ErpBackendApi.BLL.Services
                 throw new InvalidOperationException("Same department name already exists.");
             }
 
+            if (string.IsNullOrWhiteSpace(department.name))
+            {
+                Logger("Department name cannot be empty.");
+                throw new InvalidOperationException("Department name cannot be empty.");
+            }
+
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
@@ -71,6 +77,12 @@ namespace ErpBackendApi.BLL.Services
             {
                 Logger("Unable to update department information. Department not found.");
                 throw new InvalidOperationException("Unable to update department information. Department not found.");
+            }
+
+            if (string.IsNullOrWhiteSpace(department.name))
+            {
+                Logger("Department name cannot be empty.");
+                throw new InvalidOperationException("Department name cannot be empty.");
             }
 
             using var transaction = await _context.Database.BeginTransactionAsync();

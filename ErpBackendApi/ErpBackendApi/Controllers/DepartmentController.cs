@@ -22,7 +22,7 @@ namespace ErpBackendApi.Controllers
             return Ok(operation_GetAllDepartment);
         }
 
-        [HttpGet("id")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetDepartmentById(int id)
         {
             var operation_GetDepartmentById = await _iDept.GetDepartmentByIdAsync(id);
