@@ -28,13 +28,13 @@ namespace ErpBackendApi.BLL.Services
                 select new EmployeeDTO
                 {
                     id = e.id,
-                    user_id = u != null ? u.id : null,
-                    employee_name = u != null && u.is_deleted == false ? u.name : "-",
-                    employee_email = u != null && u.is_deleted == false ? u.email : "-",
-                    employee_phone = u != null && u.is_deleted == false ? u.phone : "-",
+                    user_id = u != null && u.is_deleted == false ? u.id : null,
+                    employee_name = u != null && u.is_deleted == false ? u.name : null,
+                    employee_email = u != null && u.is_deleted == false ? u.email : null,
+                    employee_phone = u != null && u.is_deleted == false ? u.phone : null,
                     employee_created_at = u != null && u.is_deleted == false ? u.created_at: null,
-                    department_id = d != null ? d.id : null,
-                    department_name = d != null && d.is_deleted == false ? d.name : "-",
+                    employee_department_id = d != null && d.is_deleted == false ? d.id : null,
+                    employee_department_name = d != null && d.is_deleted == false ? d.name : null,
                     date_hired = e.date_hired,
                     salary = e.salary,
                     status = e.status,
@@ -56,12 +56,12 @@ namespace ErpBackendApi.BLL.Services
                 {
                     id = e.id,
                     user_id = u != null ? u.id : null,
-                    employee_name = u != null && u.is_deleted == false ? u.name : "-",
-                    employee_email = u != null && u.is_deleted == false ? u.email : "-",
-                    employee_phone = u != null && u.is_deleted == false ? u.phone : "-",
+                    employee_name = u != null && u.is_deleted == false ? u.name : null,
+                    employee_email = u != null && u.is_deleted == false ? u.email : null,
+                    employee_phone = u != null && u.is_deleted == false ? u.phone : null,
                     employee_created_at = u != null && u.is_deleted == false ? u.created_at : null,
-                    department_id = d != null ? d.id : null,
-                    department_name = d != null && d.is_deleted == false ? d.name : "-",
+                    employee_department_id = d != null ? d.id : null,
+                    employee_department_name = d != null && d.is_deleted == false ? d.name : null,
                     date_hired = e.date_hired,
                     salary = e.salary,
                     status = e.status,
@@ -71,6 +71,26 @@ namespace ErpBackendApi.BLL.Services
 
         public async Task<Employee> AddEmployeeAsync(Employee emp)
         {
+            var existingUser = await _context.users.FirstOrDefaultAsync(u => u.id == emp.user_id && u.is_deleted == false);
+            if (existingUser == null)
+            {
+                Logger("User not found.");
+                throw new InvalidOperationException("User not found.");
+            }
+
+            var existingDept = await _context.departments.FirstOrDefaultAsync(d => d.id == emp.department_id && d.is_deleted == false);
+            if (existingDept == null)
+            {
+                Logger("Department not found.");
+                throw new InvalidOperationException("Department not found.");
+            }
+
+            if (emp.date_hired == null || emp.salary == null || emp.status == null)
+            {
+                Logger("Hiring date, salary and status cannot be empty.");
+                throw new InvalidOperationException("Hiring date, salary and status cannot be empty.");
+            }
+
             var existingEmployee = await _context.employees.FirstOrDefaultAsync(e => e.user_id == emp.user_id && e.department_id == emp.department_id && e.is_deleted == false);
             if (existingEmployee != null)
             {
@@ -102,6 +122,38 @@ namespace ErpBackendApi.BLL.Services
             {
                 Logger("Employee not found. Unable to update employee information.");
                 throw new InvalidOperationException("Employee not found. Unable to update employee information.");
+            }
+
+            var existingUser = await _context.users.FirstOrDefaultAsync(u => u.id == emp.user_id && u.is_deleted == false);
+            if (existingUser == null)
+            {
+                Logger("User not found.");
+                throw new InvalidOperationException("User not found.");
+            }
+
+            var existingDept = await _context.departments.FirstOrDefaultAsync(d => d.id == emp.department_id && d.is_deleted == false);
+            if (existingDept == null)
+            {
+                Logger("Department not found.");
+                throw new InvalidOperationException("Department not found.");
+            }
+
+            if (emp.date_hired == null || emp.salary == null || emp.status == null)
+            {
+                Logger("Hiring date, salary and status cannot be empty.");
+                throw new InvalidOperationException("Hiring date, salary and status cannot be empty.");
+            }
+
+            var existingEmployee2 = await _context.employees.FirstOrDefaultAsync(
+                e => e.id != emp.id &&
+                     e.user_id == emp.user_id &&
+                     e.department_id == emp.department_id &&
+                     e.is_deleted == false);
+
+            if (existingEmployee2 != null)
+            {
+                Logger("Another employee with same user already exists in this department.");
+                throw new InvalidOperationException("Another employee with same user already exists in this department.");
             }
 
             using var transaction = await _context.Database.BeginTransactionAsync();

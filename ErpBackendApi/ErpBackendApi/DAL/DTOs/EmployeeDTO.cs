@@ -10,8 +10,8 @@ namespace ErpBackendApi.DAL.DTOs
         public string? employee_email { get; set; }
         public string? employee_phone { get; set; }
         public DateTime? employee_created_at { get; set; }
-        public int? department_id { get; set; }
-        public string? department_name { get; set; }
+        public int? employee_department_id { get; set; }
+        public string? employee_department_name { get; set; }
         public DateTime? date_hired { get; set; }
         public decimal? salary { get; set; }
         public EmployeeStatus? status { get; set; }
