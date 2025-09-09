@@ -28,7 +28,7 @@ namespace ErpBackendApi.Controllers
             var operation_GetAttendanceById = await _attendances.GetAttendanceByIdAsync(id);
             if (operation_GetAttendanceById == null)
             {
-                return NotFound("Attendance not found.");
+                return BadRequest("Attendance not found.");
             }
             return Ok(operation_GetAttendanceById);
         }
@@ -36,45 +36,57 @@ namespace ErpBackendApi.Controllers
         [HttpPost]
         public async Task<IActionResult> AddAttendance(Attendance att)
         {
-            var operation_AddAttendance = await _attendances.AddAttendanceAsync(att);
-            if (operation_AddAttendance == null)
+            try
             {
-                return NotFound("Duplicate attendance for same employee on the same day.");
+                var operation_AddAttendance = await _attendances.AddAttendanceAsync(att);
+                return Ok("Attendance added successfully.");
             }
-            return Ok("Attendance added successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
-        [HttpPut]
+        [HttpPut("update")]
         public async Task<IActionResult> UpdateAttendance(Attendance att)
         {
-            var operation_UpdateAttendance = await _attendances.UpdateAttendanceAsync(att);
-            if (operation_UpdateAttendance == null)
+            try
             {
-                return NotFound("Unable to update attendance information. Not found.");
+                var operation_UpdateAttendance = await _attendances.UpdateAttendanceAsync(att);
+                return Ok("Attendance information updated successfully.");
             }
-            return Ok("Attendance information updated successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("delete")]
         public async Task<IActionResult> SoftDeleteAttendance(Attendance att)
         {
-            var operation_SoftDeleteAttendance = await _attendances.SoftDeleteAttendanceAsync(att);
-            if (operation_SoftDeleteAttendance == null)
+            try
             {
-                return NotFound("Attendance not found. Unable to delete attendance.");
+                var operation_SoftDeleteAttendance = await _attendances.SoftDeleteAttendanceAsync(att);
+                return Ok("Attendance deleted successfully.");
             }
-            return Ok("Attendance deleted successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("undo-delete")]
         public async Task<IActionResult> UndoSoftDeleteAttendance(Attendance att)
         {
-            var operation_UndoSoftDeleteAttendance = await _attendances.UndoSoftDeleteAttendanceAsync(att);
-            if (operation_UndoSoftDeleteAttendance == null)
+            try
             {
-                return NotFound("Attendance not found. Unable to restore deleted attendance.");
+                var operation_UndoSoftDeleteAttendance = await _attendances.UndoSoftDeleteAttendanceAsync(att);
+                return Ok("Deleted attendance restored successfully.");
             }
-            return Ok("Deleted attendance restored successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

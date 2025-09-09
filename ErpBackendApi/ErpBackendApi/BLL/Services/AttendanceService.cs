@@ -5,8 +5,6 @@ using ErpBackendApi.DAL.Models;
 using Microsoft.EntityFrameworkCore;
 using static ErpBackendApi.Utilities.Helper.LoggerClass;
 
-//TODO: Check if delete works with a parameter of (int id)
-
 namespace ErpBackendApi.BLL.Services
 {
     public class AttendanceService : IAttendances
@@ -30,8 +28,8 @@ namespace ErpBackendApi.BLL.Services
                 select new AttendanceDTO
                 {
                     id = a.id,
-                    employee_id = e != null ? e.id : null,
-                    employee_name = u != null && u.is_deleted == false ? u.name : "-",
+                    employee_id = e != null && e.is_deleted == false ? e.id : null,
+                    employee_name = u != null && u.is_deleted == false ? u.name : null,
                     date_of_attendance = a.date_of_attendance,
                     check_in = a.check_in,
                     check_out = a.check_out,
@@ -53,8 +51,8 @@ namespace ErpBackendApi.BLL.Services
                 select new AttendanceDTO
                 {
                     id = a.id,
-                    employee_id = e != null ? e.id : null,
-                    employee_name = u != null && u.is_deleted == false ? u.name : "-",
+                    employee_id = e != null && e.is_deleted == false ? e.id : null,
+                    employee_name = u != null && u.is_deleted == false ? u.name : null,
                     date_of_attendance = a.date_of_attendance,
                     check_in = a.check_in,
                     check_out = a.check_out,
@@ -69,13 +67,24 @@ namespace ErpBackendApi.BLL.Services
             if (existingAttendace != null)
             {
                 Logger("Duplicate attendance for same employee on the same day.");
-                return null;
+                throw new InvalidOperationException("Duplicate attendance for same employee on the same day.");
             }
-            att.is_deleted = false;
-            att.deleted_at = null;
-            _context.attendance.Add(att);
-            await _context.SaveChangesAsync();
-            return att;
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                att.is_deleted = false;
+                att.deleted_at = null;
+                _context.attendance.Add(att);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return att;
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw new InvalidOperationException("Unable to save attendance.");
+            }
         }
 
         public async Task<Attendance> UpdateAttendanceAsync(Attendance att)
@@ -84,14 +93,25 @@ namespace ErpBackendApi.BLL.Services
             if (existingAttendance == null)
             {
                 Logger("Unable to update attendance information. Not found.");
-                return null;
+                throw new InvalidOperationException("Unable to update attendance information. Not found.");
             }
-            existingAttendance.date_of_attendance = att.date_of_attendance;
-            existingAttendance.check_in = att.check_in;
-            existingAttendance.check_out = att.check_out;
-            existingAttendance.status = att.status;
-            await _context.SaveChangesAsync();
-            return existingAttendance;
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                existingAttendance.date_of_attendance = att.date_of_attendance;
+                existingAttendance.check_in = att.check_in;
+                existingAttendance.check_out = att.check_out;
+                existingAttendance.status = att.status;
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return existingAttendance;
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw new InvalidOperationException("Unable to update attendance.");
+            }
         }
 
         public async Task<Attendance> SoftDeleteAttendanceAsync(Attendance att)
@@ -100,13 +120,24 @@ namespace ErpBackendApi.BLL.Services
             if (existingAttendance == null)
             {
                 Logger("Attendance not found. Unable to delete attendance.");
-                return null;
+                throw new InvalidOperationException("Attendance not found. Unable to delete attendance.");
             }
-            existingAttendance.is_deleted = true;
-            existingAttendance.deleted_at = DateTime.UtcNow;
-            _context.attendance.Update(existingAttendance);
-            await _context.SaveChangesAsync();
-            return existingAttendance;
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                existingAttendance.is_deleted = true;
+                existingAttendance.deleted_at = DateTime.UtcNow;
+                _context.attendance.Update(existingAttendance);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return existingAttendance;
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw new InvalidOperationException("Unable to delete attendance.");
+            }
         }
 
         public async Task<Attendance> UndoSoftDeleteAttendanceAsync(Attendance att)
@@ -115,13 +146,24 @@ namespace ErpBackendApi.BLL.Services
             if (existingAttendance == null)
             {
                 Logger("Attendance not found. Unable to restore deleted attendance.");
-                return null;
+                throw new InvalidOperationException("Attendance not found. Unable to restore deleted attendance.");
             }
-            existingAttendance.is_deleted = false;
-            existingAttendance.deleted_at = null;
-            _context.attendance.Update(existingAttendance);
-            await _context.SaveChangesAsync();
-            return existingAttendance;
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                existingAttendance.is_deleted = false;
+                existingAttendance.deleted_at = null;
+                _context.attendance.Update(existingAttendance);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return existingAttendance;
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw new InvalidOperationException("Unable to restore deleted attendance.");
+            }
         }
     }
 }
