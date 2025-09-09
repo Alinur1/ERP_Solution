@@ -1,0 +1,3 @@
+# npm run dev[only for pc]
+
+#npm run dev -- --host[for mobile and pc]
