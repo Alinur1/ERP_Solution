@@ -223,5 +223,32 @@ namespace ErpBackendApi.BLL.Services
                 throw new InvalidOperationException("Unable to restore deleted employee information.");
             }
         }
+
+        public async Task<IEnumerable<EmployeeDTO>> GetAllDeletedEmployeesAsync()
+        {
+            return await
+            (
+                from e in _context.employees
+                join u in _context.users on e.user_id equals u.id into userGroup
+                from u in userGroup.DefaultIfEmpty()
+                join d in _context.departments on e.department_id equals d.id into deptGroup
+                from d in deptGroup.DefaultIfEmpty()
+                where e.is_deleted == true
+                select new EmployeeDTO
+                {
+                    id = e.id,
+                    user_id = u != null && u.is_deleted == false ? u.id : null,
+                    employee_name = u != null && u.is_deleted == false ? u.name : null,
+                    employee_email = u != null && u.is_deleted == false ? u.email : null,
+                    employee_phone = u != null && u.is_deleted == false ? u.phone : null,
+                    employee_created_at = u != null && u.is_deleted == false ? u.created_at : null,
+                    employee_department_id = d != null && d.is_deleted == false ? d.id : null,
+                    employee_department_name = d != null && d.is_deleted == false ? d.name : null,
+                    date_hired = e.date_hired,
+                    salary = e.salary,
+                    status = e.status,
+                }
+            ).ToListAsync();
+        }
     }
 }

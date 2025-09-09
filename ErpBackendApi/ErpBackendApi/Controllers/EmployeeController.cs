@@ -88,5 +88,12 @@ namespace ErpBackendApi.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet("deleted-employee")]
+        public async Task<IActionResult> GetAllDeletedEmployees()
+        {
+            var operation_GetAllDeletedEmployees = await _iEmployee.GetAllDeletedEmployeesAsync();
+            return Ok(operation_GetAllDeletedEmployees);
+        }
     }
 }

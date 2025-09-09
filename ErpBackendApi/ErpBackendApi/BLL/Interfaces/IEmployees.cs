@@ -11,5 +11,6 @@ namespace ErpBackendApi.BLL.Interfaces
         Task<Employee> UpdateEmployeeAsync(Employee emp);
         Task<Employee> SoftDeleteEmployeeAsync(Employee emp);
         Task<Employee> UndoSoftDeleteEmployeeAsync(Employee emp);
+        Task<IEnumerable<EmployeeDTO>> GetAllDeletedEmployeesAsync();
     }
 }
