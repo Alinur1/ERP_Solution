@@ -1,5 +1,6 @@
 ﻿using ErpBackendApi.BLL.Interfaces;
 using ErpBackendApi.DAL.DTOs;
+using ErpBackendApi.DAL.Enums;
 using ErpBackendApi.DAL.ERPDataContext;
 using ErpBackendApi.DAL.Models;
 using Microsoft.EntityFrameworkCore;
@@ -63,11 +64,37 @@ namespace ErpBackendApi.BLL.Services
 
         public async Task<Attendance> AddAttendanceAsync(Attendance att)
         {
-            var existingAttendace = await _context.attendance.FirstOrDefaultAsync(a => a.employee_id == att.employee_id && a.date_of_attendance == att.date_of_attendance && a.is_deleted == false);
-            if (existingAttendace != null)
+            var existingEmployee = await _context.employees.FirstOrDefaultAsync(e => e.id == att.employee_id && e.is_deleted == false);
+            if (existingEmployee == null)
+            {
+                Logger("Employee not found or inactive.");
+                throw new InvalidOperationException("Employee not found or inactive.");
+            }
+
+            if (att.date_of_attendance > DateTime.Today)
+            {
+                Logger("Attendance date cannot be in the future.");
+                throw new InvalidOperationException("Attendance date cannot be in the future.");
+            }
+
+            if (att.check_out.HasValue && att.check_in.HasValue && att.check_out <= att.check_in)
+            {
+                Logger("Check-out time must be after check-in time.");
+                throw new InvalidOperationException("Check-out time must be after check-in time.");
+            }
+
+            var existingAttendance = await _context.attendance.FirstOrDefaultAsync(a => a.employee_id == att.employee_id &&
+                                                                                        a.date_of_attendance == att.date_of_attendance &&
+                                                                                        a.is_deleted == false);
+            if (existingAttendance != null)
             {
                 Logger("Duplicate attendance for same employee on the same day.");
                 throw new InvalidOperationException("Duplicate attendance for same employee on the same day.");
+            }
+
+            if (att.status == null)
+            {
+                att.status = att.check_in.HasValue ? AttendanceStatus.Present : AttendanceStatus.Absent;
             }
 
             using var transaction = await _context.Database.BeginTransactionAsync();
@@ -89,11 +116,17 @@ namespace ErpBackendApi.BLL.Services
 
         public async Task<Attendance> UpdateAttendanceAsync(Attendance att)
         {
-            var existingAttendance = await _context.attendance.FirstOrDefaultAsync(a => a.id == att.id);
+            var existingAttendance = await _context.attendance.FirstOrDefaultAsync(a => a.id == att.id && a.is_deleted == false);
             if (existingAttendance == null)
             {
-                Logger("Unable to update attendance information. Not found.");
-                throw new InvalidOperationException("Unable to update attendance information. Not found.");
+                Logger("Attendance not found or deleted.");
+                throw new InvalidOperationException("Attendance not found or deleted.");
+            }
+
+            if (att.check_out.HasValue && att.check_in.HasValue && att.check_out <= att.check_in)
+            {
+                Logger("Check-out time must be after check-in time.");
+                throw new InvalidOperationException("Check-out time must be after check-in time.");
             }
 
             using var transaction = await _context.Database.BeginTransactionAsync();
@@ -128,7 +161,6 @@ namespace ErpBackendApi.BLL.Services
             {
                 existingAttendance.is_deleted = true;
                 existingAttendance.deleted_at = DateTime.UtcNow;
-                _context.attendance.Update(existingAttendance);
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
                 return existingAttendance;
@@ -154,7 +186,6 @@ namespace ErpBackendApi.BLL.Services
             {
                 existingAttendance.is_deleted = false;
                 existingAttendance.deleted_at = null;
-                _context.attendance.Update(existingAttendance);
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
                 return existingAttendance;
