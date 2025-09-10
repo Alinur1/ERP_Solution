@@ -95,5 +95,19 @@ namespace ErpBackendApi.Controllers
             var operation_GetAllDeletedAttendance = await _attendances.GetAllDeletedAttendancesAsync();
             return Ok(operation_GetAllDeletedAttendance);
         }
+
+        [HttpGet("attendance-by-employee/{employeeId}")]
+        public async Task<IActionResult> GetAttendanceByEmployee(int employeeId)
+        {
+            var operation_GetAttendanceByEmployee = await _attendances.GetAttendanceByEmployeeAsync(employeeId);
+            return Ok(operation_GetAttendanceByEmployee);
+        }
+
+        [HttpGet("attendance-by-date/{date}")]
+        public async Task<IActionResult> GetAttendanceByDate(DateTime date)
+        {
+            var operation_GetAttendanceByDate = await _attendances.GetAttendanceByDateAsync(date);
+            return Ok(operation_GetAttendanceByDate);
+        }
     }
 }
