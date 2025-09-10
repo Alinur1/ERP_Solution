@@ -55,6 +55,8 @@ CREATE TABLE `attendance` (
   `check_in` datetime DEFAULT NULL,
   `check_out` datetime DEFAULT NULL,
   `status` int DEFAULT NULL,
+  `is_deleted` tinyint DEFAULT NULL,
+  `deleted_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_attendance_employees_idx` (`employee_id`),
   CONSTRAINT `fk_attendance_employees` FOREIGN KEY (`employee_id`) REFERENCES `employees` (`id`)
@@ -170,7 +172,7 @@ CREATE TABLE `departments` (
   `is_deleted` tinyint DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -179,6 +181,7 @@ CREATE TABLE `departments` (
 
 LOCK TABLES `departments` WRITE;
 /*!40000 ALTER TABLE `departments` DISABLE KEYS */;
+INSERT INTO `departments` VALUES (1,'Manager',NULL,0,NULL),(2,'Founder',NULL,0,NULL),(3,'Co-Founder',NULL,0,NULL),(4,'HR',NULL,0,NULL),(5,'Senior Manager',NULL,0,NULL),(6,'Cashier',NULL,0,NULL),(7,'Senior Salesman',NULL,0,NULL),(8,'Junior Salesman',NULL,0,NULL),(9,'Security guard',NULL,0,NULL),(10,'Niggers',NULL,1,'2025-09-09 09:06:15');
 /*!40000 ALTER TABLE `departments` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -203,7 +206,7 @@ CREATE TABLE `employees` (
   KEY `fk_employee_departments_idx` (`department_id`),
   CONSTRAINT `fk_employee_departments` FOREIGN KEY (`department_id`) REFERENCES `departments` (`id`),
   CONSTRAINT `fk_employees_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -212,6 +215,7 @@ CREATE TABLE `employees` (
 
 LOCK TABLES `employees` WRITE;
 /*!40000 ALTER TABLE `employees` DISABLE KEYS */;
+INSERT INTO `employees` VALUES (1,16,2,'2025-09-09 15:12:56',1000000.00,0,0,NULL),(2,12,2,'2025-09-09 15:12:56',100000.00,0,1,'2025-09-09 15:17:55');
 /*!40000 ALTER TABLE `employees` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -730,4 +734,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-09-08 13:10:59
+-- Dump completed on 2025-09-10 16:09:37
