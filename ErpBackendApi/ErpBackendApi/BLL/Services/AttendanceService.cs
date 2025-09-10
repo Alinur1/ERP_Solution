@@ -71,7 +71,7 @@ namespace ErpBackendApi.BLL.Services
                 throw new InvalidOperationException("Employee not found or inactive.");
             }
 
-            if (att.date_of_attendance > DateTime.Today)
+            if (att.date_of_attendance?.Date > DateTime.UtcNow.Date)
             {
                 Logger("Attendance date cannot be in the future.");
                 throw new InvalidOperationException("Attendance date cannot be in the future.");
@@ -83,13 +83,14 @@ namespace ErpBackendApi.BLL.Services
                 throw new InvalidOperationException("Check-out time must be after check-in time.");
             }
 
-            var existingAttendance = await _context.attendance.FirstOrDefaultAsync(a => a.employee_id == att.employee_id &&
-                                                                                        a.date_of_attendance == att.date_of_attendance &&
-                                                                                        a.is_deleted == false);
+            var existingAttendance = await _context.attendance.FirstOrDefaultAsync(a =>
+                                                                                a.employee_id == att.employee_id &&
+                                                                                a.date_of_attendance == att.date_of_attendance &&
+                                                                                a.is_deleted == false);
             if (existingAttendance != null)
             {
-                Logger("Duplicate attendance for same employee on the same day.");
-                throw new InvalidOperationException("Duplicate attendance for same employee on the same day.");
+                Logger("Employee already has an attendance record for this date.");
+                throw new InvalidOperationException("Employee already has an attendance record for this date.");
             }
 
             if (att.status == null)
@@ -123,10 +124,28 @@ namespace ErpBackendApi.BLL.Services
                 throw new InvalidOperationException("Attendance not found or deleted.");
             }
 
+            var existingEmployee = await _context.employees.FirstOrDefaultAsync(e => e.id == att.employee_id && e.is_deleted == false);
+            if (existingEmployee == null)
+            {
+                Logger("Employee not found or inactive.");
+                throw new InvalidOperationException("Employee not found or inactive.");
+            }
+
+            if (att.date_of_attendance?.Date > DateTime.UtcNow.Date)
+            {
+                Logger("Attendance date cannot be in the future.");
+                throw new InvalidOperationException("Attendance date cannot be in the future.");
+            }
+
             if (att.check_out.HasValue && att.check_in.HasValue && att.check_out <= att.check_in)
             {
                 Logger("Check-out time must be after check-in time.");
                 throw new InvalidOperationException("Check-out time must be after check-in time.");
+            }
+
+            if (att.status == null)
+            {
+                att.status = att.check_in.HasValue ? AttendanceStatus.Present : AttendanceStatus.Absent;
             }
 
             using var transaction = await _context.Database.BeginTransactionAsync();
