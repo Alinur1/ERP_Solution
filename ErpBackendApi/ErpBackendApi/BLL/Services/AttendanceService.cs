@@ -196,5 +196,28 @@ namespace ErpBackendApi.BLL.Services
                 throw new InvalidOperationException("Unable to restore deleted attendance.");
             }
         }
+
+        public async Task<IEnumerable<AttendanceDTO>> GetAllDeletedAttendancesAsync()
+        {
+            return await
+            (
+                from a in _context.attendance
+                join e in _context.employees on a.employee_id equals e.id into employeeGroup
+                from e in employeeGroup.DefaultIfEmpty()
+                join u in _context.users on e.user_id equals u.id into userGroup
+                from u in userGroup.DefaultIfEmpty()
+                where a.is_deleted == true
+                select new AttendanceDTO
+                {
+                    id = a.id,
+                    employee_id = e != null && e.is_deleted == false ? e.id : null,
+                    employee_name = u != null && u.is_deleted == false ? u.name : null,
+                    date_of_attendance = a.date_of_attendance,
+                    check_in = a.check_in,
+                    check_out = a.check_out,
+                    status = a.status,
+                }
+            ).ToListAsync();
+        }
     }
 }

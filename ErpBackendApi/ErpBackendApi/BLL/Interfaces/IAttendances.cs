@@ -11,5 +11,6 @@ namespace ErpBackendApi.BLL.Interfaces
         Task<Attendance> UpdateAttendanceAsync(Attendance att);
         Task<Attendance> SoftDeleteAttendanceAsync(Attendance att);
         Task<Attendance> UndoSoftDeleteAttendanceAsync(Attendance att);
+        Task<IEnumerable<AttendanceDTO>> GetAllDeletedAttendancesAsync();
     }
 }

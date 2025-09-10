@@ -88,5 +88,12 @@ namespace ErpBackendApi.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet("deleted-attendance")]
+        public async Task<IActionResult> GetAllDeletedAttendance()
+        {
+            var operation_GetAllDeletedAttendance = await _attendances.GetAllDeletedAttendancesAsync();
+            return Ok(operation_GetAllDeletedAttendance);
+        }
     }
 }
