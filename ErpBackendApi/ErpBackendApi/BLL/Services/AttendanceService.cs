@@ -248,12 +248,12 @@ namespace ErpBackendApi.BLL.Services
                 from e in employeeGroup.DefaultIfEmpty()
                 join u in _context.users on e.user_id equals u.id into userGroup
                 from u in userGroup.DefaultIfEmpty()
-                where e.id == employeeId && e.is_deleted == false && a.is_deleted == false
+                where a.is_deleted == false && e.id == employeeId
                 select new AttendanceDTO
                 {
                     id = a.id,
                     employee_id = e != null && e.is_deleted == false ? e.id : null,
-                    employee_name = u != null && u.is_deleted == false ? u.name : null,
+                    employee_name = u != null && u.is_deleted == false && e.is_deleted == false ? u.name : u.name + " (Deleted employee)",
                     date_of_attendance = a.date_of_attendance,
                     check_in = a.check_in,
                     check_out = a.check_out,
