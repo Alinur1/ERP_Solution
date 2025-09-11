@@ -60,7 +60,7 @@ CREATE TABLE `attendance` (
   PRIMARY KEY (`id`),
   KEY `fk_attendance_employees_idx` (`employee_id`),
   CONSTRAINT `fk_attendance_employees` FOREIGN KEY (`employee_id`) REFERENCES `employees` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -69,6 +69,7 @@ CREATE TABLE `attendance` (
 
 LOCK TABLES `attendance` WRITE;
 /*!40000 ALTER TABLE `attendance` DISABLE KEYS */;
+INSERT INTO `attendance` VALUES (1,1,'2025-09-10 10:25:06','2025-09-10 10:25:06',NULL,0,1,'2025-09-10 18:15:17'),(2,1,'2025-09-10 10:25:06','2025-09-10 10:25:06',NULL,0,1,'2025-09-10 18:15:21'),(3,1,'2025-09-10 10:28:13','2025-09-10 10:28:13',NULL,0,1,'2025-09-10 17:48:32'),(4,1,'2025-09-10 17:49:27','2025-09-10 17:49:27',NULL,0,1,'2025-09-10 17:52:51'),(5,1,'2025-09-10 17:49:27','2025-09-10 17:49:27',NULL,0,1,'2025-09-10 17:52:56'),(6,1,'2025-09-10 00:00:00','2025-09-10 17:49:27','2025-09-10 17:55:17',0,0,NULL),(7,2,'2025-09-10 00:00:00','2025-09-10 18:22:51','2025-09-10 18:23:49',0,0,NULL),(8,3,'2025-09-11 00:00:00','2025-09-11 07:02:32','2025-09-11 07:02:55',0,0,NULL);
 /*!40000 ALTER TABLE `attendance` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -206,7 +207,7 @@ CREATE TABLE `employees` (
   KEY `fk_employee_departments_idx` (`department_id`),
   CONSTRAINT `fk_employee_departments` FOREIGN KEY (`department_id`) REFERENCES `departments` (`id`),
   CONSTRAINT `fk_employees_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -215,7 +216,7 @@ CREATE TABLE `employees` (
 
 LOCK TABLES `employees` WRITE;
 /*!40000 ALTER TABLE `employees` DISABLE KEYS */;
-INSERT INTO `employees` VALUES (1,16,2,'2025-09-09 15:12:56',1000000.00,0,0,NULL),(2,12,2,'2025-09-09 15:12:56',100000.00,0,1,'2025-09-09 15:17:55');
+INSERT INTO `employees` VALUES (1,16,2,'2025-09-09 15:12:56',1000000.00,0,0,NULL),(2,12,2,'2025-09-09 15:12:56',100000.00,0,1,'2025-09-10 18:27:11'),(3,15,3,'2025-09-11 07:00:53',10000000.00,0,0,NULL);
 /*!40000 ALTER TABLE `employees` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -383,7 +384,7 @@ DROP TABLE IF EXISTS `payroll`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `payroll` (
-  `int` int NOT NULL AUTO_INCREMENT,
+  `id` int NOT NULL AUTO_INCREMENT,
   `employee_id` int DEFAULT NULL,
   `period_start` datetime DEFAULT NULL,
   `period_end` datetime DEFAULT NULL,
@@ -394,7 +395,7 @@ CREATE TABLE `payroll` (
   `paid_on` datetime DEFAULT NULL,
   `is_deleted` tinyint DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
-  PRIMARY KEY (`int`),
+  PRIMARY KEY (`id`),
   KEY `fk_payroll_employees_idx` (`employee_id`),
   CONSTRAINT `fk_payroll_employees` FOREIGN KEY (`employee_id`) REFERENCES `employees` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -734,4 +735,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-09-10 16:09:37
+-- Dump completed on 2025-09-11 19:30:04
