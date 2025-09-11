@@ -109,5 +109,33 @@ namespace ErpBackendApi.Controllers
             var operation_GetAttendanceByDate = await _attendances.GetAttendanceByDateAsync(date);
             return Ok(operation_GetAttendanceByDate);
         }
+
+        [HttpPatch("check-in")]
+        public async Task<IActionResult> CheckIn(Attendance att)
+        {
+            try
+            {
+                var operation_CheckIn = await _attendances.CheckInAsync(att);
+                return Ok("Checked in successfully.");
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPatch("check-out")]
+        public async Task<IActionResult> CheckOut(Attendance att)
+        {
+            try
+            {
+                var operation_CheckOut = await _attendances.CheckOutAsync(att);
+                return Ok("Checked out successfully.");
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

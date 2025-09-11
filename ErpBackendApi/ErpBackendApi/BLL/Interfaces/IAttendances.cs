@@ -14,5 +14,7 @@ namespace ErpBackendApi.BLL.Interfaces
         Task<IEnumerable<AttendanceDTO>> GetAllDeletedAttendancesAsync();
         Task<IEnumerable<AttendanceDTO>> GetAttendanceByEmployeeAsync(int employeeId);
         Task<IEnumerable<AttendanceDTO>> GetAttendanceByDateAsync(DateTime date);
+        Task<Attendance> CheckInAsync(Attendance att);
+        Task<Attendance> CheckOutAsync(Attendance att);
     }
 }

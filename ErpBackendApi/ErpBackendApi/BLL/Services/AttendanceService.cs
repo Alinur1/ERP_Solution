@@ -284,5 +284,99 @@ namespace ErpBackendApi.BLL.Services
                 }
             ).ToListAsync();
         }
+
+        public async Task<Attendance> CheckInAsync(Attendance att)
+        {
+            var existingEmployee = await _context.employees.FirstOrDefaultAsync(e => e.id == att.employee_id && e.is_deleted == false);
+            if (existingEmployee == null)
+            {
+                Logger("Employee not found or inactive.");
+                throw new InvalidOperationException("Employee not found or inactive.");
+            }
+
+            var today = DateTime.UtcNow.Date;
+            var existingAttendance = await _context.attendance.FirstOrDefaultAsync(a => a.employee_id == att.employee_id &&
+                                                                                    a.date_of_attendance == today &&
+                                                                                    a.is_deleted == false);
+            if (existingAttendance != null)
+            {
+                Logger("Employee already checked in for today.");
+                throw new InvalidOperationException("Employee already checked in for today.");
+            }
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                var newAttendance = new Attendance
+                {
+                    employee_id = att.employee_id,
+                    date_of_attendance = today,
+                    check_in = att.check_in ?? DateTime.UtcNow,
+                    status = AttendanceStatus.Present,
+                    is_deleted = false,
+                    deleted_at = null
+                };
+
+                _context.attendance.Add(newAttendance);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return newAttendance;
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw new InvalidOperationException("Unable to process check-in.");
+            }
+        }
+
+        public async Task<Attendance> CheckOutAsync(Attendance att)
+        {
+            var existingEmployee = await _context.employees.FirstOrDefaultAsync(e => e.id == att.employee_id && e.is_deleted == false);
+            if (existingEmployee == null)
+            {
+                Logger("Employee not found or inactive.");
+                throw new InvalidOperationException("Employee not found or inactive.");
+            }
+
+            var today = DateTime.UtcNow.Date;
+            var existingAttendance = await _context.attendance.FirstOrDefaultAsync(a => a.employee_id == att.employee_id &&
+                                                                                    a.date_of_attendance == today &&
+                                                                                    a.is_deleted == false);
+            if (existingAttendance == null)
+            {
+                Logger("No check-in record found for today. Please check in first.");
+                throw new InvalidOperationException("No check-in record found for today. Please check in first.");
+            }
+
+            if (existingAttendance.check_out.HasValue)
+            {
+                Logger("Employee already checked out for today.");
+                throw new InvalidOperationException("Employee already checked out for today.");
+            }
+
+            if (existingAttendance.check_in.HasValue && att.check_out <= existingAttendance.check_in)
+            {
+                Logger("Check-out time must be after check-in time.");
+                throw new InvalidOperationException("Check-out time must be after check-in time.");
+            }
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                existingAttendance.check_out = att.check_out ?? DateTime.UtcNow;
+                if (existingAttendance.status == AttendanceStatus.Absent && existingAttendance.check_in.HasValue)
+                {
+                    existingAttendance.status = AttendanceStatus.Present;
+                }
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return existingAttendance;
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw new InvalidOperationException("Unable to process check-out.");
+            }
+        }
     }
 }
