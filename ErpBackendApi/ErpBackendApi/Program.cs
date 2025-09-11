@@ -152,7 +152,7 @@ Testing TODO
 16. "ready to implement frontend" - expenses
 17. "ready to implement frontend" - departments
 18. "ready to implement frontend" - employees
-19. attendance
+19. "ready to implement frontend" - attendance
 20. payroll
 21. accounts
 22. transactions
