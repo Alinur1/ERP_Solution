@@ -22,13 +22,13 @@ namespace ErpBackendApi.Controllers
             return Ok(operation_GetAllPayroll);
         }
 
-        [HttpGet("id")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetPayrollById(int id)
         {
             var operation_GetPayrollById = await _iPayroll.GetPayrollByIdAsync(id);
             if (operation_GetPayrollById == null)
             {
-                return NotFound("Payroll not found.");
+                return BadRequest("Payroll not found.");
             }
             return Ok(operation_GetPayrollById);
         }
@@ -36,45 +36,57 @@ namespace ErpBackendApi.Controllers
         [HttpPost]
         public async Task<IActionResult> AddPayroll(Payroll payroll)
         {
-            var operation_AddPayroll = await _iPayroll.AddPayrollAsync(payroll);
-            if (operation_AddPayroll == null)
+            try
             {
-                return NotFound("Same employee cannot have more than one payroll.");
+                var operation_AddPayroll = await _iPayroll.AddPayrollAsync(payroll);
+                return Ok("Payroll added successfully.");
             }
-            return Ok("Payroll added successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
-        [HttpPut]
+        [HttpPut("update")]
         public async Task<IActionResult> UpdatePayroll(Payroll payroll)
         {
-            var operation_UpdatePayroll = await _iPayroll.UpdatePayrollAsync(payroll);
-            if (operation_UpdatePayroll == null)
+            try
             {
-                return NotFound("Unable to update payroll. Payroll not found.");
+                var operation_UpdatePayroll = await _iPayroll.UpdatePayrollAsync(payroll);
+                return Ok("Payroll updated successfully.");
             }
-            return Ok("Payroll updated successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("delete")]
         public async Task<IActionResult> SoftDeletePayroll(Payroll payroll)
         {
-            var operation_SoftDeletePayroll = await _iPayroll.SoftDeletePayrollAsync(payroll);
-            if (operation_SoftDeletePayroll == null)
+            try
             {
-                return NotFound("Unable to delete payroll. Payroll not found.");
+                var operation_SoftDeletePayroll = await _iPayroll.SoftDeletePayrollAsync(payroll);
+                return Ok("Payroll deleted successfully.");
             }
-            return Ok("Payroll deleted successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }            
         }
 
         [HttpPut("undo-delete")]
         public async Task<IActionResult> UndoSoftDeletePayroll(Payroll payroll)
         {
-            var operation_UndoSoftDeletePayroll = await _iPayroll.UndoSoftDeletePayrollAsync(payroll);
-            if (operation_UndoSoftDeletePayroll == null)
+            try
             {
-                return NotFound("Unable to restore payroll. Payroll not found.");
+                var operation_UndoSoftDeletePayroll = await _iPayroll.UndoSoftDeletePayrollAsync(payroll);
+                return Ok("Payroll restored successfully.");
             }
-            return Ok("Payroll restored successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

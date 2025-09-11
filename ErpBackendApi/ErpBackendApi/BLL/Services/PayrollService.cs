@@ -75,8 +75,9 @@ namespace ErpBackendApi.BLL.Services
             if (existingPayroll != null)
             {
                 Logger("Same employee cannot have more than one payroll.");
-                return null;
+                throw new InvalidOperationException("Same employee cannot have more than one payroll.");
             }
+
             payroll.is_deleted = false;
             payroll.deleted_at = null;
             _context.payroll.Add(payroll);
@@ -90,8 +91,9 @@ namespace ErpBackendApi.BLL.Services
             if (existingPayroll == null)
             {
                 Logger("Unable to update payroll. Payroll not found.");
-                return null;
+                throw new InvalidOperationException("Unable to update payroll. Payroll not found.");
             }
+
             existingPayroll.period_start = payroll.period_start;
             existingPayroll.period_end = payroll.period_end;
             existingPayroll.base_salary = payroll.base_salary;
@@ -109,11 +111,11 @@ namespace ErpBackendApi.BLL.Services
             if (existingPayroll == null)
             {
                 Logger("Unable to delete payroll. Payroll not found.");
-                return null;
+                throw new InvalidOperationException("Unable to delete payroll. Payroll not found.");
             }
+
             existingPayroll.is_deleted = true;
             existingPayroll.deleted_at = DateTime.UtcNow;
-            _context.payroll.Update(existingPayroll);
             await _context.SaveChangesAsync();
             return existingPayroll;
         }
@@ -124,11 +126,11 @@ namespace ErpBackendApi.BLL.Services
             if (existingPayroll == null)
             {
                 Logger("Unable to restore payroll. Payroll not found.");
-                return null;
+                throw new InvalidOperationException("Unable to restore payroll. Payroll not found.");
             }
+
             existingPayroll.is_deleted = false;
             existingPayroll.deleted_at = null;
-            _context.payroll.Update(existingPayroll);
             await _context.SaveChangesAsync();
             return existingPayroll;
         }
