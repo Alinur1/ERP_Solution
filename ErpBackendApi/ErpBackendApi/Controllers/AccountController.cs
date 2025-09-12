@@ -28,7 +28,7 @@ namespace ErpBackendApi.Controllers
             var operation_GetAccountById = await _iAccount.GetAccountByIdAsync(id);
             if (operation_GetAccountById == null)
             {
-                return NotFound("Account not found.");
+                return BadRequest("Account not found.");
             }
             return Ok(operation_GetAccountById);
         }
@@ -36,45 +36,57 @@ namespace ErpBackendApi.Controllers
         [HttpPost]
         public async Task<IActionResult> AddAccount(Account account)
         {
-            var operation_AddAccount = await _iAccount.AddAccountAsync(account);
-            if (operation_AddAccount == null)
+            try
             {
-                return NotFound("Something went wrong. Unable to update account.");
+                var operation_AddAccount = await _iAccount.AddAccountAsync(account);
+                return Ok("Account details added successfully.");
             }
-            return Ok("Account details added successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
-        [HttpPut]
+        [HttpPut("update")]
         public async Task<IActionResult> UpdateAccount(Account account)
         {
-            var operation_UpdateAccount = await _iAccount.UpdateAccountAsync(account);
-            if (operation_UpdateAccount == null)
+            try
             {
-                return NotFound("Unable to update account details. Account not found.");
+                var operation_UpdateAccount = await _iAccount.UpdateAccountAsync(account);
+                return Ok("Account details updated successfully.");
             }
-            return Ok("Account details updated successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("delete")]
         public async Task<IActionResult> SoftDeleteAccount(Account account)
         {
-            var operation_DeleteAccount = await _iAccount.SoftDeleteAccountAsync(account);
-            if (operation_DeleteAccount == null)
+            try
             {
-                return NotFound("Unable to delete account details. Account not found.");
+                var operation_DeleteAccount = await _iAccount.SoftDeleteAccountAsync(account);
+                return Ok("Account details deleted successfully.");
             }
-            return Ok("Account details deleted successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("undo-delete")]
         public async Task<IActionResult> UndoSoftDeleteAccount(Account account)
         {
-            var operation_UndoDeleteAccount = await _iAccount.UndoSoftDeleteAccountAsync(account);
-            if (operation_UndoDeleteAccount == null)
+            try
             {
-                return NotFound("Unable to restore account details. Account not found.");
+                var operation_UndoDeleteAccount = await _iAccount.UndoSoftDeleteAccountAsync(account);
+                return Ok("Deleted account details restored successfully.");
             }
-            return Ok("Deleted account details restored successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

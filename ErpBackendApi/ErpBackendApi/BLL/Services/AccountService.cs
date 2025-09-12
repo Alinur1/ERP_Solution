@@ -23,16 +23,28 @@ namespace ErpBackendApi.BLL.Services
 
         public async Task<Account> GetAccountByIdAsync(int id)
         {
-            return await _context.accounts.FirstOrDefaultAsync(a => a.id == id && a.is_deleted == false);
+            return await _context.accounts
+                .Where(a => a.id == id && a.is_deleted == false)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<Account> AddAccountAsync(Account account)
         {
-            account.is_deleted = false;
-            account.deleted_at = null;
-            _context.accounts.Add(account);
-            await _context.SaveChangesAsync();
-            return account;
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                account.is_deleted = false;
+                account.deleted_at = null;
+                _context.accounts.Add(account);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return account;
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw new InvalidOperationException("Unable to add account.");
+            }
         }
 
         public async Task<Account> UpdateAccountAsync(Account account)
@@ -41,12 +53,23 @@ namespace ErpBackendApi.BLL.Services
             if (existingAccount == null)
             {
                 Logger("Unable to update account details. Account not found.");
-                return null;
+                throw new InvalidOperationException("Unable to update account details. Account not found.");
             }
-            existingAccount.name = account.name;
-            existingAccount.type = account.type;
-            await _context.SaveChangesAsync();
-            return existingAccount;
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                existingAccount.name = account.name;
+                existingAccount.type = account.type;
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return existingAccount;
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw new InvalidOperationException("Unable to update account.");
+            }
         }
 
         public async Task<Account> SoftDeleteAccountAsync(Account account)
@@ -55,13 +78,23 @@ namespace ErpBackendApi.BLL.Services
             if (existingAccount == null)
             {
                 Logger("Unable to delete account details. Account not found.");
-                return null;
+                throw new InvalidOperationException("Unable to delete account details. Account not found.");
             }
-            existingAccount.is_deleted = true;
-            existingAccount.deleted_at = DateTime.UtcNow;
-            _context.accounts.Update(existingAccount);
-            await _context.SaveChangesAsync();
-            return existingAccount;
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                existingAccount.is_deleted = true;
+                existingAccount.deleted_at = DateTime.UtcNow;
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return existingAccount;
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw new InvalidOperationException("Unable to delete account.");
+            }
         }
 
         public async Task<Account> UndoSoftDeleteAccountAsync(Account account)
@@ -70,13 +103,23 @@ namespace ErpBackendApi.BLL.Services
             if (existingAccount == null)
             {
                 Logger("Unable to restore account details. Account not found.");
-                return null;
+                throw new InvalidOperationException("Unable to restore account details. Account not found.");
             }
-            existingAccount.is_deleted = false;
-            existingAccount.deleted_at = null;
-            _context.accounts.Update(existingAccount);
-            await _context.SaveChangesAsync();
-            return existingAccount;
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                existingAccount.is_deleted = false;
+                existingAccount.deleted_at = null;
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return existingAccount;
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw new InvalidOperationException("Unable to restore deleted account.");
+            }
         }
     }
 }
