@@ -88,5 +88,12 @@ namespace ErpBackendApi.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet("deleted-payroll")]
+        public async Task<IActionResult> GetAllDeletedPayrolls()
+        {
+            var operation_GetAllDeletedPayrolls = await _iPayroll.GetAllDeletedPayrollAsync();
+            return Ok(operation_GetAllDeletedPayrolls);
+        }
     }
 }

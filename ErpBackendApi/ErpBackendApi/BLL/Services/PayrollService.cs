@@ -148,7 +148,6 @@ namespace ErpBackendApi.BLL.Services
                 throw new InvalidOperationException("Payroll not found or deleted.");
             }
 
-            // Get the employee (current or new if changing)
             int? targetEmployeeId = payroll.employee_id ?? existingPayroll.employee_id;
             var existingEmployee = await _context.employees.FirstOrDefaultAsync(e => e.id == targetEmployeeId && e.is_deleted == false);
 
@@ -267,6 +266,35 @@ namespace ErpBackendApi.BLL.Services
                 await transaction.RollbackAsync();
                 throw new InvalidOperationException("Unable to restore payroll.");
             }
+        }
+
+        public async Task<IEnumerable<PayrollDTO>> GetAllDeletedPayrollAsync()
+        {
+            return await
+            (
+                from p in _context.payroll
+                join e in _context.employees on p.employee_id equals e.id into employeeGroup
+                from e in employeeGroup.DefaultIfEmpty()
+                join u in _context.users on e.user_id equals u.id into userGroup
+                from u in userGroup.DefaultIfEmpty()
+                where p.is_deleted == true
+                select new PayrollDTO
+                {
+                    id = p.id,
+                    employee_id = e != null && e.is_deleted == false ? e.id : null,
+                    user_id = u != null && u.is_deleted == false ? u.id : null,
+                    employee_name = u != null && u.is_deleted == false ? u.name : u.name + " (Deleted User)",
+                    employee_salary = e != null && e.is_deleted == false ? e.salary : null, // ← Get from employee
+                    period_start = p.period_start,
+                    period_end = p.period_end,
+                    deductions = p.deductions,
+                    bonuses = p.bonuses,
+                    net_pay = p.net_pay,
+                    paid_on = p.paid_on,
+                    is_deleted = p.is_deleted,
+                    deleted_at = p.deleted_at
+                }
+            ).ToListAsync();
         }
     }
 }
