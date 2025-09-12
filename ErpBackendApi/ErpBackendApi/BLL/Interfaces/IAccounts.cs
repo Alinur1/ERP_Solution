@@ -10,5 +10,6 @@ namespace ErpBackendApi.BLL.Interfaces
         Task<Account> UpdateAccountAsync(Account account);
         Task<Account> SoftDeleteAccountAsync(Account account);
         Task<Account> UndoSoftDeleteAccountAsync(Account account);
+        Task<IEnumerable<Account>> GetAllDeletedAccountsAsync();
     }
 }

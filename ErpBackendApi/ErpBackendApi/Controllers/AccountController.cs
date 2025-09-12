@@ -88,5 +88,12 @@ namespace ErpBackendApi.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet("deleted-accounts")]
+        public async Task<IActionResult> GetAllDeletedAccounts()
+        {
+            var operation_GetAllDeletedAccounts = await _iAccount.GetAllDeletedAccountsAsync();
+            return Ok(operation_GetAllDeletedAccounts);
+        }
     }
 }

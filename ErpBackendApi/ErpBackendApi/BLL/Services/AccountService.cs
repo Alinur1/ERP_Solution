@@ -161,5 +161,14 @@ namespace ErpBackendApi.BLL.Services
                 throw new InvalidOperationException("Unable to restore deleted account.");
             }
         }
+
+        public async Task<IEnumerable<Account>> GetAllDeletedAccountsAsync()
+        {
+            return await _context.accounts
+                    .Where(a => a.is_deleted == true)
+                    .OrderBy(a => a.type)
+                    .ThenBy(a => a.name)
+                    .ToListAsync();
+        }
     }
 }
