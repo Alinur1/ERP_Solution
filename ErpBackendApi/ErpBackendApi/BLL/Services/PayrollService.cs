@@ -31,7 +31,7 @@ namespace ErpBackendApi.BLL.Services
                     employee_id = e != null && e.is_deleted == false ? e.id : null,
                     user_id = u != null && u.is_deleted == false ? u.id : null,
                     employee_name = u != null && u.is_deleted == false ? u.name : u.name + " (Deleted User)",
-                    employee_salary = e != null && e.is_deleted == false ? e.salary : null, // ← Get from employee
+                    employee_salary = e != null ? e.salary : null,
                     period_start = p.period_start,
                     period_end = p.period_end,
                     deductions = p.deductions,
@@ -58,7 +58,7 @@ namespace ErpBackendApi.BLL.Services
                     employee_id = e != null && e.is_deleted == false ? e.id : null,
                     user_id = u != null && u.is_deleted == false ? u.id : null,
                     employee_name = u != null && u.is_deleted == false ? u.name : u.name + " (Deleted User)",
-                    employee_salary = e != null && e.is_deleted == false ? e.salary : null, // ← Get from employee
+                    employee_salary = e != null ? e.salary : null,
                     period_start = p.period_start,
                     period_end = p.period_end,
                     deductions = p.deductions,
@@ -284,7 +284,7 @@ namespace ErpBackendApi.BLL.Services
                     employee_id = e != null && e.is_deleted == false ? e.id : null,
                     user_id = u != null && u.is_deleted == false ? u.id : null,
                     employee_name = u != null && u.is_deleted == false ? u.name : u.name + " (Deleted User)",
-                    employee_salary = e != null && e.is_deleted == false ? e.salary : null, // ← Get from employee
+                    employee_salary = e != null ? e.salary : null,
                     period_start = p.period_start,
                     period_end = p.period_end,
                     deductions = p.deductions,
