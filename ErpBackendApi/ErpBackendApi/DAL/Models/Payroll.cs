@@ -6,7 +6,6 @@ namespace ErpBackendApi.DAL.Models
         public int? employee_id { get; set; }
         public DateTime? period_start { get; set; }
         public DateTime? period_end { get; set; }
-        public decimal? base_salary { get; set; }
         public decimal? deductions { get; set; }
         public decimal? bonuses { get; set; }
         public decimal? net_pay { get; set; }
