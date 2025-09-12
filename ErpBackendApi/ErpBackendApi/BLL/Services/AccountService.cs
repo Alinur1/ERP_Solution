@@ -17,19 +17,40 @@ namespace ErpBackendApi.BLL.Services
         public async Task<IEnumerable<Account>> GetAllAccountsAsync()
         {
             return await _context.accounts
-                .Where(a => a.is_deleted == false)
-                .ToListAsync();
+                    .Where(a => a.is_deleted == false)
+                    .OrderBy(a => a.type)
+                    .ThenBy(a => a.name)
+                    .ToListAsync();
         }
 
         public async Task<Account> GetAccountByIdAsync(int id)
         {
             return await _context.accounts
-                .Where(a => a.id == id && a.is_deleted == false)
-                .FirstOrDefaultAsync();
+                    .Where(a => a.id == id && a.is_deleted == false)
+                    .FirstOrDefaultAsync();
         }
 
         public async Task<Account> AddAccountAsync(Account account)
         {
+            var existingAccount = await _context.accounts.FirstOrDefaultAsync(a => a.name == account.name && a.is_deleted == false);
+            if (existingAccount != null)
+            {
+                Logger("Account with this name already exists.");
+                throw new InvalidOperationException("Account with this name already exists.");
+            }
+
+            if (string.IsNullOrWhiteSpace(account.name))
+            {
+                Logger("Account name cannot be empty.");
+                throw new InvalidOperationException("Account name cannot be empty.");
+            }
+
+            if (account.type == null)
+            {
+                Logger("Account type is required.");
+                throw new InvalidOperationException("Account type is required.");
+            }
+
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
@@ -54,6 +75,25 @@ namespace ErpBackendApi.BLL.Services
             {
                 Logger("Unable to update account details. Account not found.");
                 throw new InvalidOperationException("Unable to update account details. Account not found.");
+            }
+
+            var duplicateAccount = await _context.accounts.FirstOrDefaultAsync(a => a.id != account.id && a.name == account.name && a.is_deleted == false);
+            if (duplicateAccount != null)
+            {
+                Logger("Another account with this name already exists.");
+                throw new InvalidOperationException("Another account with this name already exists.");
+            }
+
+            if (string.IsNullOrWhiteSpace(account.name))
+            {
+                Logger("Account name cannot be empty.");
+                throw new InvalidOperationException("Account name cannot be empty.");
+            }
+
+            if (account.type == null)
+            {
+                Logger("Account type is required.");
+                throw new InvalidOperationException("Account type is required.");
             }
 
             using var transaction = await _context.Database.BeginTransactionAsync();
