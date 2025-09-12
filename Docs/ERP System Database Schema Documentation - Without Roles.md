@@ -179,7 +179,6 @@ Salary details per pay period.
 - **employee_id** (FK to employees.id) - INT
 - **period_start** - DATETIME
 - **period_end** - DATETIME
-- **base_salary** - DECIMAL(12,2)
 - **deductions** - DECIMAL(12,2)
 - **bonuses** - DECIMAL(12,2)
 - **net_pay** - DECIMAL(12,2)
