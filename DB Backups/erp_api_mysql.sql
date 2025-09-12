@@ -388,7 +388,6 @@ CREATE TABLE `payroll` (
   `employee_id` int DEFAULT NULL,
   `period_start` datetime DEFAULT NULL,
   `period_end` datetime DEFAULT NULL,
-  `base_salary` decimal(12,2) DEFAULT NULL,
   `deductions` decimal(12,2) DEFAULT NULL,
   `bonuses` decimal(12,2) DEFAULT NULL,
   `net_pay` decimal(12,2) DEFAULT NULL,
@@ -398,7 +397,7 @@ CREATE TABLE `payroll` (
   PRIMARY KEY (`id`),
   KEY `fk_payroll_employees_idx` (`employee_id`),
   CONSTRAINT `fk_payroll_employees` FOREIGN KEY (`employee_id`) REFERENCES `employees` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -407,6 +406,7 @@ CREATE TABLE `payroll` (
 
 LOCK TABLES `payroll` WRITE;
 /*!40000 ALTER TABLE `payroll` DISABLE KEYS */;
+INSERT INTO `payroll` VALUES (1,1,'2025-09-11 00:00:00','2025-09-12 00:00:00',0.00,10.00,1000010.00,'2025-09-13 09:29:43',0,NULL),(2,3,'2025-09-11 00:00:00','2025-09-12 00:00:00',0.00,100.00,10000100.00,'2025-09-13 09:29:43',0,NULL);
 /*!40000 ALTER TABLE `payroll` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -735,4 +735,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-09-11 19:30:04
+-- Dump completed on 2025-09-12 15:42:06
