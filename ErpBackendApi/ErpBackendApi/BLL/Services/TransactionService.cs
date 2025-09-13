@@ -26,8 +26,8 @@ namespace ErpBackendApi.BLL.Services
                 select new TransactionDTO
                 {
                     id = t.id,
-                    account_id = a.id,
-                    account_name = a.name,
+                    account_id = a != null && a.is_deleted == false ? a.id : null,
+                    account_name = a != null && a.is_deleted == false ? a.name : a.name + " (Deleted account)",
                     transaction_date = t.transaction_date,
                     description = t.description,
                     amount = t.amount,
@@ -47,8 +47,8 @@ namespace ErpBackendApi.BLL.Services
                 select new TransactionDTO
                 {
                     id = t.id,
-                    account_id = a.id,
-                    account_name = a.name,
+                    account_id = a != null && a.is_deleted == false ? a.id : null,
+                    account_name = a != null && a.is_deleted == false ? a.name : a.name + " (Deleted account)",
                     transaction_date = t.transaction_date,
                     description = t.description,
                     amount = t.amount,
@@ -59,11 +59,21 @@ namespace ErpBackendApi.BLL.Services
 
         public async Task<Transaction> AddTransactionAsync(Transaction transaction)
         {
-            transaction.is_deleted = false;
-            transaction.deleted_at = null;
-            _context.transactions.Add(transaction);
-            await _context.SaveChangesAsync();
-            return transaction;
+            using var DataTransaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                transaction.is_deleted = false;
+                transaction.deleted_at = null;
+                _context.transactions.Add(transaction);
+                await _context.SaveChangesAsync();
+                await DataTransaction.CommitAsync();
+                return transaction;
+            }
+            catch
+            {
+                await DataTransaction.RollbackAsync();
+                throw new InvalidOperationException("Unable to add transaction.");
+            }
         }
 
         public async Task<Transaction> UpdateTransactionAsync(Transaction transaction)
@@ -72,14 +82,25 @@ namespace ErpBackendApi.BLL.Services
             if (existingTransaction == null)
             {
                 Logger("Unable to update transaction information. Transaction not found.");
-                return null;
+                throw new InvalidOperationException("Unable to update transaction information. Transaction not found.");
             }
-            existingTransaction.transaction_date = transaction.transaction_date;
-            existingTransaction.description = transaction.description;
-            existingTransaction.amount = transaction.amount;
-            existingTransaction.type = transaction.type;
-            await _context.SaveChangesAsync();
-            return existingTransaction;
+
+            using var DataTransaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                existingTransaction.transaction_date = transaction.transaction_date;
+                existingTransaction.description = transaction.description;
+                existingTransaction.amount = transaction.amount;
+                existingTransaction.type = transaction.type;
+                await _context.SaveChangesAsync();
+                await DataTransaction.CommitAsync();
+                return existingTransaction;
+            }
+            catch
+            {
+                await DataTransaction.RollbackAsync();
+                throw new InvalidOperationException("Unable to update transaction.");
+            }
         }
 
         public async Task<Transaction> SoftDeleteTransactionAsync(Transaction transaction)
@@ -88,13 +109,23 @@ namespace ErpBackendApi.BLL.Services
             if (existingTransaction == null)
             {
                 Logger("Unable to delete transaction information. Transaction not found.");
-                return null;
+                throw new InvalidOperationException("Unable to delete transaction information. Transaction not found.");
             }
-            existingTransaction.is_deleted = true;
-            existingTransaction.deleted_at = DateTime.UtcNow;
-            _context.transactions.Update(existingTransaction);
-            await _context.SaveChangesAsync();
-            return existingTransaction;
+
+            using var DataTransaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                existingTransaction.is_deleted = true;
+                existingTransaction.deleted_at = DateTime.UtcNow;
+                await _context.SaveChangesAsync();
+                await DataTransaction.CommitAsync();
+                return existingTransaction;
+            }
+            catch
+            {
+                await DataTransaction.RollbackAsync();
+                throw new InvalidOperationException("Unable to delete transaction.");
+            }
         }
 
         public async Task<Transaction> UndoSoftDeleteTransactionAsync(Transaction transaction)
@@ -103,13 +134,23 @@ namespace ErpBackendApi.BLL.Services
             if (existingTransaction == null)
             {
                 Logger("Unable to restore deleted transaction information. Transaction not found.");
-                return null;
+                throw new InvalidOperationException("Unable to restore deleted transaction information. Transaction not found.");
             }
-            existingTransaction.is_deleted = false;
-            existingTransaction.deleted_at = null;
-            _context.transactions.Update(existingTransaction);
-            await _context.SaveChangesAsync();
-            return existingTransaction;
+
+            using var DataTransaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                existingTransaction.is_deleted = false;
+                existingTransaction.deleted_at = null;
+                await _context.SaveChangesAsync();
+                await DataTransaction.CommitAsync();
+                return existingTransaction;
+            }
+            catch
+            {
+                await DataTransaction.RollbackAsync();
+                throw new InvalidOperationException("Unable to restore deleted transaction.");
+            }
         }
     }
 }

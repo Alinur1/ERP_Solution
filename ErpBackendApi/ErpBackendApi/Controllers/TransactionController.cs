@@ -28,7 +28,7 @@ namespace ErpBackendApi.Controllers
             var operation_GetTransactionById = await _iTransaction.GetTransactionByIdAsync(id);
             if (operation_GetTransactionById == null)
             {
-                return NotFound("Transaction not found.");
+                return BadRequest("Transaction not found.");
             }
             return Ok(operation_GetTransactionById);
         }
@@ -36,45 +36,57 @@ namespace ErpBackendApi.Controllers
         [HttpPost]
         public async Task<IActionResult> AddTransaction(Transaction transaction)
         {
-            var operation_AddTransaction = await _iTransaction.AddTransactionAsync(transaction);
-            if (operation_AddTransaction == null)
+            try
             {
-                return NotFound("Unable to add transaction information. Something went wrong.");
+                var operation_AddTransaction = await _iTransaction.AddTransactionAsync(transaction);
+                return Ok("Transaction added successfully.");
             }
-            return Ok("Transaction added successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut]
         public async Task<IActionResult> UpdateTransaction(Transaction transaction)
         {
-            var operation_UpdateTransaction = await _iTransaction.UpdateTransactionAsync(transaction);
-            if (operation_UpdateTransaction == null)
+            try
             {
-                return NotFound("Unable to update transaction information. Transaction not found.");
+                var operation_UpdateTransaction = await _iTransaction.UpdateTransactionAsync(transaction);
+                return Ok("Transaction updated successfully.");
             }
-            return Ok("Transaction updated successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("delete")]
         public async Task<IActionResult> SoftDeleteTransaction(Transaction transaction)
         {
-            var operation_SoftDeleteTransaction = await _iTransaction.SoftDeleteTransactionAsync(transaction);
-            if (operation_SoftDeleteTransaction == null)
+            try
             {
-                return NotFound("Unable to delete transaction information. Transaction not found.");
+                var operation_SoftDeleteTransaction = await _iTransaction.SoftDeleteTransactionAsync(transaction);
+                return Ok("Transaction information deleted successfully.");
             }
-            return Ok("Transaction information deleted successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("undo-delete")]
         public async Task<IActionResult> UndoSoftDeleteTransaction(Transaction transaction)
         {
-            var operation_UndoSoftDeleteTransaction = await _iTransaction.UndoSoftDeleteTransactionAsync(transaction);
-            if (operation_UndoSoftDeleteTransaction == null)
+            try
             {
-                return NotFound("Unable to restore deleted transaction information. Transaction not found.");
+                var operation_UndoSoftDeleteTransaction = await _iTransaction.UndoSoftDeleteTransactionAsync(transaction);
+                return Ok("Transaction information restored successfully.");
             }
-            return Ok("Transaction information restored successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
