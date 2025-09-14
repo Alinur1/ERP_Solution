@@ -9,6 +9,7 @@ namespace ErpBackendApi.DAL.Models
         public string? name { get; set; }
         //[Column(TypeName = "int")]
         public AccountType? type { get; set; }
+        public bool? is_system_account { get; set; } = false;
         public bool? is_deleted { get; set; }
         public DateTime? deleted_at { get; set; }
     }

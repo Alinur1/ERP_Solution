@@ -1,4 +1,5 @@
 ﻿using ErpBackendApi.BLL.Interfaces;
+using ErpBackendApi.DAL.Enums;
 using ErpBackendApi.DAL.ERPDataContext;
 using ErpBackendApi.DAL.Models;
 using Microsoft.EntityFrameworkCore;
@@ -51,6 +52,12 @@ namespace ErpBackendApi.BLL.Services
                 throw new InvalidOperationException("Account type is required.");
             }
 
+            if (!Enum.IsDefined(typeof(AccountType), account.type.Value))
+            {
+                Logger($"Invalid account type. Valid values are: {string.Join(", ", Enum.GetValues(typeof(AccountType)).Cast<int>())}");
+                throw new InvalidOperationException($"Invalid account type. Valid values are: {string.Join(", ", Enum.GetValues(typeof(AccountType)).Cast<int>())}");
+            }
+
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
@@ -77,6 +84,12 @@ namespace ErpBackendApi.BLL.Services
                 throw new InvalidOperationException("Unable to update account details. Account not found.");
             }
 
+            if (existingAccount.is_system_account == true)
+            {
+                Logger("System accounts cannot be modified or deleted.");
+                throw new InvalidOperationException("System accounts cannot be modified or deleted.");
+            }
+
             var duplicateAccount = await _context.accounts.FirstOrDefaultAsync(a => a.id != account.id && a.name == account.name && a.is_deleted == false);
             if (duplicateAccount != null)
             {
@@ -94,6 +107,12 @@ namespace ErpBackendApi.BLL.Services
             {
                 Logger("Account type is required.");
                 throw new InvalidOperationException("Account type is required.");
+            }
+
+            if (!Enum.IsDefined(typeof(AccountType), account.type.Value))
+            {
+                Logger($"Invalid account type. Valid values are: {string.Join(", ", Enum.GetValues(typeof(AccountType)).Cast<int>())}");
+                throw new InvalidOperationException($"Invalid account type. Valid values are: {string.Join(", ", Enum.GetValues(typeof(AccountType)).Cast<int>())}");
             }
 
             using var transaction = await _context.Database.BeginTransactionAsync();
@@ -121,6 +140,12 @@ namespace ErpBackendApi.BLL.Services
                 throw new InvalidOperationException("Unable to delete account details. Account not found.");
             }
 
+            if (existingAccount.is_system_account == true)
+            {
+                Logger("System accounts cannot be modified or deleted.");
+                throw new InvalidOperationException("System accounts cannot be modified or deleted.");
+            }
+
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
@@ -144,6 +169,12 @@ namespace ErpBackendApi.BLL.Services
             {
                 Logger("Unable to restore account details. Account not found.");
                 throw new InvalidOperationException("Unable to restore account details. Account not found.");
+            }
+
+            if (existingAccount.is_system_account == true)
+            {
+                Logger("How did you delete a system accounts bruh -_- ???. Can't restore account if you force deleted it. Hack again xD.");
+                throw new InvalidOperationException("How did you delete a system accounts bruh -_- ???. Can't restore account if you force deleted it. Hack again xD.");
             }
 
             using var transaction = await _context.Database.BeginTransactionAsync();
