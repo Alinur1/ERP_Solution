@@ -193,6 +193,7 @@ Chart of accounts.
 - **id** (PK) - INT
 - **name** - VARCHAR(255)
 - **type** - ENUM('Income', 'Expense', 'Asset', 'Liability', 'Equity')
+- **is_system_account** - BIT - Default value "false"
 - **is_deleted** - BIT
 - **deleted_at** - DATETIME
 
