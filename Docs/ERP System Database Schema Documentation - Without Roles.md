@@ -204,7 +204,6 @@ Financial transactions per account.
 - **description** - TEXT
 - **amount** - DECIMAL(12,2)
 - **type** - ENUM('Credit', 'Debit')
-- **is_system_account** - BIT - Default value "false"
 - **is_deleted** - BIT
 - **deleted_at** - DATETIME
 
