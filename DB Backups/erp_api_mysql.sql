@@ -29,7 +29,7 @@ CREATE TABLE `accounts` (
   `is_deleted` tinyint DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -38,6 +38,7 @@ CREATE TABLE `accounts` (
 
 LOCK TABLES `accounts` WRITE;
 /*!40000 ALTER TABLE `accounts` DISABLE KEYS */;
+INSERT INTO `accounts` VALUES (1,'Sales Revenue',0,0,NULL),(2,'Service Revenue',0,0,NULL),(3,'Interest Income',0,0,NULL),(4,'Rental Income',0,0,NULL),(5,'Cost of Goods Sold (COGS)',1,0,NULL),(6,'Rent Expense',1,0,NULL),(7,'Utilities Expense',1,0,NULL),(8,'Salaries & Wages',1,0,NULL),(9,'Office Supplies',1,0,NULL),(10,'Marketing Expense',1,0,NULL),(11,'Depreciation Expense',1,0,NULL),(12,'Insurance Expense',1,0,NULL),(13,'Travel Expense',1,0,NULL),(14,'Cash',2,0,NULL),(15,'Accounts Receivable',2,0,NULL),(16,'Inventory',2,0,NULL),(17,'Prepaid Expenses',2,0,NULL),(18,'Equipment',2,0,NULL),(19,'Buildings',2,0,NULL),(20,'Vehicles',2,0,NULL),(21,'Bank Account',2,0,NULL),(22,'Accounts Payable',3,0,NULL),(23,'Salaries Payable',3,0,NULL),(24,'Taxes Payable',3,0,NULL),(25,'Bank Loan',3,0,NULL),(26,'Credit Card Payable',3,0,NULL),(27,'Unearned Revenue',3,0,NULL),(28,'Owner’s Capital',4,0,NULL),(29,'Retained Earnings',4,0,NULL),(30,'Owner’s Drawings / Dividends',4,0,NULL);
 /*!40000 ALTER TABLE `accounts` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -679,6 +680,7 @@ CREATE TABLE `transactions` (
   `description` text,
   `amount` decimal(12,2) DEFAULT NULL,
   `type` int DEFAULT NULL,
+  `is_system_account` tinyint DEFAULT NULL,
   `is_deleted` tinyint DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -735,4 +737,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-09-12 15:42:06
+-- Dump completed on 2025-09-14 18:53:43
