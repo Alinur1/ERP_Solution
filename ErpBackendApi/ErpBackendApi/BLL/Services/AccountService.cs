@@ -58,6 +58,19 @@ namespace ErpBackendApi.BLL.Services
                 throw new InvalidOperationException($"Invalid account type. Valid values are: {string.Join(", ", Enum.GetValues(typeof(AccountType)).Cast<int>())}");
             }
 
+            if (account.normal_balance == null)
+            {
+                account.normal_balance = account.type switch
+                {
+                    AccountType.Asset => DebitCreditType.Debit,      // 0
+                    AccountType.Liability => DebitCreditType.Credit, // 1
+                    AccountType.Equity => DebitCreditType.Credit,    // 1
+                    AccountType.Income => DebitCreditType.Credit,    // 1
+                    AccountType.Expense => DebitCreditType.Debit,    // 0
+                    _ => throw new InvalidOperationException("Invalid account type")
+                };
+            }
+
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
@@ -113,6 +126,19 @@ namespace ErpBackendApi.BLL.Services
             {
                 Logger($"Invalid account type. Valid values are: {string.Join(", ", Enum.GetValues(typeof(AccountType)).Cast<int>())}");
                 throw new InvalidOperationException($"Invalid account type. Valid values are: {string.Join(", ", Enum.GetValues(typeof(AccountType)).Cast<int>())}");
+            }
+
+            if (account.normal_balance == null)
+            {
+                account.normal_balance = account.type switch
+                {
+                    AccountType.Asset => DebitCreditType.Debit,      // 0
+                    AccountType.Liability => DebitCreditType.Credit, // 1
+                    AccountType.Equity => DebitCreditType.Credit,    // 1
+                    AccountType.Income => DebitCreditType.Credit,    // 1
+                    AccountType.Expense => DebitCreditType.Debit,    // 0
+                    _ => throw new InvalidOperationException("Invalid account type")
+                };
             }
 
             using var transaction = await _context.Database.BeginTransactionAsync();

@@ -10,8 +10,7 @@ namespace ErpBackendApi.DAL.DTOs
         public DateTime? transaction_date { get; set; }
         public string? description { get; set; }
         public decimal? amount { get; set; }
-        //[Column(TypeName = "int")]
-        public TransactionType? type { get; set; }
+        public DebitCreditType? normal_balance { get; set; }
         public bool? is_deleted { get; set; }
         public DateTime? deleted_at { get; set; }
     }

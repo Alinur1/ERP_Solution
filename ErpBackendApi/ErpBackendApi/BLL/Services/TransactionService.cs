@@ -32,7 +32,7 @@ namespace ErpBackendApi.BLL.Services
                     transaction_date = t.transaction_date,
                     description = t.description,
                     amount = t.amount,
-                    type = t.type,
+                    normal_balance = t.normal_balance,
                 }
             ).ToListAsync();
         }
@@ -53,7 +53,7 @@ namespace ErpBackendApi.BLL.Services
                     transaction_date = t.transaction_date,
                     description = t.description,
                     amount = t.amount,
-                    type = t.type,
+                    normal_balance = t.normal_balance,
                 }
             ).FirstOrDefaultAsync();
         }
@@ -67,16 +67,15 @@ namespace ErpBackendApi.BLL.Services
                 throw new InvalidOperationException("Account not found or inactive.");
             }
 
-            if (transaction.type == null)
+            if (transaction.normal_balance == null)
             {
-                Logger("Transaction type is required.");
-                throw new InvalidOperationException("Transaction type is required.");
+                transaction.normal_balance = existingAccount.normal_balance;
             }
 
-            if (!Enum.IsDefined(typeof(TransactionType), transaction.type.Value))
+            if (!Enum.IsDefined(typeof(DebitCreditType), transaction.normal_balance.Value))
             {
-                Logger($"Invalid transaction type. Valid values: {string.Join(", ", Enum.GetValues(typeof(TransactionType)).Cast<int>())}");
-                throw new InvalidOperationException($"Invalid transaction type. Valid values: {string.Join(", ", Enum.GetValues(typeof(TransactionType)).Cast<int>())}");
+                Logger($"Invalid transaction type. Valid values: {string.Join(", ", Enum.GetValues(typeof(DebitCreditType)).Cast<int>())}");
+                throw new InvalidOperationException($"Invalid transaction type. Valid values: {string.Join(", ", Enum.GetValues(typeof(DebitCreditType)).Cast<int>())}");
             }
 
             if (transaction.amount <= 0)
@@ -117,26 +116,25 @@ namespace ErpBackendApi.BLL.Services
                 throw new InvalidOperationException("Transaction not found or deleted.");
             }
 
-            if (transaction.account_id.HasValue && transaction.account_id != existingTransaction.account_id)
+            // Get the account (current or new if changing)
+            int? targetAccountId = transaction.account_id ?? existingTransaction.account_id;
+            var existingAccount = await _context.accounts.FirstOrDefaultAsync(a => a.id == targetAccountId && a.is_deleted == false);
+
+            if (existingAccount == null)
             {
-                var existingAccount = await _context.accounts.FirstOrDefaultAsync(a => a.id == transaction.account_id && a.is_deleted == false);
-                if (existingAccount == null)
-                {
-                    Logger("Account not found or inactive.");
-                    throw new InvalidOperationException("Account not found or inactive.");
-                }
+                Logger("Account not found or inactive.");
+                throw new InvalidOperationException("Account not found or inactive.");
             }
 
-            if (transaction.type == null)
+            if (transaction.normal_balance == null)
             {
-                Logger("Transaction type is required.");
-                throw new InvalidOperationException("Transaction type is required.");
+                transaction.normal_balance = existingAccount.normal_balance;
             }
 
-            if (!Enum.IsDefined(typeof(TransactionType), transaction.type.Value))
+            if (!Enum.IsDefined(typeof(DebitCreditType), transaction.normal_balance.Value))
             {
-                Logger($"Invalid transaction type. Valid values: {string.Join(", ", Enum.GetValues(typeof(TransactionType)).Cast<int>())}");
-                throw new InvalidOperationException($"Invalid transaction type. Valid values: {string.Join(", ", Enum.GetValues(typeof(TransactionType)).Cast<int>())}");
+                Logger($"Invalid transaction type. Valid values: {string.Join(", ", Enum.GetValues(typeof(DebitCreditType)).Cast<int>())}");
+                throw new InvalidOperationException($"Invalid transaction type. Valid values: {string.Join(", ", Enum.GetValues(typeof(DebitCreditType)).Cast<int>())}");
             }
 
             if (transaction.amount <= 0)
@@ -158,8 +156,7 @@ namespace ErpBackendApi.BLL.Services
                 existingTransaction.transaction_date = transaction.transaction_date ?? existingTransaction.transaction_date;
                 existingTransaction.description = transaction.description ?? existingTransaction.description;
                 existingTransaction.amount = transaction.amount ?? existingTransaction.amount;
-                existingTransaction.type = transaction.type ?? existingTransaction.type;
-
+                existingTransaction.normal_balance = transaction.normal_balance ?? existingTransaction.normal_balance;
                 await _context.SaveChangesAsync();
                 await DataTransaction.CommitAsync();
                 return existingTransaction;
