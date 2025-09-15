@@ -22,7 +22,7 @@ namespace ErpBackendApi.Controllers
             return Ok(operation_GetAllTransactions);
         }
 
-        [HttpGet("id")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetTransactionById(int id)
         {
             var operation_GetTransactionById = await _iTransaction.GetTransactionByIdAsync(id);
@@ -47,7 +47,7 @@ namespace ErpBackendApi.Controllers
             }
         }
 
-        [HttpPut]
+        [HttpPut("update")]
         public async Task<IActionResult> UpdateTransaction(Transaction transaction)
         {
             try
