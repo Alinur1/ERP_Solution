@@ -193,6 +193,7 @@ Chart of accounts.
 - **id** (PK) - INT
 - **name** - VARCHAR(255)
 - **type** - ENUM('Income', 'Expense', 'Asset', 'Liability', 'Equity')
+- **normal_balance** - ENUM()
 - **is_system_account** - BIT - Default value "false"
 - **is_deleted** - BIT
 - **deleted_at** - DATETIME
@@ -204,7 +205,7 @@ Financial transactions per account.
 - **transaction_date** - DATETIME
 - **description** - TEXT
 - **amount** - DECIMAL(12,2)
-- **type** - ENUM('Credit', 'Debit')
+- **normal_balance** - ENUM('Credit', 'Debit')
 - **is_deleted** - BIT
 - **deleted_at** - DATETIME
 

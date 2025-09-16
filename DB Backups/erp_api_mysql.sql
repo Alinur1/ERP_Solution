@@ -26,11 +26,12 @@ CREATE TABLE `accounts` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
   `type` int DEFAULT NULL,
+  `normal_balance` int DEFAULT NULL,
   `is_system_account` tinyint DEFAULT NULL,
   `is_deleted` tinyint DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -39,7 +40,7 @@ CREATE TABLE `accounts` (
 
 LOCK TABLES `accounts` WRITE;
 /*!40000 ALTER TABLE `accounts` DISABLE KEYS */;
-INSERT INTO `accounts` VALUES (1,'Sales Revenue',0,1,0,NULL),(2,'Service Revenue',0,1,0,NULL),(3,'Interest Income',0,1,0,NULL),(4,'Rental Income',0,1,0,NULL),(5,'Cost of Goods Sold (COGS)',1,1,0,NULL),(6,'Rent Expense',1,1,0,NULL),(7,'Utilities Expense',1,1,0,NULL),(8,'Salaries & Wages',1,1,0,NULL),(9,'Office Supplies',1,1,0,NULL),(10,'Marketing Expense',1,1,0,NULL),(11,'Depreciation Expense',1,1,0,NULL),(12,'Insurance Expense',1,1,0,NULL),(13,'Travel Expense',1,1,0,NULL),(14,'Cash',2,1,0,NULL),(15,'Accounts Receivable',2,1,0,NULL),(16,'Inventory',2,1,0,NULL),(17,'Prepaid Expenses',2,1,0,NULL),(18,'Equipment',2,1,0,NULL),(19,'Buildings',2,1,0,NULL),(20,'Vehicles',2,1,0,NULL),(21,'Bank Account',2,1,0,NULL),(22,'Accounts Payable',3,1,0,NULL),(23,'Salaries Payable',3,1,0,NULL),(24,'Taxes Payable',3,1,0,NULL),(25,'Bank Loan',3,1,0,NULL),(26,'Credit Card Payable',3,1,0,NULL),(27,'Unearned Revenue',3,1,0,NULL),(28,'Owner’s Capital',4,1,0,NULL),(29,'Retained Earnings',4,1,0,NULL),(30,'Owner’s Drawings / Dividends',4,1,0,NULL);
+INSERT INTO `accounts` VALUES (1,'Sales Revenue',0,1,1,0,NULL),(2,'Service Revenue',0,1,1,0,NULL),(3,'Interest Income',0,1,1,0,NULL),(4,'Rental Income',0,1,1,0,NULL),(5,'Cost of Goods Sold (COGS)',1,0,1,0,NULL),(6,'Rent Expense',1,0,1,0,NULL),(7,'Utilities Expense',1,0,1,0,NULL),(8,'Salaries & Wages',1,0,1,0,NULL),(9,'Office Supplies',1,0,1,0,NULL),(10,'Marketing Expense',1,0,1,0,NULL),(11,'Depreciation Expense',1,0,1,0,NULL),(12,'Insurance Expense',1,0,1,0,NULL),(13,'Travel Expense',1,0,1,0,NULL),(14,'Cash',2,0,1,0,NULL),(15,'Accounts Receivable',2,0,1,0,NULL),(16,'Inventory',2,0,1,0,NULL),(17,'Prepaid Expenses',2,0,1,0,NULL),(18,'Equipment',2,0,1,0,NULL),(19,'Buildings',2,0,1,0,NULL),(20,'Vehicles',2,0,1,0,NULL),(21,'Bank Account',2,0,1,0,NULL),(22,'Accounts Payable',3,1,1,0,NULL),(23,'Salaries Payable',3,1,1,0,NULL),(24,'Taxes Payable',3,1,1,0,NULL),(25,'Bank Loan',3,1,1,0,NULL),(26,'Credit Card Payable',3,1,1,0,NULL),(27,'Unearned Revenue',3,1,1,0,NULL),(28,'Owner’s Capital',4,1,1,0,NULL),(29,'Retained Earnings',4,1,1,0,NULL),(30,'Owner’s Drawings / Dividends',4,1,1,0,NULL),(31,'testing',5,NULL,0,1,'2025-09-14 13:15:52'),(32,'testing',5,NULL,0,1,'2025-09-14 13:22:45'),(33,'testing',5,NULL,0,1,'2025-09-14 13:25:31'),(34,'testing',5,NULL,0,1,'2025-09-14 13:26:30'),(35,'testing',4,1,0,0,NULL),(36,'Owner\'s family',4,1,0,0,NULL);
 /*!40000 ALTER TABLE `accounts` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -680,13 +681,13 @@ CREATE TABLE `transactions` (
   `transaction_date` datetime DEFAULT NULL,
   `description` text,
   `amount` decimal(12,2) DEFAULT NULL,
-  `type` int DEFAULT NULL,
+  `normal_balance` int DEFAULT NULL,
   `is_deleted` tinyint DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_transactions_accounts_idx` (`account_id`),
   CONSTRAINT `fk_transactions_accounts` FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -695,6 +696,7 @@ CREATE TABLE `transactions` (
 
 LOCK TABLES `transactions` WRITE;
 /*!40000 ALTER TABLE `transactions` DISABLE KEYS */;
+INSERT INTO `transactions` VALUES (1,10,'2025-09-15 00:00:00',NULL,1000.00,0,0,NULL),(2,14,'2025-09-15 00:00:00',NULL,20000.00,0,0,NULL);
 /*!40000 ALTER TABLE `transactions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -737,4 +739,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-09-14 19:05:09
+-- Dump completed on 2025-09-16 13:20:42
