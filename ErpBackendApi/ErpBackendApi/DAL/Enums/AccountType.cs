@@ -2,10 +2,10 @@
 {
     public enum AccountType
     {
-        Income,
-        Expense,
-        Asset,
-        Liability,
-        Equity
+        Income,      // 1 = Credit
+        Expense,     // 0 = Debit
+        Asset,       // 0 = Debit
+        Liability,   // 1 = Credit
+        Equity       // 1 = Credit
     }
 }

@@ -128,7 +128,16 @@ namespace ErpBackendApi.BLL.Services
                 throw new InvalidOperationException($"Invalid account type. Valid values are: {string.Join(", ", Enum.GetValues(typeof(AccountType)).Cast<int>())}");
             }
 
-            if (account.normal_balance == null)
+            if (account.normal_balance.HasValue && !Enum.IsDefined(typeof(DebitCreditType), account.normal_balance.Value))
+            {
+                Logger($"Invalid normal balance. Valid values: {string.Join(", ", Enum.GetValues(typeof(DebitCreditType)).Cast<int>())}");
+                throw new InvalidOperationException($"Invalid normal balance. Valid values: {string.Join(", ", Enum.GetValues(typeof(DebitCreditType)).Cast<int>())}");
+            }
+
+            bool typeChanged = account.type != existingAccount.type;
+            bool normalBalanceNotProvided = !account.normal_balance.HasValue;
+
+            if (normalBalanceNotProvided || typeChanged)
             {
                 account.normal_balance = account.type switch
                 {
@@ -146,6 +155,7 @@ namespace ErpBackendApi.BLL.Services
             {
                 existingAccount.name = account.name;
                 existingAccount.type = account.type;
+                existingAccount.normal_balance = account.normal_balance;
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
                 return existingAccount;
