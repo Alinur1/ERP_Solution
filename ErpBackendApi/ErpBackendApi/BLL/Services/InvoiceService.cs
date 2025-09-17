@@ -10,9 +10,11 @@ namespace ErpBackendApi.BLL.Services
     public class InvoiceService : IInvoices
     {
         private readonly AppDataContext _context;
-        public InvoiceService(AppDataContext context)
+        private readonly ITransactionGenerator _transactionGenerator;
+        public InvoiceService(AppDataContext context, ITransactionGenerator transactionGenerator)
         {
             _context = context;
+            _transactionGenerator = transactionGenerator;
         }
 
         public async Task<IEnumerable<InvoiceDTO>> GetAllInvoiceAsync()
@@ -132,20 +134,27 @@ namespace ErpBackendApi.BLL.Services
                     inventory.last_updated = DateTime.UtcNow;
                 }
 
-                // Calculate invoice total (flat or percent discount)
+                // Calculate invoice total
                 invoice.total_amount = orderItems.Sum(item =>
                 {
                     var discount = item.discount ?? 0;
                     var lineTotal = item.amount ?? 0;
                     return discount <= 1
-                        ? lineTotal - (lineTotal * discount)   // treat <=1 as percentage
-                        : lineTotal - discount;                // treat >1 as flat amount
+                        ? lineTotal - (lineTotal * discount)
+                        : lineTotal - discount;
                 });
 
                 invoice.is_deleted = false;
                 invoice.deleted_at = null;
+
+                // SAVE INVOICE FIRST TO GET ID
                 _context.invoices.Add(invoice);
                 await _context.SaveChangesAsync();
+
+                // GENERATE AUTOMATIC TRANSACTIONS!
+                string description = $"Sales Order #{invoice.sales_order_id}";
+                await _transactionGenerator.GenerateInvoiceTransactionsAsync(invoice, description);
+
                 await transaction.CommitAsync();
                 return invoice;
             }
@@ -175,9 +184,37 @@ namespace ErpBackendApi.BLL.Services
                     throw new InvalidOperationException("Invoice not found or deleted. Unable to update.");
                 }
 
-                existingInvoice.invoice_date = invoice.invoice_date;
+                var hasTransactions = await _context.transactions.AnyAsync(t => t.description.Contains($"INV-{existingInvoice.id}:") && t.is_deleted == false);
+
+                if (hasTransactions)
+                {
+                    if (invoice.invoice_date != existingInvoice.invoice_date)
+                    {
+                        Logger("Cannot change invoice date after accounting transactions have been created.");
+                        throw new InvalidOperationException("Cannot change invoice date after accounting transactions have been created.");
+                    }
+
+                    if (invoice.total_amount != existingInvoice.total_amount)
+                    {
+                        Logger("Cannot change invoice amount after accounting transactions have been created.");
+                        throw new InvalidOperationException("Cannot change invoice amount after accounting transactions have been created.");
+                    }
+
+                    if (invoice.sales_order_id != existingInvoice.sales_order_id)
+                    {
+                        Logger("Cannot change sales order reference after accounting transactions have been created.");
+                        throw new InvalidOperationException("Cannot change sales order reference after accounting transactions have been created.");
+                    }
+                }
+
                 existingInvoice.is_paid = invoice.is_paid;
                 existingInvoice.due_date = invoice.due_date;
+
+                if (!hasTransactions)
+                {
+                    existingInvoice.invoice_date = invoice.invoice_date;
+                }
+
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
                 return existingInvoice;
@@ -216,9 +253,13 @@ namespace ErpBackendApi.BLL.Services
                     }
                 }
 
+                // REVERSE THE TRANSACTIONS!
+                await _transactionGenerator.ReverseInvoiceTransactionsAsync(existingInvoice.id, "Invoice deleted");
+
                 existingInvoice.is_deleted = true;
                 existingInvoice.deleted_at = DateTime.UtcNow;
                 await _context.SaveChangesAsync();
+
                 await transaction.CommitAsync();
                 return existingInvoice;
             }
@@ -245,6 +286,8 @@ namespace ErpBackendApi.BLL.Services
                 var orderItems = await _context.sales_order_items
                     .Where(soi => soi.sales_order_id == existingInvoice.sales_order_id && soi.is_deleted == false)
                     .ToListAsync();
+
+                // Deduct inventory again
                 foreach (var item in orderItems)
                 {
                     var inventory = await _context.inventory.FirstOrDefaultAsync(inv => inv.product_id == item.product_id && inv.is_deleted == false);
@@ -256,6 +299,18 @@ namespace ErpBackendApi.BLL.Services
 
                     inventory.quantity -= item.quantity;
                     inventory.last_updated = DateTime.UtcNow;
+                }
+
+                // RESTORE TRANSACTIONS (by undoing the soft delete)
+                var reversedTransactions = await _context.transactions
+                    .Where(t => t.description.Contains($"INV-{existingInvoice.id}:") && t.is_deleted == true)
+                    .ToListAsync();
+
+                foreach (var trans in reversedTransactions)
+                {
+                    trans.is_deleted = false;
+                    trans.deleted_at = null;
+                    trans.description = trans.description.Replace(" - Reversed: Invoice deleted", ""); // Clean up description
                 }
 
                 existingInvoice.is_deleted = false;
