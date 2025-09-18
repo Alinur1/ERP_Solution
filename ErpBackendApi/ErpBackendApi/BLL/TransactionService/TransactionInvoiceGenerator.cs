@@ -7,11 +7,11 @@ using static ErpBackendApi.Utilities.Helper.LoggerClass;
 
 namespace ErpBackendApi.BLL.TransactionService
 {
-    public class TransactionGenerator : ITransactionGenerator
+    public class TransactionInvoiceGenerator : ITransactionInvoiceGenerator
     {
         private readonly AppDataContext _context;
 
-        public TransactionGenerator(AppDataContext context)
+        public TransactionInvoiceGenerator(AppDataContext context)
         {
             _context = context;
         }

@@ -11,8 +11,8 @@ namespace ErpBackendApi.BLL.Services
     public class InvoiceService : IInvoices
     {
         private readonly AppDataContext _context;
-        private readonly ITransactionGenerator _transactionGenerator;
-        public InvoiceService(AppDataContext context, ITransactionGenerator transactionGenerator)
+        private readonly ITransactionInvoiceGenerator _transactionGenerator;
+        public InvoiceService(AppDataContext context, ITransactionInvoiceGenerator transactionGenerator)
         {
             _context = context;
             _transactionGenerator = transactionGenerator;
