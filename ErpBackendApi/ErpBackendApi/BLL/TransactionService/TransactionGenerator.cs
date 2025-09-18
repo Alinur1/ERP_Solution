@@ -1,11 +1,11 @@
-﻿using ErpBackendApi.BLL.Interfaces;
+﻿using ErpBackendApi.BLL.TransactionInterface;
 using ErpBackendApi.DAL.Enums;
 using ErpBackendApi.DAL.ERPDataContext;
 using ErpBackendApi.DAL.Models;
 using Microsoft.EntityFrameworkCore;
 using static ErpBackendApi.Utilities.Helper.LoggerClass;
 
-namespace ErpBackendApi.BLL.Services
+namespace ErpBackendApi.BLL.TransactionService
 {
     public class TransactionGenerator : ITransactionGenerator
     {

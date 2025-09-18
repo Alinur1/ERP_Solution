@@ -1,6 +1,6 @@
 ﻿using ErpBackendApi.DAL.Models;
 
-namespace ErpBackendApi.BLL.Interfaces
+namespace ErpBackendApi.BLL.TransactionInterface
 {
     public interface ITransactionGenerator
     {
