@@ -132,6 +132,7 @@ TODO
 14. Change all the DateOnly to DateTime
 15. Add pagination as necessity. Check the PaginatedResult.cs in the Utilites/Helper folder.
 16. Add transaction [CommitAsync(), RollbackAsync()] in services as necessary (except the methods that uses HTTPGET).
+17. Use "is_deleted" instead of using "description" for the automatic transaction feature which is implemented in invoice and expense.
 
 
 
