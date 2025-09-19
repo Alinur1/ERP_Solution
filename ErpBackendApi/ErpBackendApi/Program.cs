@@ -63,6 +63,7 @@ builder.Services.AddScoped<INotifications, NotificationService>();
 builder.Services.AddScoped<ISettings, SettingService>();
 builder.Services.AddScoped<ICompanyProfile, CompanyProfileService>();
 builder.Services.AddScoped<ITransactionInvoiceGenerator, TransactionInvoiceGenerator>();
+builder.Services.AddScoped<ITransactionExpenseGenerator, TransactionExpenseGenerator>();
 
 
 builder.Services.AddSingleton<JwtHelper>();

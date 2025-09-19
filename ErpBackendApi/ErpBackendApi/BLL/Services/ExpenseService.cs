@@ -1,4 +1,5 @@
 ﻿using ErpBackendApi.BLL.Interfaces;
+using ErpBackendApi.BLL.TransactionInterface;
 using ErpBackendApi.DAL.DTOs;
 using ErpBackendApi.DAL.ERPDataContext;
 using ErpBackendApi.DAL.Models;
@@ -10,9 +11,11 @@ namespace ErpBackendApi.BLL.Services
     public class ExpenseService : IExpenses
     {
         private readonly AppDataContext _context;
-        public ExpenseService(AppDataContext context)
+        private readonly ITransactionExpenseGenerator _transactionGenerator;
+        public ExpenseService(AppDataContext context, ITransactionExpenseGenerator transactionGenerator)
         {
             _context = context;
+            _transactionGenerator = transactionGenerator;
         }
 
         public async Task<IEnumerable<ExpenseDTO>> GetAllExpenseAsync()
@@ -149,6 +152,11 @@ namespace ErpBackendApi.BLL.Services
                 expense.deleted_at = null;
                 _context.expenses.Add(expense);
                 await _context.SaveChangesAsync();
+
+                // GENERATE AUTOMATIC TRANSACTIONS!
+                string desc = $"Purchase Order #{expense.purchase_order_id}";
+                await _transactionGenerator.GenerateExpenseTransactionsAsync(expense, desc);
+
                 await transaction.CommitAsync();
                 return expense;
             }
@@ -178,9 +186,37 @@ namespace ErpBackendApi.BLL.Services
                     throw new InvalidOperationException("Expense not found or deleted. Unable to update.");
                 }
 
-                existingExpense.description = expense.description;
-                existingExpense.total_amount = expense.total_amount;
-                existingExpense.expense_date = expense.expense_date;
+                var hasTransactions = await _context.transactions.AnyAsync(t => t.description.Contains($"EXP-{existingExpense.id}:") && t.is_deleted == false);
+
+                if (hasTransactions)
+                {
+                    if (expense.total_amount != existingExpense.total_amount)
+                    {
+                        Logger("Cannot change expense amount after accounting transactions have been created.");
+                        throw new InvalidOperationException("Cannot change expense amount after accounting transactions have been created.");
+                    }
+                    if (expense.purchase_order_id != existingExpense.purchase_order_id)
+                    {
+                        Logger("Cannot change purchase order reference after accounting transactions have been created.");
+                        throw new InvalidOperationException("Cannot change purchase order reference after accounting transactions have been created.");
+                    }
+                    if (expense.expense_date != existingExpense.expense_date)
+                    {
+                        Logger("Cannot change expense date after accounting transactions have been created.");
+                        throw new InvalidOperationException("Cannot change expense date after accounting transactions have been created.");
+                    }
+                }
+
+                // Fields that can always be updated (if no transactions, all fields can be updated)
+                existingExpense.description = expense.description ?? existingExpense.description;
+
+                // Only update these if no transactions exist, otherwise they are locked above
+                if (!hasTransactions)
+                {
+                    existingExpense.total_amount = expense.total_amount;
+                    existingExpense.purchase_order_id = expense.purchase_order_id;
+                    existingExpense.expense_date = expense.expense_date;
+                }
 
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
@@ -221,11 +257,13 @@ namespace ErpBackendApi.BLL.Services
                             Logger($"Not enough stock to reverse expense for product {item.product_id}.");
                             throw new InvalidOperationException($"Not enough stock to reverse expense for product {item.product_id}.");
                         }
-
                         inventory.quantity -= item.quantity;
                         inventory.last_updated = DateTime.UtcNow;
                     }
                 }
+
+                // REVERSE THE ACCOUNTING TRANSACTIONS!
+                await _transactionGenerator.ReverseExpenseTransactionsAsync(existingExpense.id, "Expense deleted");
 
                 existingExpense.is_deleted = true;
                 existingExpense.deleted_at = DateTime.UtcNow;
@@ -278,6 +316,22 @@ namespace ErpBackendApi.BLL.Services
                     {
                         inventory.quantity += item.quantity;
                         inventory.last_updated = DateTime.UtcNow;
+                    }
+                }
+
+                // RESTORE THE ORIGINAL TRANSACTIONS (by undoing their soft delete)
+                var reversedTransactions = await _context.transactions
+                    .Where(t => t.description.Contains($"EXP-{existingExpense.id}:") && t.is_deleted == true)
+                    .ToListAsync();
+
+                foreach (var trans in reversedTransactions)
+                {
+                    trans.is_deleted = false;
+                    trans.deleted_at = null;
+                    // Clean up the description if it was marked as reversed
+                    if (trans.description.Contains("Reversed"))
+                    {
+                        trans.description = trans.description.Replace("Reversed - Expense deleted", "Restored");
                     }
                 }
 
