@@ -9,8 +9,5 @@ namespace ErpBackendApi.BLL.Interfaces
         Task<InvoiceDTO> GetInvoiceByIdAsync(int id);
         Task<InvoiceDTO> GetInvoiceByOrderIdAsync(int orderId);
         Task<Invoice> AddInvoiceAsync(Invoice invoice);
-        Task<Invoice> UpdateInvoiceAsync(Invoice invoice);
-        Task<Invoice> SoftDeleteInvoiceAsync(Invoice invoice);
-        Task<Invoice> UndoSoftDeleteInvoiceAsync(Invoice invoice);
     }
 }

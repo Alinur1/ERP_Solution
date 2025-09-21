@@ -49,32 +49,6 @@ namespace ErpBackendApi.BLL.TransactionService
             }
         }
 
-        public async Task ReverseInvoiceTransactionsAsync(int invoiceId, string reason)
-        {
-            try
-            {
-                var transactions = await _context.transactions
-                    .Where(t => t.description.Contains($"INV-{invoiceId}:") && t.is_deleted == false)
-                    .ToListAsync();
-
-                if (transactions.Count == 0) return;
-
-                foreach (var transactionEntry in transactions)
-                {
-                    transactionEntry.is_deleted = true;
-                    transactionEntry.deleted_at = DateTime.UtcNow;
-                    transactionEntry.description += $" - Reversed: {reason}";
-                }
-
-                await _context.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                Logger($"Error reversing invoice transactions: {ex.Message}");
-                throw new InvalidOperationException("Failed to reverse accounting entries for invoice.");
-            }
-        }
-
         private Transaction CreateTransaction(int accountId, decimal? amount, DebitCreditType normalBalance, string description, DateTime? transactionDate)
         {
             return new Transaction

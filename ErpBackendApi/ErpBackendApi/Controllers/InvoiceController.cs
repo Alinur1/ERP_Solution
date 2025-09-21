@@ -60,47 +60,5 @@ namespace ErpBackendApi.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
-        [HttpPut("update")]
-        public async Task<IActionResult> UpdateInvoice(Invoice invoice)
-        {
-            try
-            {
-                var operation_UpdateInvoice = await _iInvoices.UpdateInvoiceAsync(invoice);
-                return Ok("Invoice information updated successfully.");
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpPut("delete")]
-        public async Task<IActionResult> SoftDeleteInvoice(Invoice invoice)
-        {
-            try
-            {
-                var operation_SoftDeleteInvoice = await _iInvoices.SoftDeleteInvoiceAsync(invoice);
-                return Ok("Invoice deleted successfully.");
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpPut("undo-delete")]
-        public async Task<IActionResult> UndoSoftDeleteInvoice(Invoice invoice)
-        {
-            try
-            {
-                var operation_UndoSoftDeleteInvoice = await _iInvoices.UndoSoftDeleteInvoiceAsync(invoice);
-                return Ok("Deleted invoice restored successfully.");
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
     }
 }
