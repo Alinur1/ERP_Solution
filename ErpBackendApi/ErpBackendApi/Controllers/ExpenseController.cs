@@ -46,47 +46,5 @@ namespace ErpBackendApi.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
-        [HttpPut("update")]
-        public async Task<IActionResult> UpdateExpense(Expense expense)
-        {
-            try
-            {
-                var operation_UpdateExpense = await _iExpenses.UpdateExpenseAsync(expense);
-                return Ok("Expense updated successfully.");
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpPut("delete")]
-        public async Task<IActionResult> SoftDeleteExpense(Expense expense)
-        {
-            try
-            {
-                var operation_SoftDeleteExpense = await _iExpenses.SoftDeleteExpenseAsync(expense);
-                return Ok("Expense deleted successfully.");
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpPut("undo-delete")]
-        public async Task<IActionResult> UndoSoftDeleteExpense(Expense expense)
-        {
-            try
-            {
-                var operation_UndoSoftDeleteExpense = await _iExpenses.UndoSoftDeleteExpenseAsync(expense);
-                return Ok("Expense restored successfully.");
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
     }
 }

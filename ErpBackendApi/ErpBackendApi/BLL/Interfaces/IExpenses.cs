@@ -8,8 +8,5 @@ namespace ErpBackendApi.BLL.Interfaces
         Task<IEnumerable<ExpenseDTO>> GetAllExpenseAsync();
         Task<ExpenseDTO> GetExpenseByIdAsync(int id);
         Task<Expense> AddExpenseAsync(Expense expense);
-        Task<Expense> UpdateExpenseAsync(Expense expense);
-        Task<Expense> SoftDeleteExpenseAsync(Expense expense);
-        Task<Expense> UndoSoftDeleteExpenseAsync(Expense expense);
     }
 }

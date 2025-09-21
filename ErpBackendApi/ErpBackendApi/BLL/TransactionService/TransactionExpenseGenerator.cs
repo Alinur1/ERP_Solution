@@ -56,32 +56,5 @@ namespace ErpBackendApi.BLL.TransactionService
             await _context.transactions.AddRangeAsync(debitTransaction, creditTransaction);
             await _context.SaveChangesAsync();
         }
-
-        public async Task ReverseExpenseTransactionsAsync(int expenseId, string reason)
-        {
-            var transactionsToReverse = await _context.transactions
-                .Where(t => t.description.Contains($"EXP-{expenseId}:") && t.is_deleted == false)
-                .ToListAsync();
-
-            foreach (var originalTrans in transactionsToReverse)
-            {
-                var reversedNormalBalance = originalTrans.normal_balance == DebitCreditType.Debit
-                    ? DebitCreditType.Credit
-                    : DebitCreditType.Debit;
-
-                var reversingTransaction = new Transaction
-                {
-                    account_id = originalTrans.account_id,
-                    transaction_date = DateTime.UtcNow,
-                    description = $"EXP-{expenseId}: Reversed - {reason}",
-                    amount = originalTrans.amount,
-                    normal_balance = reversedNormalBalance,
-                    is_deleted = false,
-                    deleted_at = null
-                };
-                await _context.transactions.AddAsync(reversingTransaction);
-            }
-            await _context.SaveChangesAsync();
-        }
     }
 }
