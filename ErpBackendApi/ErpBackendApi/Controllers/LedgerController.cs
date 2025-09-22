@@ -43,38 +43,5 @@ namespace ErpBackendApi.Controllers
             }
             return Ok("Ledger information added successfully.");
         }
-
-        [HttpPut]
-        public async Task<IActionResult> UpdateLedger(Ledger ledger)
-        {
-            var operation_UpdateLedger = await _iLedger.UpdateLedgerAsync(ledger);
-            if (operation_UpdateLedger == null)
-            {
-                return NotFound("Unable to update ledger information. Invalid ledger ID.");
-            }
-            return Ok("Ledger information updated successfully.");
-        }
-
-        [HttpPut("delete")]
-        public async Task<IActionResult> SoftDeleteLedger(Ledger ledger)
-        {
-            var operation_SoftDeleteLedger = await _iLedger.SoftDeleteLedgerAsync(ledger);
-            if (operation_SoftDeleteLedger == null)
-            {
-                return NotFound("Unable to delete ledger information. Invalid ledger ID.");
-            }
-            return Ok("Ledger information deleted successfully.");
-        }
-
-        [HttpPut("undo-delete")]
-        public async Task<IActionResult> UndoSoftDeleteLedger(Ledger ledger)
-        {
-            var operation_UndoSoftDeleteLedger = await _iLedger.UndoSoftDeleteLedgerAsync(ledger);
-            if (operation_UndoSoftDeleteLedger == null)
-            {
-                return NotFound("Unable to restore deleted ledger information. Invalid ledger ID.");
-            }
-            return Ok("Ledger information restored successfully.");
-        }
     }
 }

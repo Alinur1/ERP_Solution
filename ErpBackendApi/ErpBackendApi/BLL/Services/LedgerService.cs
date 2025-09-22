@@ -88,50 +88,5 @@ namespace ErpBackendApi.BLL.Services
             await _context.SaveChangesAsync();
             return ledger;
         }
-
-        public async Task<Ledger> UpdateLedgerAsync(Ledger ledger)
-        {
-            var existingLedger = await _context.ledgers.FirstOrDefaultAsync(l => l.id == ledger.id && l.is_deleted == false);
-            if (existingLedger == null)
-            {
-                Logger("Unable to update ledger information. Invalid ledger ID.");
-                return null;
-            }
-            existingLedger.entry_date = ledger.entry_date;
-            existingLedger.description = ledger.description;
-            existingLedger.debit_account_id = ledger.debit_account_id;
-            existingLedger.credit_account_id = ledger.credit_account_id;
-            existingLedger.amount = ledger.amount;
-            await _context.SaveChangesAsync();
-            return existingLedger;
-        }
-
-        public async Task<Ledger> SoftDeleteLedgerAsync(Ledger ledger)
-        {
-            var existingLedger = await _context.ledgers.FirstOrDefaultAsync(l => l.id == ledger.id && l.is_deleted == false);
-            if (existingLedger == null)
-            {
-                Logger("Unable to delete ledger information. Invalid ledger ID.");
-                return null;
-            }
-            existingLedger.is_deleted = true;
-            existingLedger.deleted_at = DateTime.UtcNow;
-            await _context.SaveChangesAsync();
-            return existingLedger;
-        }
-
-        public async Task<Ledger> UndoSoftDeleteLedgerAsync(Ledger ledger)
-        {
-            var existingLedger = await _context.ledgers.FirstOrDefaultAsync(l => l.id == ledger.id && l.is_deleted == true);
-            if (existingLedger == null)
-            {
-                Logger("Unable to restore deleted ledger information. Invalid ledger ID.");
-                return null;
-            }
-            existingLedger.is_deleted = false;
-            existingLedger.deleted_at = null;
-            await _context.SaveChangesAsync();
-            return existingLedger;
-        }
     }
 }

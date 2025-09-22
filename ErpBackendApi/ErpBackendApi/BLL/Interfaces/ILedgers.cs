@@ -8,8 +8,5 @@ namespace ErpBackendApi.BLL.Interfaces
         Task<IEnumerable<LedgerDTO>> GetAllLedgersAsync();
         Task<LedgerDTO> GetLedgerByIdAsync(int id);
         Task<Ledger> AddLedgerAsync(Ledger ledger);
-        Task<Ledger> UpdateLedgerAsync(Ledger ledger);
-        Task<Ledger> SoftDeleteLedgerAsync(Ledger ledger);
-        Task<Ledger> UndoSoftDeleteLedgerAsync(Ledger ledger);
     }
 }
