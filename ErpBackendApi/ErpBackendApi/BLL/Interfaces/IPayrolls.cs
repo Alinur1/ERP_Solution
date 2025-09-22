@@ -8,9 +8,5 @@ namespace ErpBackendApi.BLL.Interfaces
         Task<IEnumerable<PayrollDTO>> GetAllPayrollAsync();
         Task<PayrollDTO> GetPayrollByIdAsync(int id);
         Task<Payroll> AddPayrollAsync(Payroll payroll);
-        Task<Payroll> UpdatePayrollAsync(Payroll payroll);
-        Task<Payroll> SoftDeletePayrollAsync(Payroll payroll);
-        Task<Payroll> UndoSoftDeletePayrollAsync(Payroll payroll);
-        Task<IEnumerable<PayrollDTO>> GetAllDeletedPayrollAsync();
     }
 }

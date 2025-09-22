@@ -45,55 +45,6 @@ namespace ErpBackendApi.Controllers
             {
                 return BadRequest(ex.Message);
             }
-        }
-
-        [HttpPut("update")]
-        public async Task<IActionResult> UpdatePayroll(Payroll payroll)
-        {
-            try
-            {
-                var operation_UpdatePayroll = await _iPayroll.UpdatePayrollAsync(payroll);
-                return Ok("Payroll updated successfully.");
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpPut("delete")]
-        public async Task<IActionResult> SoftDeletePayroll(Payroll payroll)
-        {
-            try
-            {
-                var operation_SoftDeletePayroll = await _iPayroll.SoftDeletePayrollAsync(payroll);
-                return Ok("Payroll deleted successfully.");
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(ex.Message);
-            }            
-        }
-
-        [HttpPut("undo-delete")]
-        public async Task<IActionResult> UndoSoftDeletePayroll(Payroll payroll)
-        {
-            try
-            {
-                var operation_UndoSoftDeletePayroll = await _iPayroll.UndoSoftDeletePayrollAsync(payroll);
-                return Ok("Payroll restored successfully.");
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpGet("deleted-payroll")]
-        public async Task<IActionResult> GetAllDeletedPayrolls()
-        {
-            var operation_GetAllDeletedPayrolls = await _iPayroll.GetAllDeletedPayrollAsync();
-            return Ok(operation_GetAllDeletedPayrolls);
-        }
+        }        
     }
 }
