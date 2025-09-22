@@ -18,30 +18,51 @@ namespace ErpBackendApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllLedgers()
         {
-            var operation_GetAllLedgers = await _iLedger.GetAllLedgersAsync();
-            return Ok(operation_GetAllLedgers);
+            try
+            {
+                var operation_GetAllLedgers = await _iLedger.GetAllLedgersAsync();
+                return Ok(operation_GetAllLedgers);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error retrieving ledgers: {ex.Message}");
+            }
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetLedgerById(int id)
         {
-            var operation_GetLedgerById = await _iLedger.GetLedgerByIdAsync(id);
-            if (operation_GetLedgerById == null)
+            try
             {
-                return NotFound("Ledger information not found. Invalid ledger ID.");
+                var operation_GetLedgerById = await _iLedger.GetLedgerByIdAsync(id);
+                if (operation_GetLedgerById == null)
+                {
+                    return NotFound("Ledger entry not found.");
+                }
+                return Ok(operation_GetLedgerById);
             }
-            return Ok(operation_GetLedgerById);
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error retrieving ledger: {ex.Message}");
+            }
         }
 
         [HttpPost]
         public async Task<IActionResult> AddLedger(Ledger ledger)
         {
-            var operation_AddLedger = await _iLedger.AddLedgerAsync(ledger);
-            if (operation_AddLedger == null)
+            try
             {
-                return NotFound("Unable to add ledger information. Something went wrong.");
+                var operation_AddLedger = await _iLedger.AddLedgerAsync(ledger);
+                return Ok("Ledger entry added successfully.");
             }
-            return Ok("Ledger information added successfully.");
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error adding ledger entry: {ex.Message}");
+            }
         }
     }
 }
